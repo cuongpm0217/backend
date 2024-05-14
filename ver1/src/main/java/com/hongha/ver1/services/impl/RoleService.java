@@ -6,8 +6,13 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+<<<<<<< HEAD
 import com.hongha.ver1.entities.Role;
 import com.hongha.ver1.entities.enums.ERole;
+=======
+import com.hongha.ver1.entities.ERole;
+import com.hongha.ver1.entities.Role;
+>>>>>>> a833e23cca83a037a87c92ee39e57e07f3c32774
 import com.hongha.ver1.reporitories.RoleReporitory;
 import com.hongha.ver1.services.IRoleService;
 

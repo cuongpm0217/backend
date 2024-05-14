@@ -1,7 +1,10 @@
 package com.hongha.ver1.entities;
 
+<<<<<<< HEAD
 import com.hongha.ver1.entities.enums.EProductType;
 
+=======
+>>>>>>> a833e23cca83a037a87c92ee39e57e07f3c32774
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

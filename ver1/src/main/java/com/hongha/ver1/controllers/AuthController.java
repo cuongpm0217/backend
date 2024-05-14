@@ -12,9 +12,15 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import com.hongha.ver1.entities.CustomUserDetail;
+<<<<<<< HEAD
 import com.hongha.ver1.entities.Role;
 import com.hongha.ver1.entities.User;
 import com.hongha.ver1.entities.enums.ERole;
+=======
+import com.hongha.ver1.entities.ERole;
+import com.hongha.ver1.entities.Role;
+import com.hongha.ver1.entities.User;
+>>>>>>> a833e23cca83a037a87c92ee39e57e07f3c32774
 import com.hongha.ver1.reporitories.RoleReporitory;
 import com.hongha.ver1.reporitories.UserReporitory;
 import com.hongha.ver1.securties.jwt.JwtUtils;

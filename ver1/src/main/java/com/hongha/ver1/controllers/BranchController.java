@@ -8,6 +8,10 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+<<<<<<< HEAD
+=======
+import org.springframework.security.core.userdetails.UserDetailsService;
+>>>>>>> a833e23cca83a037a87c92ee39e57e07f3c32774
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +27,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hongha.ver1.dtos.BranchDTO;
 import com.hongha.ver1.entities.Branch;
 import com.hongha.ver1.services.IBranchService;
+<<<<<<< HEAD
+=======
+import com.hongha.ver1.services.impl.BranchService;
+import com.hongha.ver1.utils.Convertor;
+>>>>>>> a833e23cca83a037a87c92ee39e57e07f3c32774
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
