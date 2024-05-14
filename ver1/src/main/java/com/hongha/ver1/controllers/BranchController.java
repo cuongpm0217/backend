@@ -89,7 +89,7 @@ public class BranchController {
 	@PutMapping(value = "/{uuid}")
 	@ResponseStatus(HttpStatus.OK)
 	public void updateByUUID(@PathVariable("uuid") UUID uuid, @RequestBody BranchDTO branchDTO) {
-		if (!Objects.equals(uuid, branchDTO.getGen_id())) {
+		if (!Objects.equals(uuid, branchDTO.getGenId())) {
 			throw new IllegalArgumentException("UUIDs don't match");
 		}
 		Branch branch = mapper.map(branchDTO, Branch.class);
