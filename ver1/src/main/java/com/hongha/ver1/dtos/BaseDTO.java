@@ -10,7 +10,7 @@ import lombok.Data;
 @MappedSuperclass
 public abstract class BaseDTO {
 	private Long id;
-	private UUID gen_id;
+	private UUID genId;
 	private String createBy;
 	private String updateBy;
 	private Date createdAt;
