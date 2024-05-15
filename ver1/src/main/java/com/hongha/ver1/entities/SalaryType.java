@@ -19,7 +19,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SalaryType {
+public class SalaryType extends BaseEntityAudit{
 	@Enumerated(EnumType.STRING)
 	@Column
 	private ESalaryType name;

@@ -14,7 +14,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Proposal {
+public class Proposal extends BaseEntityAudit{
 	@Column
 	private long customerId;
 	@Column

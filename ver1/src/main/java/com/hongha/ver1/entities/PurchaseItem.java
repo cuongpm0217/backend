@@ -16,7 +16,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PurchaseItem {
+public class PurchaseItem extends BaseEntityAudit{
 	@Column
 	private long purchaseId;
 	@Column

@@ -16,7 +16,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RepairBillItem {
+public class RepairBillItem extends BaseEntityAudit{
 	@Column
 	private long repairBillId;
 	@Column
