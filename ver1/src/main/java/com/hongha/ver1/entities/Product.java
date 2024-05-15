@@ -24,7 +24,7 @@ public class Product extends BaseEntityAudit{
 	@Column(name="product_brand_id")
 	private long productBrandId;
 	@Column
-	private BigInteger price;
+	private BigInteger price;// saling price
 	@Column(name="currency_id")
 	private long currencyId;
 	@Column(name="unit_id")

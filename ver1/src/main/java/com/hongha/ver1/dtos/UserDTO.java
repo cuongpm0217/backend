@@ -17,6 +17,7 @@ public class UserDTO extends BaseDTO{
 	private String username;
 	private String password;
 	private String email;
+	private String fullName;
 	private boolean gender;
 	private Date dob;
 	private String avatar;
