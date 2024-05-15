@@ -29,6 +29,8 @@ public class User extends BaseEntityAudit{
 	private String password="QWE098&^%lkjGHJ)(*456";//set pass default
 	@Column(unique = true,nullable = false)
 	private String email;
+	@Column(name = "full_name")
+	private String fullName;
 	@Column
 	private boolean gender = true;
 	@Column
