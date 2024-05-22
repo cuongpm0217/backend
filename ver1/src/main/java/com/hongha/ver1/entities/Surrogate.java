@@ -21,4 +21,6 @@ public class Surrogate extends BaseEntityAudit{
 	private String phone;
 	@Column
 	private String address;
+	@Column
+	private String company;
 }
