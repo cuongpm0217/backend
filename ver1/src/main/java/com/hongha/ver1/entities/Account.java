@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "_accounting")
+@Table(name = "_account")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Accounting extends BaseEntityAudit {
+public class Account extends BaseEntityAudit {
 	@Column
 	private String code;// 131 311..
 	@Column
