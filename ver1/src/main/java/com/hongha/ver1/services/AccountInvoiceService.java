@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.hongha.ver1.entities.AccountInvoice;
 
-public interface IAccountInvoiceService {
+public interface AccountInvoiceService {
 	AccountInvoice save(AccountInvoice accountInvoiceRequest);
 
 	AccountInvoice findById(long id);

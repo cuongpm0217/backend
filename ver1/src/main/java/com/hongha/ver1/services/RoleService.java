@@ -6,7 +6,7 @@ import java.util.UUID;
 import com.hongha.ver1.entities.Role;
 import com.hongha.ver1.entities.enums.ERole;
 
-public interface IRoleService {
+public interface RoleService {
 	Role save(Role RoleRequest);
 
 	Role findById(long id);

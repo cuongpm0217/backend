@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.hongha.ver1.entities.Surrogate;
 
-public interface ISurrogateService {
+public interface SurrogateService {
 	Surrogate save(Surrogate surrogateRequest);
 
 	Surrogate findById(long id);

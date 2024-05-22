@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.hongha.ver1.entities.Employee;
 
-public interface IEmployeeService {
+public interface EmployeeService {
 	Employee save(Employee employeeRequest);
 	Employee findById(long id);
 	Employee findByUUID(UUID genId);

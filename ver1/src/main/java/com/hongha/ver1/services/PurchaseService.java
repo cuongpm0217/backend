@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.hongha.ver1.entities.Purchase;
 
-public interface IPurchaseService {
+public interface PurchaseService {
 	Purchase save(Purchase purchaseRequest);
 
 	Purchase findById(long id);

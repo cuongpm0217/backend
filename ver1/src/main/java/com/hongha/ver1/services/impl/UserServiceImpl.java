@@ -11,7 +11,7 @@ import com.hongha.ver1.entities.User;
 import com.hongha.ver1.repositories.UserRepository;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserServiceImpl implements UserDetailsService {
     @Autowired
     private UserRepository userRepo;
     @Override

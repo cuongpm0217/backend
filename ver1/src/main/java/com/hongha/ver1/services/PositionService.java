@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.hongha.ver1.entities.Position;
 
-public interface IPositionService {
+public interface PositionService {
 	Position save(Position positionRequest);
 
 	Position findById(long id);

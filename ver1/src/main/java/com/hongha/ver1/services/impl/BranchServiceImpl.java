@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.hongha.ver1.entities.Branch;
 import com.hongha.ver1.repositories.BranchRepository;
-import com.hongha.ver1.services.IBranchService;
+import com.hongha.ver1.services.BranchService;
 @Service
-public class BranchService implements IBranchService{
+public class BranchServiceImpl implements BranchService{
 	@Autowired
 	private BranchRepository branchRepo;
 	@Override

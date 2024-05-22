@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.hongha.ver1.entities.Salary;
 
-public interface ISalaryService {
+public interface SalaryService {
 	Salary save(Salary salaryRequest);
 
 	Salary findById(long id);

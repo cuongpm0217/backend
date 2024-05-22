@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.hongha.ver1.entities.Account;
 
-public interface IAccountService {
+public interface AccountService {
 	Account save(Account accountRequest);
 
 	Account findById(long id);

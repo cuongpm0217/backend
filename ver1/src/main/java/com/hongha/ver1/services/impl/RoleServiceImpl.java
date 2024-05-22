@@ -9,10 +9,10 @@ import org.springframework.stereotype.Service;
 import com.hongha.ver1.entities.Role;
 import com.hongha.ver1.entities.enums.ERole;
 import com.hongha.ver1.repositories.RoleRepository;
-import com.hongha.ver1.services.IRoleService;
+import com.hongha.ver1.services.RoleService;
 
 @Service
-public class RoleService implements IRoleService {
+public class RoleServiceImpl implements RoleService {
 	@Autowired
 	private RoleRepository roleRepo;
 

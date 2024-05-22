@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import com.hongha.ver1.entities.Branch;
 
-public interface IBranchService {
+public interface BranchService {
 	Branch save(Branch branchRequest);
 	Branch findById(long id);
 	Branch findByUUID(UUID genId);

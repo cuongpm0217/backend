@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.hongha.ver1.entities.ProposalItem;
 
-public interface IProposalItemService {
+public interface ProposalItemService {
 	ProposalItem save(ProposalItem proposalItemRequest);
 
 	ProposalItem findById(long id);

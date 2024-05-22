@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.hongha.ver1.entities.Customer;
 
-public interface ICustomerService {
+public interface CustomerService {
 	Customer save(Customer customerRequest);
 
 	Customer findById(long id);

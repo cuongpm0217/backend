@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hongha.ver1.dtos.BranchDTO;
 import com.hongha.ver1.entities.Branch;
-import com.hongha.ver1.services.IBranchService;
+import com.hongha.ver1.services.BranchService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -35,9 +35,9 @@ public class BranchController {
 //	@Autowired
 //	private UserDetailsService userService;
 	@Autowired
-	private IBranchService branchService;
+	private BranchService branchService;
 
-	public BranchController(IBranchService branchService) {
+	public BranchController(BranchService branchService) {
 		super();
 		this.branchService = branchService;
 	}

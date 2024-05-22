@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.hongha.ver1.entities.Ledger;
 
-public interface ILedgerService {
+public interface LedgerService {
 	Ledger save(Ledger ledgerRequest);
 
 	Ledger findById(long id);

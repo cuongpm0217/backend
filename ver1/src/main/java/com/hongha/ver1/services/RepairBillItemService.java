@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.hongha.ver1.entities.RepairBillItem;
 
-public interface IRepairBillItemService {
+public interface RepairBillItemService {
 	RepairBillItem save(RepairBillItem repairBillItemRequest);
 
 	RepairBillItem findById(long id);

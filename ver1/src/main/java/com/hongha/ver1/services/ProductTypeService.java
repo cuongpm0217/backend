@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.hongha.ver1.entities.ProductType;
 
-public interface IProductTypeService {
+public interface ProductTypeService {
 	ProductType save(ProductType productTypeRequest);
 
 	ProductType findById(long id);

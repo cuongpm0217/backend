@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.hongha.ver1.entities.SalaryType;
 
-public interface ISalaryTypeService {
+public interface SalaryTypeService {
 	SalaryType save(SalaryType salaryTypeRequest);
 
 	SalaryType findById(long id);

@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.hongha.ver1.entities.Department;
 
-public interface IDepartmentService {
+public interface DepartmentService {
 	Department save(Department departmentRequest);
 
 	Department findById(long id);

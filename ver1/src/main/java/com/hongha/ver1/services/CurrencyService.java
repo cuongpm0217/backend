@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.hongha.ver1.entities.Currency;
 
-public interface ICurrencyService {
+public interface CurrencyService {
 	Currency save(Currency currencyRequest);
 
 	Currency findById(long id);

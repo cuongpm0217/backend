@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.hongha.ver1.entities.Partner;
 
-public interface IPartnerService {
+public interface PartnerService {
 	Partner save(Partner partnerRequest);
 
 	Partner findById(long id);

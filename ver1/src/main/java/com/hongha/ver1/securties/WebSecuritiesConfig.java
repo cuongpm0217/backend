@@ -16,14 +16,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.hongha.ver1.securties.jwt.AuthEntryPointJwt;
 import com.hongha.ver1.securties.jwt.AuthTokenFilter;
-import com.hongha.ver1.services.impl.UserService;
+import com.hongha.ver1.services.impl.UserServiceImpl;
 
 
 @Configuration
 @EnableWebSecurity
 public class WebSecuritiesConfig {
 	@Autowired
-    UserService userService;
+    UserServiceImpl userService;
     @Autowired
     private AuthEntryPointJwt unauthorizedHandler;
 

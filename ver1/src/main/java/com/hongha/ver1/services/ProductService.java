@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.hongha.ver1.entities.Product;
 
-public interface IProductService {
+public interface ProductService {
 	Product save(Product productRequest);
 
 	Product findById(long id);

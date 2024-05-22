@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.hongha.ver1.entities.Unit;
 
-public interface IUnitService {
+public interface UnitService {
 	Unit save(Unit unitRequest);
 
 	Unit findById(long id);
