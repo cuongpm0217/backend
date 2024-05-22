@@ -16,9 +16,8 @@ import com.hongha.ver1.entities.CustomUserDetail;
 import com.hongha.ver1.entities.Role;
 import com.hongha.ver1.entities.User;
 import com.hongha.ver1.entities.enums.ERole;
-
-import com.hongha.ver1.reporitories.RoleReporitory;
-import com.hongha.ver1.reporitories.UserReporitory;
+import com.hongha.ver1.repositories.RoleRepository;
+import com.hongha.ver1.repositories.UserRepository;
 import com.hongha.ver1.securties.jwt.JwtUtils;
 import com.hongha.ver1.securties.jwt.payload.request.LoginRequest;
 import com.hongha.ver1.securties.jwt.payload.request.SignupRequest;
@@ -38,9 +37,9 @@ public class AuthController {
 	@Autowired()
 	AuthenticationManager authenticationManager;
 	@Autowired
-	UserReporitory userRepository;
+	UserRepository userRepository;
 	@Autowired
-	RoleReporitory roleRepository;
+	RoleRepository roleRepository;
 	@Autowired()
 	PasswordEncoder passwordEncoder;
 	@Autowired

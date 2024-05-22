@@ -1,4 +1,4 @@
-package com.hongha.ver1.reporitories;
+package com.hongha.ver1.repositories;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -12,7 +12,7 @@ import com.hongha.ver1.entities.Role;
 import com.hongha.ver1.entities.enums.ERole;
 
 @Repository
-public interface RoleReporitory extends JpaRepository<Role, Long> {
+public interface RoleRepository extends JpaRepository<Role, Long> {
 	Optional<Role> findByName(ERole name);
 
 	@Query(value = "select r from _role r where r.gen_id= :uuid", nativeQuery = true)
