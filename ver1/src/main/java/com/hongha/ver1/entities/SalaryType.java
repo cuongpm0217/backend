@@ -21,6 +21,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SalaryType extends BaseEntityAudit{
 	@Enumerated(EnumType.STRING)
-	@Column
+	@Column(unique = true, nullable = false)
 	private ESalaryType name;
 }
