@@ -18,7 +18,11 @@ public class Proposal extends BaseEntityAudit{
 	@Column
 	private long customerId;
 	@Column
-	private String liencePlate;
+	private String licensePlate;
 	@Column
 	private String vehicle;
+	@Column
+	private long branchId;
+	@Column
+	private long employeeId;
 }

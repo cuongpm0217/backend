@@ -27,4 +27,6 @@ public class Purchase extends BaseEntityAudit{
 	private long partnerId;
 	@Column
 	private long employeeId;	
+	@Column
+	private long branchId;
 }

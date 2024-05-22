@@ -31,5 +31,9 @@ public class RepairBill extends BaseEntityAudit{
 	private String licensePlate;
 	@Column
 	private String vehicle;
+	@Column
+	private long branchId;
+	@Column
+	private long employeeId;
 	
 }

@@ -27,9 +27,11 @@ public class Employee extends BaseEntityAudit{
 	private long departmentId;
 	@Column
 	private long branchId;
+	@Column
 	private Date dob;
 	@Column
 	private String nationalID;///cmt cccd
+	@Column
 	private String phone1;
 	@Column
 	private String phone2;
