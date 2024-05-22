@@ -7,12 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hongha.ver1.entities.Branch;
-import com.hongha.ver1.reporitories.BranchReporitory;
+import com.hongha.ver1.repositories.BranchRepository;
 import com.hongha.ver1.services.IBranchService;
 @Service
 public class BranchService implements IBranchService{
 	@Autowired
-	private BranchReporitory branchRepo;
+	private BranchRepository branchRepo;
 	@Override
 	public Branch save(Branch branch) {
 		return branchRepo.save(branch);

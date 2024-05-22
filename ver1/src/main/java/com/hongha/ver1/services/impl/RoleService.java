@@ -8,14 +8,13 @@ import org.springframework.stereotype.Service;
 
 import com.hongha.ver1.entities.Role;
 import com.hongha.ver1.entities.enums.ERole;
-
-import com.hongha.ver1.reporitories.RoleReporitory;
+import com.hongha.ver1.repositories.RoleRepository;
 import com.hongha.ver1.services.IRoleService;
 
 @Service
 public class RoleService implements IRoleService {
 	@Autowired
-	private RoleReporitory roleRepo;
+	private RoleRepository roleRepo;
 
 	@Override
 	public Role save(Role role) {

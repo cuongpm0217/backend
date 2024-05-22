@@ -8,12 +8,12 @@ import org.springframework.stereotype.Service;
 
 import com.hongha.ver1.entities.CustomUserDetail;
 import com.hongha.ver1.entities.User;
-import com.hongha.ver1.reporitories.UserReporitory;
+import com.hongha.ver1.repositories.UserRepository;
 
 @Service
 public class UserService implements UserDetailsService {
     @Autowired
-    private UserReporitory userRepo;
+    private UserRepository userRepo;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user;
