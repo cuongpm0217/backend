@@ -17,9 +17,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProposalItem extends BaseEntityAudit{
-	@Column
+	@Column(nullable = false)
 	private long proposalId;
-	@Column
+	@Column(nullable = false)
 	private long productId;
 	@Column
 	private int quantity;
