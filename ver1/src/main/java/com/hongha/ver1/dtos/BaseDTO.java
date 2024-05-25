@@ -11,8 +11,8 @@ import lombok.Data;
 public abstract class BaseDTO {
 	private Long id;
 	private UUID genId;
-	private String createBy;
-	private String updateBy;
+	private String createdBy;
+	private String updatedBy;
 	private Date createdAt;
 	private Date updatedAt;
 

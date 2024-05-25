@@ -27,7 +27,7 @@ public abstract class BaseEntity implements Serializable {
 //	@ID
 //	@GeneratedValue(strategy = GenerationType.UUID)
 	@Column(name = "gen_id",unique = true,nullable = false)
-	private UUID gen_id = UUID.randomUUID();
+	private UUID genId = UUID.randomUUID();
 
 	@Override
 	public boolean equals(Object o) {
