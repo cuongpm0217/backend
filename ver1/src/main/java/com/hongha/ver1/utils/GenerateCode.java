@@ -4,9 +4,11 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.springframework.stereotype.Component;
 
+@Component
 public class GenerateCode {
-
+	
 	public String GenInvoiceCode(int countInYear, String invoiceType) {
 		String code = "";
 		SimpleDateFormat df = new SimpleDateFormat("yyyy");
