@@ -59,8 +59,7 @@ public class JwtUtils {
     }
     
     private SecretKey getSigninKey() {
-        SecretKey key = Keys.hmacShaKeyFor(JWT_SECRET.getBytes(StandardCharsets.UTF_8));
-        System.out.println("ALG: "+key.getAlgorithm());
+        SecretKey key = Keys.hmacShaKeyFor(JWT_SECRET.getBytes(StandardCharsets.UTF_8));        
         return key;
     }
 
