@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hongha.ver1.entities.Account;
 import com.hongha.ver1.entities.History;
@@ -20,22 +21,28 @@ public class AccountServiceImpl implements AccountService {
 	@Autowired
 	private AccountRepository accountRepo;
 	@Autowired
-	private HistoryRepository historyRepo;	
+	private HistoryRepository historyRepo;
 	private History history;
-	
+
 	private String getUserName() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String username = authentication.getName();
 		return username;
 	}
-	
+
 	@Override
+	@Transactional
 	public Account save(Account accountRequest) {
 		accountRequest.setCreatedBy(getUserName());
 		accountRequest.setUpdatedBy(getUserName());
-		history = new History(Account.class.getName(),EAction.CREATE,accountRequest.getId().toString());
-		historyRepo.save(history);
-		return accountRepo.save(accountRequest);
+		Account isInserted = accountRepo.save(accountRequest);
+		if (isInserted != null) {
+			history = new History(Account.class.getName(), EAction.CREATE, accountRequest.getId().toString());
+			historyRepo.save(history);
+			return isInserted;
+		} else {
+			throw new RuntimeException("Can't save");
+		}
 	}
 
 	@Override
@@ -60,14 +67,14 @@ public class AccountServiceImpl implements AccountService {
 		accountUpdate.setLevel(accountRequest.getLevel());
 		accountUpdate.setName(accountRequest.getName());
 		accountUpdate.setUpdatedBy(getUserName());
-		history = new History(Account.class.getName(),EAction.UPDATE,accountRequest.getId().toString());
+		history = new History(Account.class.getName(), EAction.UPDATE, accountRequest.getId().toString());
 		historyRepo.save(history);
 		return accountRepo.save(accountUpdate);
 	}
 
 	@Override
 	public void delete(long id) {
-		history = new History(Account.class.getName(),EAction.DELETE,String.valueOf(id));
+		history = new History(Account.class.getName(), EAction.DELETE, String.valueOf(id));
 		historyRepo.save(history);
 		accountRepo.deleteById(id);
 	}
@@ -79,7 +86,7 @@ public class AccountServiceImpl implements AccountService {
 		accountUpdate.setLevel(accountRequest.getLevel());
 		accountUpdate.setName(accountRequest.getName());
 		accountUpdate.setUpdatedBy(getUserName());
-		history = new History(Account.class.getName(),EAction.UPDATE,accountRequest.getGenId().toString());
+		history = new History(Account.class.getName(), EAction.UPDATE, accountRequest.getGenId().toString());
 		historyRepo.save(history);
 		return accountRepo.save(accountUpdate);
 	}
@@ -88,9 +95,9 @@ public class AccountServiceImpl implements AccountService {
 	public void deleteByUUID(UUID genID) {
 		Account accountUpdate = accountRepo.findByUUID(genID);
 		if (accountUpdate.getId() != null)
-			history = new History(Account.class.getName(),EAction.DELETE,String.valueOf(genID));
-			historyRepo.save(history);
-			accountRepo.deleteById(accountUpdate.getId());
+			history = new History(Account.class.getName(), EAction.DELETE, String.valueOf(genID));
+		historyRepo.save(history);
+		accountRepo.deleteById(accountUpdate.getId());
 	}
 
 }

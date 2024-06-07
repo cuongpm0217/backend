@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hongha.ver1.entities.Branch;
 import com.hongha.ver1.entities.History;
@@ -23,21 +24,37 @@ public class BranchServiceImpl implements BranchService {
 
 	@Override
 	public Branch save(Branch branch) {
-		history = new History(Branch.class.getName(), EAction.CREATE, branch.getId().toString());
-		historyRepo.save(history);
-		return branchRepo.save(branch);
+		Branch isInserted = branchRepo.save(branch);
+		if (branchRepo.getReferenceById(branch.getId()) != null) {
+			history = new History(Branch.class.getName(), EAction.CREATE, branch.getId().toString());
+			historyRepo.save(history);
+			return isInserted;
+		} else {
+			throw new RuntimeException("Can't save branch " + branch.getId());
+		}
 	}
 
 	@Override
 	public Branch findById(long id) {
-		return branchRepo.getReferenceById(id);
+		Branch branch = branchRepo.getReferenceById(id);
+		if (branch != null) {
+			return branch;
+		} else
+			throw new RuntimeException("Not found");
 	}
 
 	@Override
 	public List<Branch> getAll() {
-		return branchRepo.findAll();
+		List<Branch> list = branchRepo.findAll();
+		if (!list.isEmpty()) {
+			return list;
+		} else {
+			throw new RuntimeException("Branch is empty");
+		}
+
 	}
 
+	@Transactional
 	@Override
 	public Branch update(long id, Branch branchRequest) {
 		Branch branchUpdate = branchRepo.getReferenceById(id);
@@ -51,6 +68,7 @@ public class BranchServiceImpl implements BranchService {
 		return branchRepo.save(branchUpdate);
 	}
 
+	@Transactional
 	@Override
 	public void delete(long id) {
 		Branch branch = branchRepo.getReferenceById(id);
@@ -58,14 +76,22 @@ public class BranchServiceImpl implements BranchService {
 			history = new History(Branch.class.getName(), EAction.DELETE, branch.getId().toString());
 			historyRepo.save(history);
 			branchRepo.deleteById(id);
+		} else {
+			throw new RuntimeException("Not found");
 		}
 	}
 
 	@Override
 	public Branch findByUUID(UUID genId) {
-		return branchRepo.findByUUID(genId);
+		Branch branch = branchRepo.findByUUID(genId);
+		if (branch != null) {
+			return branch;
+		} else
+			throw new RuntimeException("Not found");
+
 	}
 
+	@Transactional
 	@Override
 	public Branch updateByUUID(UUID genID, Branch branchRequest) {
 		Branch branchUpdate = branchRepo.findByUUID(genID);
@@ -79,14 +105,16 @@ public class BranchServiceImpl implements BranchService {
 		return branchRepo.save(branchUpdate);
 	}
 
+	@Transactional
 	@Override
 	public void deleteByUUID(UUID genID) {
 		Branch branch = branchRepo.findByUUID(genID);
-		if (branch.getId() != null) {
+		if (branch != null) {
 			history = new History(Branch.class.getName(), EAction.DELETE, branch.getGenId().toString());
 			historyRepo.save(history);
 			branchRepo.deleteById(branch.getId());
-		}
+		} else
+			throw new RuntimeException("Not found");
 	}
 
 }
