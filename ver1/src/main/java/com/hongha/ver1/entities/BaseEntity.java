@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
-import org.hibernate.annotations.GenericGenerator;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,6 +17,7 @@ import lombok.Setter;
 @MappedSuperclass
 public abstract class BaseEntity implements Serializable {
 
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", updatable = false, nullable = false)
@@ -26,7 +25,7 @@ public abstract class BaseEntity implements Serializable {
 //	uuid
 //	@ID
 //	@GeneratedValue(strategy = GenerationType.UUID)
-	@Column(name = "gen_id",unique = true,nullable = false)
+	@Column(name = "gen_id", unique = true, nullable = false)
 	private UUID genId = UUID.randomUUID();
 
 	@Override

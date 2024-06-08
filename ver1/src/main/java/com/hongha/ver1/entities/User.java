@@ -4,8 +4,11 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.hongha.ver1.entities.listeners.UserListener;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
@@ -17,12 +20,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
+@EntityListeners(UserListener.class)
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="_user")
 public class User extends BaseEntityAudit{
+	
+	private static final long serialVersionUID = 1L;
 	@Column(unique = true,nullable = false,updatable = false)
 	private String username;
 	@Column(nullable = false)

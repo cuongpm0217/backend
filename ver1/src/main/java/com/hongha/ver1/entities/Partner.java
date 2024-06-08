@@ -1,7 +1,10 @@
 package com.hongha.ver1.entities;
 
+import com.hongha.ver1.entities.listeners.PartnerListener;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,12 +12,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
+@EntityListeners(PartnerListener.class)
 @Table(name = "_partner")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Partner extends BaseEntityAudit{
+public class Partner extends BaseEntityAudit {
+
+	private static final long serialVersionUID = 1L;
 	@Column
 	private String name;
 	@Column

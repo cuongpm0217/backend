@@ -18,16 +18,11 @@ import com.hongha.ver1.services.BranchService;
 public class BranchServiceImpl implements BranchService {
 	@Autowired
 	private BranchRepository branchRepo;
-	@Autowired
-	private HistoryRepository historyRepo;
-	private History history;
 
 	@Override
 	public Branch save(Branch branch) {
 		Branch isInserted = branchRepo.save(branch);
 		if (branchRepo.getReferenceById(branch.getId()) != null) {
-			history = new History(Branch.class.getName(), EAction.CREATE, branch.getId().toString());
-			historyRepo.save(history);
 			return isInserted;
 		} else {
 			throw new RuntimeException("Can't save branch " + branch.getId());
@@ -63,8 +58,7 @@ public class BranchServiceImpl implements BranchService {
 		branchUpdate.setName(branchRequest.getName());
 		branchUpdate.setPhone1(branchRequest.getPhone1());
 		branchUpdate.setPhone2(branchRequest.getPhone2());
-		history = new History(Branch.class.getName(), EAction.UPDATE, branchUpdate.getId().toString());
-		historyRepo.save(history);
+
 		return branchRepo.save(branchUpdate);
 	}
 
@@ -73,8 +67,7 @@ public class BranchServiceImpl implements BranchService {
 	public void delete(long id) {
 		Branch branch = branchRepo.getReferenceById(id);
 		if (branch.getId() != null) {
-			history = new History(Branch.class.getName(), EAction.DELETE, branch.getId().toString());
-			historyRepo.save(history);
+
 			branchRepo.deleteById(id);
 		} else {
 			throw new RuntimeException("Not found");
@@ -100,8 +93,6 @@ public class BranchServiceImpl implements BranchService {
 		branchUpdate.setName(branchRequest.getName());
 		branchUpdate.setPhone1(branchRequest.getPhone1());
 		branchUpdate.setPhone2(branchRequest.getPhone2());
-		history = new History(Branch.class.getName(), EAction.UPDATE, branchUpdate.getGenId().toString());
-		historyRepo.save(history);
 		return branchRepo.save(branchUpdate);
 	}
 
@@ -110,8 +101,6 @@ public class BranchServiceImpl implements BranchService {
 	public void deleteByUUID(UUID genID) {
 		Branch branch = branchRepo.findByUUID(genID);
 		if (branch != null) {
-			history = new History(Branch.class.getName(), EAction.DELETE, branch.getGenId().toString());
-			historyRepo.save(history);
 			branchRepo.deleteById(branch.getId());
 		} else
 			throw new RuntimeException("Not found");

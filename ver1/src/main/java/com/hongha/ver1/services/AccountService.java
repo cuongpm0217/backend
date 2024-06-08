@@ -1,5 +1,6 @@
 package com.hongha.ver1.services;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,7 +13,7 @@ public interface AccountService {
 
 	Account findByUUID(UUID genId);
 
-	List<Account> getAll();
+	List<Account> getAll() throws IOException;
 
 	Account update(long id, Account accountRequest);
 

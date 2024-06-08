@@ -1,10 +1,11 @@
 package com.hongha.ver1.entities;
 
-
 import com.hongha.ver1.entities.enums.ESalaryType;
+import com.hongha.ver1.entities.listeners.SalaryTypeListener;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
@@ -14,12 +15,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="_salary_type")
+@EntityListeners(SalaryTypeListener.class)
+@Table(name = "_salary_type")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SalaryType extends BaseEntityAudit{
+public class SalaryType extends BaseEntityAudit {
+
+	private static final long serialVersionUID = 1L;
 	@Enumerated(EnumType.STRING)
 	@Column(unique = true, nullable = false)
 	private ESalaryType name;
