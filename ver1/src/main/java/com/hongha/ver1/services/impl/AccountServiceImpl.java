@@ -71,6 +71,7 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
+	@Transactional
 	public Account update(long id, Account accountRequest) {
 		Account accountUpdate = accountRepo.getReferenceById(id);
 		if (accountUpdate != null) {
@@ -89,6 +90,7 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
+	@Transactional
 	public void delete(long id) {
 		Account acc = accountRepo.getReferenceById(id);
 		if (acc != null) {
@@ -99,6 +101,7 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
+	@Transactional
 	public Account updateByUUID(UUID genID, Account accountRequest) {
 		Account accountUpdate = accountRepo.findByUUID(genID);
 		if (accountUpdate != null) {
@@ -106,9 +109,9 @@ public class AccountServiceImpl implements AccountService {
 			accountUpdate.setLevel(accountRequest.getLevel());
 			accountUpdate.setName(accountRequest.getName());
 			Account isUpdated = accountRepo.save(accountUpdate);
-			if(isUpdated!=null) {
+			if (isUpdated != null) {
 				return isUpdated;
-			}else {
+			} else {
 				throw new RuntimeException("Update fail");
 			}
 		} else {
@@ -117,9 +120,10 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
+	@Transactional
 	public void deleteByUUID(UUID genID) {
 		Account accountUpdate = accountRepo.findByUUID(genID);
-		if (accountUpdate.getId() != null) {
+		if (accountUpdate != null) {
 			accountRepo.deleteById(accountUpdate.getId());
 		} else {
 			throw new RuntimeException("Not found " + genID);

@@ -6,37 +6,46 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hongha.ver1.entities.Customer;
-import com.hongha.ver1.entities.History;
-import com.hongha.ver1.entities.enums.EAction;
 import com.hongha.ver1.repositories.CustomerRepository;
-import com.hongha.ver1.repositories.HistoryRepository;
 import com.hongha.ver1.services.CustomerService;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
 	@Autowired
 	private CustomerRepository cusRepo;
-	@Autowired
-	private HistoryRepository hisRepo;
-	private History history;
 
 	@Override
+	@Transactional
 	public Customer save(Customer customerRequest) {
-		history = new History(Customer.class.getName(), EAction.CREATE, customerRequest.getId().toString());
-		hisRepo.save(history);
-		return cusRepo.save(customerRequest);
+		Customer created = cusRepo.save(customerRequest);
+		if (created != null) {
+			return created;
+		} else {
+			throw new RuntimeException("Can't create Customer");
+		}
 	}
 
 	@Override
 	public Customer findById(long id) {
-		return cusRepo.getReferenceById(id);
+		Customer selected = cusRepo.getReferenceById(id);
+		if (selected != null) {
+			return selected;
+		} else {
+			throw new RuntimeException("Not found customer:" + String.valueOf(id));
+		}
 	}
 
 	@Override
 	public Customer findByUUID(UUID genId) {
-		return cusRepo.findByUUID(genId);
+		Customer selected = cusRepo.findByUUID(genId);
+		if (selected != null) {
+			return selected;
+		} else {
+			throw new RuntimeException("Not found Customer:" + String.valueOf(genId));
+		}
 	}
 
 	@Override
@@ -47,48 +56,62 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public Customer update(long id, Customer customerRequest) {
 		Customer updateObj = cusRepo.getReferenceById(id);
-		updateObj.setAddress(customerRequest.getAddress());
-		updateObj.setCustomerTypeId(customerRequest.getCustomerTypeId());
-		updateObj.setName(customerRequest.getName());
-		updateObj.setPhone1(customerRequest.getPhone1());
-		updateObj.setPhone2(customerRequest.getPhone2());
-		updateObj.setSurrogateId(customerRequest.getSurrogateId());
-		history = new History(Customer.class.getName(), EAction.UPDATE, updateObj.getId().toString());
-		hisRepo.save(history);
-		return cusRepo.save(updateObj);
+		if (updateObj != null) {
+			updateObj.setAddress(customerRequest.getAddress());
+			updateObj.setCustomerTypeId(customerRequest.getCustomerTypeId());
+			updateObj.setName(customerRequest.getName());
+			updateObj.setPhone1(customerRequest.getPhone1());
+			updateObj.setPhone2(customerRequest.getPhone2());
+			updateObj.setSurrogateId(customerRequest.getSurrogateId());
+			Customer updated = cusRepo.save(updateObj);
+			if (updated != null) {
+				return updated;
+			} else {
+				throw new RuntimeException("Can't update Customer:" + String.valueOf(id));
+			}
+		} else {
+			throw new RuntimeException("Not found Customer" + String.valueOf(id));
+		}
 	}
 
 	@Override
 	public void delete(long id) {
 		Customer updateObj = cusRepo.getReferenceById(id);
-		if (!Objects.isNull(updateObj)) {
-			history = new History(Customer.class.getName(), EAction.DELETE, updateObj.getId().toString());
-			hisRepo.save(history);
+		if (updateObj != null) {
 			cusRepo.deleteById(updateObj.getId());
+		} else {
+			throw new RuntimeException("Not found Customer:" + String.valueOf(id));
 		}
 	}
 
 	@Override
 	public Customer updateByUUID(UUID genID, Customer customerRequest) {
 		Customer updateObj = cusRepo.findByUUID(genID);
-		updateObj.setAddress(customerRequest.getAddress());
-		updateObj.setCustomerTypeId(customerRequest.getCustomerTypeId());
-		updateObj.setName(customerRequest.getName());
-		updateObj.setPhone1(customerRequest.getPhone1());
-		updateObj.setPhone2(customerRequest.getPhone2());
-		updateObj.setSurrogateId(customerRequest.getSurrogateId());
-		history = new History(Customer.class.getName(), EAction.UPDATE, updateObj.getGenId().toString());
-		hisRepo.save(history);
-		return cusRepo.save(updateObj);
+		if (updateObj != null) {
+			updateObj.setAddress(customerRequest.getAddress());
+			updateObj.setCustomerTypeId(customerRequest.getCustomerTypeId());
+			updateObj.setName(customerRequest.getName());
+			updateObj.setPhone1(customerRequest.getPhone1());
+			updateObj.setPhone2(customerRequest.getPhone2());
+			updateObj.setSurrogateId(customerRequest.getSurrogateId());
+			Customer inserted = cusRepo.save(updateObj);
+			if (inserted != null) {
+				return inserted;
+			} else {
+				throw new RuntimeException("Can't update Customer" + String.valueOf(genID));
+			}
+		} else {
+			throw new RuntimeException("Not found Customer:" + String.valueOf(genID));
+		}
 	}
 
 	@Override
 	public void deleteByUUID(UUID genID) {
 		Customer updateObj = cusRepo.findByUUID(genID);
-		if (!Objects.isNull(updateObj)) {
-			history = new History(Customer.class.getName(), EAction.DELETE, String.valueOf(genID));
-			hisRepo.save(history);
+		if (updateObj != null) {
 			cusRepo.deleteById(updateObj.getId());
+		} else {
+			throw new RuntimeException("Not found Customer" + String.valueOf(genID));
 		}
 
 	}

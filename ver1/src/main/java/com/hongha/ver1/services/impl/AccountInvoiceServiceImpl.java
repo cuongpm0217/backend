@@ -4,48 +4,47 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hongha.ver1.entities.AccountInvoice;
-import com.hongha.ver1.entities.History;
-import com.hongha.ver1.entities.enums.EAction;
 import com.hongha.ver1.repositories.AccountInvoiceRepository;
-import com.hongha.ver1.repositories.HistoryRepository;
 import com.hongha.ver1.services.AccountInvoiceService;
 
 @Service
 public class AccountInvoiceServiceImpl implements AccountInvoiceService {
 	@Autowired
 	private AccountInvoiceRepository accInvRepo;
-	@Autowired
-	private HistoryRepository historyRepo;
-	private History history;
-
-	private String getUserName() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		String username = authentication.getName();
-		return username;
-	}
 
 	@Override
+	@Transactional
 	public AccountInvoice save(AccountInvoice accountInvoiceRequest) {
-		accountInvoiceRequest.setCreatedBy(getUserName());
-		accountInvoiceRequest.setUpdatedBy(getUserName());
-		history = new History(AccountInvoice.class.getName(), EAction.CREATE, accountInvoiceRequest.getId().toString());
-		historyRepo.save(history);
-		return accInvRepo.save(accountInvoiceRequest);
+		AccountInvoice isInserted = accInvRepo.save(accountInvoiceRequest);
+		if (isInserted != null) {
+			return isInserted;
+		} else {
+			throw new RuntimeException("Can't create");
+		}
 	}
 
 	@Override
 	public AccountInvoice findById(long id) {
-		return accInvRepo.getReferenceById(id);
+		AccountInvoice selected = accInvRepo.getReferenceById(id);
+		if (selected != null) {
+			return selected;
+		} else {
+			throw new RuntimeException("Not found:" + String.valueOf(id));
+		}
 	}
 
 	@Override
 	public AccountInvoice findByUUID(UUID genId) {
-		return accInvRepo.findByUUID(genId);
+		AccountInvoice selected = accInvRepo.findByUUID(genId);
+		if (selected != null) {
+			return selected;
+		} else {
+			throw new RuntimeException("Not found:" + String.valueOf(genId));
+		}
 	}
 
 	@Override
@@ -54,49 +53,69 @@ public class AccountInvoiceServiceImpl implements AccountInvoiceService {
 	}
 
 	@Override
+	@Transactional
 	public AccountInvoice update(long id, AccountInvoice accountInvoiceRequest) {
 		AccountInvoice updateObj = accInvRepo.getReferenceById(id);
-		updateObj.setAccountId(accountInvoiceRequest.getAccountId());
-		updateObj.setCredit(accountInvoiceRequest.getCredit());
-		updateObj.setDebit(accountInvoiceRequest.getDebit());
-		updateObj.setInvoiceCode(accountInvoiceRequest.getInvoiceCode());
-		updateObj.setInvoiceId(accountInvoiceRequest.getInvoiceId());
-		updateObj.setInvoiceType(accountInvoiceRequest.getInvoiceType());
-		updateObj.setUpdatedBy(getUserName());
-		history = new History(AccountInvoice.class.getName(), EAction.UPDATE, updateObj.getId().toString());
-		historyRepo.save(history);
-		return accInvRepo.save(updateObj);
+		if (updateObj != null) {
+			updateObj.setAccountId(accountInvoiceRequest.getAccountId());
+			updateObj.setCredit(accountInvoiceRequest.getCredit());
+			updateObj.setDebit(accountInvoiceRequest.getDebit());
+			updateObj.setInvoiceCode(accountInvoiceRequest.getInvoiceCode());
+			updateObj.setInvoiceId(accountInvoiceRequest.getInvoiceId());
+			updateObj.setInvoiceType(accountInvoiceRequest.getInvoiceType());
+			AccountInvoice updated = accInvRepo.save(updateObj);
+			if (updated != null) {
+				return updated;
+			} else {
+				throw new RuntimeException("Can't update");
+			}
+		} else {
+			throw new RuntimeException("Not found:" + String.valueOf(id));
+		}
 	}
 
 	@Override
+	@Transactional
 	public void delete(long id) {
-		accInvRepo.deleteById(id);
-		history = new History(AccountInvoice.class.getName(), EAction.DELETE, String.valueOf(id));
-		historyRepo.save(history);
+		AccountInvoice del = accInvRepo.getReferenceById(id);
+		if (del != null) {
+			accInvRepo.deleteById(id);
+		} else {
+			throw new RuntimeException("Not found:" + String.valueOf(id));
+		}
 	}
 
 	@Override
+	@Transactional
 	public AccountInvoice updateByUUID(UUID genID, AccountInvoice accountInvoiceRequest) {
 		AccountInvoice updateObj = accInvRepo.findByUUID(genID);
-		updateObj.setAccountId(accountInvoiceRequest.getAccountId());
-		updateObj.setCredit(accountInvoiceRequest.getCredit());
-		updateObj.setDebit(accountInvoiceRequest.getDebit());
-		updateObj.setInvoiceCode(accountInvoiceRequest.getInvoiceCode());
-		updateObj.setInvoiceId(accountInvoiceRequest.getInvoiceId());
-		updateObj.setInvoiceType(accountInvoiceRequest.getInvoiceType());
-		updateObj.setUpdatedBy(getUserName());
-		history = new History(AccountInvoice.class.getName(), EAction.UPDATE, updateObj.getGenId().toString());
-		historyRepo.save(history);
-		return accInvRepo.save(updateObj);
+		if (updateObj != null) {
+			updateObj.setAccountId(accountInvoiceRequest.getAccountId());
+			updateObj.setCredit(accountInvoiceRequest.getCredit());
+			updateObj.setDebit(accountInvoiceRequest.getDebit());
+			updateObj.setInvoiceCode(accountInvoiceRequest.getInvoiceCode());
+			updateObj.setInvoiceId(accountInvoiceRequest.getInvoiceId());
+			updateObj.setInvoiceType(accountInvoiceRequest.getInvoiceType());
+			AccountInvoice updated = accInvRepo.save(updateObj);
+			if (updated != null) {
+				return updated;
+			} else {
+				throw new RuntimeException("Can't update");
+			}
+		} else {
+			throw new RuntimeException("Not found:" + String.valueOf(genID));
+		}
 	}
 
 	@Override
+	@Transactional
 	public void deleteByUUID(UUID genID) {
 		AccountInvoice updateObj = accInvRepo.findByUUID(genID);
-		if (updateObj.getId() != null)
+		if (updateObj != null)
 			accInvRepo.deleteById(updateObj.getId());
-		history = new History(AccountInvoice.class.getName(), EAction.DELETE, updateObj.getGenId().toString());
-		historyRepo.save(history);
+		else
+			throw new RuntimeException("Not found:" + String.valueOf(genID));
+
 	}
 
 }
