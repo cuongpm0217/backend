@@ -5,7 +5,7 @@ public enum EProductType {
 	EProductType_Tool("CÔNG CỤ"),
 	EProductType_Job("CÔNG VIỆC"),
 	EProductType_MATERIAL("VẬT LIỆU");
-	private String label;
+	public final String label;
 	private EProductType(String label) {
 		this.label = label;
 	}
