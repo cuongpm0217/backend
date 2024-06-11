@@ -41,5 +41,10 @@ public class RepairBill extends BaseEntityAudit{
 	private long branchId;
 	@Column
 	private long employeeId;
+	@Column(name="surrogate_id")
+	private long surrogateId;
+	//default payer = surrogate
+	@Column(name="payer_id")
+	private long payerId;
 	
 }
