@@ -26,13 +26,13 @@ public class Purchase extends BaseEntityAudit{
 	@Column
 	private String code;
 	@Column
-	private String detail;
-	@Column
+	private String detail;	
+	@Column(name="date_receipt")
 	private Date dateReceipt;
-	@Column
+	@Column(name="partner_id")
 	private long partnerId;
-	@Column
+	@Column(name="employee_id")
 	private long employeeId;	
-	@Column
+	@Column(name="branch_id")
 	private long branchId;
 }
