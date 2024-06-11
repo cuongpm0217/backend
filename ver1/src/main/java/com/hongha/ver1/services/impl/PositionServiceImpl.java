@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
@@ -18,130 +19,129 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hongha.ver1.entities.Department;
-import com.hongha.ver1.repositories.DepartmentRepository;
-import com.hongha.ver1.services.DepartmentService;
+import com.hongha.ver1.entities.Position;
+import com.hongha.ver1.repositories.PositionRepository;
+import com.hongha.ver1.services.PositionService;
 
 @Service
-public class DepartmentServiceImpl implements DepartmentService {
+public class PositionServiceImpl implements PositionService {
 	@Autowired
-	private DepartmentRepository depRepo;
+	private PositionRepository positionRepo;
 
 	@Override
 	@Transactional
-	public Department save(Department departmentRequest) {
-		Department isInserted = depRepo.save(departmentRequest);
+	public Position save(Position positionRequest) {
+		Position isInserted = positionRepo.save(positionRequest);
 		if (isInserted != null) {
 			return isInserted;
 		} else {
-			throw new RuntimeException("Can't create Department");
+			throw new RuntimeException("Can't create Position");
 		}
 
 	}
 
 	@Override
-	public Department findById(long id) {
-		Department selected = depRepo.getReferenceById(id);
+	public Position findById(long id) {
+		Position selected = positionRepo.getReferenceById(id);
 		if (selected != null) {
 			return selected;
 		} else {
-			throw new RuntimeException("Not found Department:" + String.valueOf(id));
+			throw new RuntimeException("Not found Position:" + String.valueOf(id));
 		}
 	}
 
 	@Override
-	public Department findByUUID(UUID genId) {
-		Department selected = depRepo.findByUUID(genId);
+	public Position findByUUID(UUID genId) {
+		Position selected = positionRepo.findByUUID(genId);
 		if (selected != null) {
 			return selected;
 		} else {
-			throw new RuntimeException("Not found Department:" + String.valueOf(genId));
+			throw new RuntimeException("Not found Position:" + String.valueOf(genId));
 		}
 	}
 
 	@Override
-	public List<Department> getAll() throws IOException {
-		List<Department> list= depRepo.findAll();
+	public List<Position> getAll() throws IOException {
+		List<Position> list = positionRepo.findAll();
 		if(list.isEmpty()) {
-			loadDepartmentExcel();
+			loadPositionExcel();
 		}
 		return list;
 	}
 
 	@Override
 	@Transactional
-	public Department update(long id, Department departmentRequest) {
-		Department selected = depRepo.getReferenceById(id);
+	public Position update(long id, Position positionRequest) {
+		Position selected = positionRepo.getReferenceById(id);
 		if (selected != null) {
-			selected.setCode(departmentRequest.getCode());
-			selected.setName(departmentRequest.getName());
-			Department updated = depRepo.save(selected);
-			if(updated!=null) {
+			selected.setLevel(positionRequest.getLevel());
+			selected.setName(positionRequest.getName());
+			Position updated = positionRepo.save(selected);
+			if (updated != null) {
 				return updated;
-			}else {
-				throw new RuntimeException("Can't update Department:"+String.valueOf(id));
+			} else {
+				throw new RuntimeException("Can't update Position:" + String.valueOf(id));
 			}
 		} else {
-			throw new RuntimeException("Not found Department:" + String.valueOf(id));
-		}		
-	}
-
-	@Override
-	@Transactional
-	public void delete(long id) {
-		Department selected = depRepo.getReferenceById(id);
-		if(selected!=null) {
-			depRepo.deleteById(id);
-		}else {
-			throw new RuntimeException("Not found Department:"+String.valueOf(id));
+			throw new RuntimeException("Not found Position:" + String.valueOf(id));
 		}
 	}
 
 	@Override
 	@Transactional
-	public Department updateByUUID(UUID genID, Department departmentRequest) {
-		Department selected = depRepo.findByUUID(genID);
+	public void delete(long id) {
+		Position selected = positionRepo.getReferenceById(id);
 		if (selected != null) {
-			selected.setCode(departmentRequest.getCode());
-			selected.setName(departmentRequest.getName());			
-			Department updated = depRepo.save(selected);
-			if(updated!=null) {
+			positionRepo.deleteById(id);
+		} else {
+			throw new RuntimeException("Not found Position:" + String.valueOf(id));
+		}
+	}
+
+	@Override
+	@Transactional
+	public Position updateByUUID(UUID genID, Position positionRequest) {
+		Position selected = positionRepo.findByUUID(genID);
+		if (selected != null) {
+			selected.setLevel(positionRequest.getLevel());
+			selected.setName(positionRequest.getName());
+			Position updated = positionRepo.save(selected);
+			if (updated != null) {
 				return updated;
-			}else {
-				throw new RuntimeException("Can't update Department:"+String.valueOf(genID));
+			} else {
+				throw new RuntimeException("Can't update Position:" + String.valueOf(genID));
 			}
 		} else {
-			throw new RuntimeException("Not found Department:" + String.valueOf(genID));
+			throw new RuntimeException("Not found Position:" + String.valueOf(genID));
 		}
 	}
 
 	@Override
 	@Transactional
 	public void deleteByUUID(UUID genID) {
-		Department selected = depRepo.findByUUID(genID);
-		if(selected!=null) {
-			depRepo.deleteById(selected.getId());
-		}else {
-			throw new RuntimeException("Not found Department:"+String.valueOf(genID));
+		Position selected = positionRepo.findByUUID(genID);
+		if (selected != null) {
+			positionRepo.deleteById(selected.getId());
+		} else {
+			throw new RuntimeException("Not found Position:" + String.valueOf(genID));
 		}
 	}
-
 	// Load data sample
-		private void loadDepartmentExcel() throws IOException {
+		private void loadPositionExcel() throws IOException {
 			String excelFilePath = "src/main/resources/static/data.xlsx";
 
 			InputStream inputStream = new FileInputStream(new File(excelFilePath));
 
 			Workbook wb = new XSSFWorkbook(inputStream);
 
-			Sheet sheet = wb.getSheet("department");
+			Sheet sheet = wb.getSheet("position");
 			Iterator<Row> rows = sheet.iterator();
 			while (rows.hasNext()) {
 				Row nextRow = rows.next();
 //				 Get all cells
 				Iterator<Cell> cellIterator = nextRow.cellIterator();
 	// Read cells and set value for object
-				Department dep = new Department();
+				Position position = new Position();
 				while (cellIterator.hasNext()) {
 					// Read cell
 					Cell cell = cellIterator.next();
@@ -153,20 +153,19 @@ public class DepartmentServiceImpl implements DepartmentService {
 					int columnIndex = cell.getColumnIndex();
 					switch (columnIndex) {
 					case 0:
-						dep.setName((String) getCellValue(cell));
+						position.setName((String) getCellValue(cell));
 						break;
 					case 1:
-						dep.setVname((String) getCellValue(cell));
+						position.setVname((String) getCellValue(cell));
 						break;
 					case 2:
-						dep.setBranchId((long) cellValue);
+						position.setLevel(new BigDecimal((double) cellValue).intValue());
 						break;
-
 					default:
 						break;
 					}
 				}
-				depRepo.save(dep);
+				positionRepo.save(position);
 			}
 			wb.close();
 			inputStream.close();

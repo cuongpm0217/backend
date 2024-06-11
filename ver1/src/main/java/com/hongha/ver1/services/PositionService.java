@@ -1,5 +1,6 @@
 package com.hongha.ver1.services;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,7 +13,7 @@ public interface PositionService {
 
 	Position findByUUID(UUID genId);
 
-	List<Position> getAll();
+	List<Position> getAll() throws IOException;
 
 	Position update(long id, Position positionRequest);
 

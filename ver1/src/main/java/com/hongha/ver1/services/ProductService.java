@@ -19,4 +19,6 @@ public interface ProductService {
 	void delete(long id);
 
 	void deleteByUUID(UUID genID);
+
+	Product updateByUUID(UUID genID, Product productRequest);
 }

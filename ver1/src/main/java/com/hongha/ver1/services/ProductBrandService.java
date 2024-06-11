@@ -1,5 +1,6 @@
 package com.hongha.ver1.services;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,7 +13,7 @@ public interface ProductBrandService {
 
 	ProductBrand findByUUID(UUID genId);
 
-	List<ProductBrand> getAll();
+	List<ProductBrand> getAll() throws IOException;
 
 	ProductBrand update(long id, ProductBrand productBrandRequest);
 
