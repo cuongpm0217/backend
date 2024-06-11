@@ -1,5 +1,7 @@
 package com.hongha.ver1.entities;
 
+import java.math.BigInteger;
+
 import com.hongha.ver1.entities.enums.EExpenseType;
 import com.hongha.ver1.entities.listeners.ExpenseListener;
 
@@ -29,4 +31,6 @@ public class Expense extends BaseEntityAudit {
 	private EExpenseType name;
 	@Column()
 	private String detail;
+	@Column
+	private BigInteger cost;
 }
