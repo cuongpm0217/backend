@@ -25,5 +25,5 @@ public class Position extends BaseEntityAudit{
 	@Column
 	private String vname;
 	@Column
-	private int level = 8;// 1 tgd 2 ptgd 3 gd 4 pgd 5 tp 6 pp 7 t nhom 8 nv
+	private int level = 9;
 }
