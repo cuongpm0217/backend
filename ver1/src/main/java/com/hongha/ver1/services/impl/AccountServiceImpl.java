@@ -63,9 +63,7 @@ public class AccountServiceImpl implements AccountService {
 	public List<Account> getAll() throws IOException {
 		List<Account> accounts = accountRepo.findAll();
 		if (accounts.isEmpty()) {
-
 			loadAccountExcel();
-
 		}
 		return accounts;
 	}
