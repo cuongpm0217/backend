@@ -5,13 +5,10 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.hongha.ver1.entities.Branch;
-import com.hongha.ver1.entities.History;
 import com.hongha.ver1.entities.Role;
-import com.hongha.ver1.entities.enums.EAction;
 import com.hongha.ver1.entities.enums.ERole;
-import com.hongha.ver1.repositories.HistoryRepository;
 import com.hongha.ver1.repositories.RoleRepository;
 import com.hongha.ver1.services.RoleService;
 
@@ -19,20 +16,26 @@ import com.hongha.ver1.services.RoleService;
 public class RoleServiceImpl implements RoleService {
 	@Autowired
 	private RoleRepository roleRepo;
-	@Autowired
-	private HistoryRepository historyRepo;
-	private History history;
-	
+
 	@Override
+	@Transactional
 	public Role save(Role role) {
-		history = new History(Role.class.getName(),EAction.CREATE,role.getId().toString());
-		historyRepo.save(history);
-		return roleRepo.save(role);
+		Role isInserted = roleRepo.save(role);
+		if (isInserted != null) {
+			return isInserted;
+		} else {
+			throw new RuntimeException("Can't create Role");
+		}
 	}
 
 	@Override
 	public Role findById(long id) {
-		return roleRepo.getReferenceById(id);
+		Role selected = roleRepo.getReferenceById(id);
+		if (selected != null) {
+			return selected;
+		} else {
+			throw new RuntimeException("Not found Role:" + String.valueOf(id));
+		}
 	}
 
 	@Override
@@ -41,51 +44,76 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
+	@Transactional
 	public Role update(long id, Role roleRequest) {
 		Role roleUpdate = roleRepo.getReferenceById(id);
-		roleUpdate.setName(roleRequest.getName());
-		history = new History(Role.class.getName(),EAction.UPDATE,roleRequest.getId().toString());
-		historyRepo.save(history);
-		return roleRepo.save(roleUpdate);
+		if (roleUpdate != null) {
+			roleUpdate.setName(roleRequest.getName());
+			Role updated = roleRepo.save(roleUpdate);
+			if (updated != null) {
+				return updated;
+			} else {
+				throw new RuntimeException("Can't update Role:" + String.valueOf(id));
+			}
+		} else {
+			throw new RuntimeException("Not found Role:" + String.valueOf(id));
+		}
 	}
 
 	@Override
+	@Transactional
 	public void delete(long id) {
 		Role role = roleRepo.getReferenceById(id);
 		if (role.getId() != null) {
-			history = new History(Role.class.getName(),EAction.DELETE,String.valueOf(id));
-			historyRepo.save(history);
 			roleRepo.deleteById(id);
 		}
 	}
 
 	@Override
 	public Role findByUUID(UUID genId) {
-		return roleRepo.findByUUID(genId);
+		Role selected = roleRepo.findByUUID(genId);
+		if (selected != null) {
+			return selected;
+		} else {
+			throw new RuntimeException("Not found Role:" + String.valueOf(genId));
+		}
 	}
 
 	@Override
+	@Transactional
 	public Role updateByUUID(UUID genID, Role roleRequest) {
 		Role roleUpdate = roleRepo.findByUUID(genID);
-		roleUpdate.setName(roleRequest.getName());
-		history = new History(Role.class.getName(),EAction.UPDATE,roleRequest.getGenId().toString());
-		historyRepo.save(history);
-		return roleRepo.save(roleUpdate);
+		if (roleUpdate != null) {
+			roleUpdate.setName(roleRequest.getName());
+			Role updated = roleRepo.save(roleUpdate);
+			if (updated != null) {
+				return updated;
+			} else {
+				throw new RuntimeException("Can't update Role:" + String.valueOf(genID));
+			}
+		} else {
+			throw new RuntimeException("Not found Role:" + String.valueOf(genID));
+		}
 	}
 
 	@Override
+	@Transactional
 	public void deleteByUUID(UUID genID) {
 		Role role = roleRepo.findByUUID(genID);
-		if (role.getId() != null) {
-			history = new History(Role.class.getName(),EAction.DELETE,role.getGenId().toString());
-			historyRepo.save(history);
+		if (role != null) {
 			roleRepo.deleteById(role.getId());
+		} else {
+			throw new RuntimeException("Not found Role:" + String.valueOf(genID));
 		}
 	}
 
 	@Override
 	public Role findByName(ERole name) {
-		return roleRepo.findByName(name).get();
-
+		Role selected = roleRepo.findByName(name).get();
+		if (selected != null) {
+			return selected;
+		} else {
+			throw new RuntimeException("Not found Role:" + name.toString());
+		}
 	}
 }

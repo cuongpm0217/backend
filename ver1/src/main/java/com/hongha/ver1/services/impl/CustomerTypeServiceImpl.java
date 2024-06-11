@@ -1,42 +1,49 @@
 package com.hongha.ver1.services.impl;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hongha.ver1.entities.CustomerType;
-import com.hongha.ver1.entities.History;
-import com.hongha.ver1.entities.enums.EAction;
 import com.hongha.ver1.repositories.CustomerTypeRepository;
-import com.hongha.ver1.repositories.HistoryRepository;
 import com.hongha.ver1.services.CustomerTypeService;
 
 @Service
 public class CustomerTypeServiceImpl implements CustomerTypeService {
 	@Autowired
 	private CustomerTypeRepository cusTypeRepo;
-	@Autowired
-	private HistoryRepository hisRepo;
-	private History his;
 
 	@Override
+	@Transactional
 	public CustomerType save(CustomerType customerTypeRequest) {
-		his = new History(CustomerType.class.getName(), EAction.CREATE, customerTypeRequest.getId().toString());
-		hisRepo.save(his);
-		return cusTypeRepo.save(customerTypeRequest);
+		CustomerType isInserted = cusTypeRepo.save(customerTypeRequest);
+		if (isInserted != null) {
+			return isInserted;
+		} else {
+			throw new RuntimeException("Can't create Customer Type");
+		}
 	}
 
 	@Override
 	public CustomerType findById(long id) {
-		return cusTypeRepo.getReferenceById(id);
+		CustomerType selected = cusTypeRepo.getReferenceById(id);
+		if (selected != null) {
+			return selected;
+		} else {
+			throw new RuntimeException("Not found Customer Type:" + String.valueOf(id));
+		}
 	}
 
 	@Override
 	public CustomerType findByUUID(UUID genId) {
-		return cusTypeRepo.findByUUID(genId);
+		CustomerType selected = cusTypeRepo.findByUUID(genId);
+		if (selected != null) {
+			return selected;
+		} else {
+			throw new RuntimeException("Not found Customer Type:" + String.valueOf(genId));
+		}
 	}
 
 	@Override
@@ -45,40 +52,59 @@ public class CustomerTypeServiceImpl implements CustomerTypeService {
 	}
 
 	@Override
+	@Transactional
 	public CustomerType update(long id, CustomerType customerTypeRequest) {
 		CustomerType updateObj = cusTypeRepo.getReferenceById(id);
-		updateObj.setName(customerTypeRequest.getName());
-		his = new History(CustomerType.class.getName(), EAction.UPDATE, updateObj.getId().toString());
-		hisRepo.save(his);
-		return cusTypeRepo.save(updateObj);
+		if (updateObj != null) {
+			updateObj.setName(customerTypeRequest.getName());
+			CustomerType updated = cusTypeRepo.save(updateObj);
+			if (updated != null) {
+				return updated;
+			} else {
+				throw new RuntimeException("Can't update Customer Type:" + String.valueOf(id));
+			}
+		} else {
+			throw new RuntimeException("Not found Customer Type:" + String.valueOf(id));
+		}
+
 	}
 
 	@Override
+	@Transactional
 	public void delete(long id) {
 		CustomerType updateObj = cusTypeRepo.getReferenceById(id);
-		if (!Objects.isNull(updateObj)) {
-			his = new History(CustomerType.class.getName(), EAction.DELETE, updateObj.getId().toString());
-			hisRepo.save(his);
+		if (updateObj != null) {
 			cusTypeRepo.deleteById(id);
+		} else {
+			throw new RuntimeException("Not found Customer Type:" + String.valueOf(id));
 		}
 	}
 
 	@Override
+	@Transactional
 	public CustomerType updateByUUID(UUID genID, CustomerType customerTypeRequest) {
 		CustomerType updateObj = cusTypeRepo.findByUUID(genID);
-		updateObj.setName(customerTypeRequest.getName());
-		his = new History(CustomerType.class.getName(), EAction.UPDATE, updateObj.getGenId().toString());
-		hisRepo.save(his);
-		return cusTypeRepo.save(updateObj);
+		if (updateObj != null) {
+			updateObj.setName(customerTypeRequest.getName());
+			CustomerType updated = cusTypeRepo.save(updateObj);
+			if (updated != null) {
+				return updated;
+			} else {
+				throw new RuntimeException("Can't update Customer Type:" + String.valueOf(genID));
+			}
+		} else {
+			throw new RuntimeException("Not found Customer Type:" + String.valueOf(genID));
+		}
 	}
 
 	@Override
+	@Transactional
 	public void deleteByUUID(UUID genID) {
 		CustomerType updateObj = cusTypeRepo.findByUUID(genID);
-		if (!Objects.isNull(updateObj)) {
-			his = new History(CustomerType.class.getName(), EAction.DELETE, updateObj.getGenId().toString());
-			hisRepo.save(his);
+		if (updateObj != null) {
 			cusTypeRepo.deleteById(updateObj.getId());
+		} else {
+			throw new RuntimeException("Not found Customer Type:" + String.valueOf(genID));
 		}
 
 	}
