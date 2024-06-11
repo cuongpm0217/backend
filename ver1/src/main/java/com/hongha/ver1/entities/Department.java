@@ -23,6 +23,8 @@ public class Department extends BaseEntityAudit {
 	@Column
 	private String name;
 	@Column
+	private String vname;
+	@Column
 	private long branchId;
 	@Column
 	private String code;
