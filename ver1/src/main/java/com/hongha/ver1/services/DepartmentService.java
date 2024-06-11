@@ -1,5 +1,6 @@
 package com.hongha.ver1.services;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,7 +13,7 @@ public interface DepartmentService {
 
 	Department findByUUID(UUID genId);
 
-	List<Department> getAll();
+	List<Department> getAll() throws IOException;
 
 	Department update(long id, Department departmentRequest);
 
