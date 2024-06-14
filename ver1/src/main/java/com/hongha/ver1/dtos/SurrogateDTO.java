@@ -13,4 +13,6 @@ public class SurrogateDTO extends BaseDTO {
 	private String name;
 	private String phone;
 	private String address;
+	private String company;
+	private long customerId;
 }

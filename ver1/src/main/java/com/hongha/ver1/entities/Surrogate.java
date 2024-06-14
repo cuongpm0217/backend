@@ -29,4 +29,6 @@ public class Surrogate extends BaseEntityAudit{
 	private String address;
 	@Column
 	private String company;
+	@Column(name="customer_id",nullable = false)
+	private long customerId;
 }

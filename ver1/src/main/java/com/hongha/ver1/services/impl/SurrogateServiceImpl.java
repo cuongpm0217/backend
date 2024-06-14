@@ -71,6 +71,7 @@ public class SurrogateServiceImpl implements SurrogateService{
 		selected.setCompany(surRequest.getCompany());
 		selected.setName(surRequest.getName());
 		selected.setPhone(surRequest.getPhone());
+		selected.setCustomerId(surRequest.getCustomerId());
 		Surrogate updated = surRepo.save(selected);
 		if (updated != null) {
 			return updated;
