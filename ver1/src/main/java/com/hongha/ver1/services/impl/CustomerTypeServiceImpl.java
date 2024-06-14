@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hongha.ver1.entities.CustomerType;
+import com.hongha.ver1.entities.enums.ECustomerType;
 import com.hongha.ver1.repositories.CustomerTypeRepository;
 import com.hongha.ver1.services.CustomerTypeService;
 
@@ -48,7 +49,19 @@ public class CustomerTypeServiceImpl implements CustomerTypeService {
 
 	@Override
 	public List<CustomerType> getAll() {
-		return cusTypeRepo.findAll();
+		List<CustomerType> list = cusTypeRepo.findAll();
+		if(list.isEmpty()) {
+			CustomerType cusType = new CustomerType();
+			cusType.setName(ECustomerType.ECustomerType_INVIDUAL);
+			cusTypeRepo.save(cusType);
+			CustomerType cusTypeOrg = new CustomerType();
+			cusTypeOrg.setName(ECustomerType.ECustomerType_ORGANIZATION);
+			cusTypeRepo.save(cusTypeOrg);
+			CustomerType cusTypePartner = new CustomerType();
+			cusTypePartner.setName(ECustomerType.ECustomerType_PARTNER);
+			cusTypeRepo.save(cusTypePartner);
+		}
+		return list;
 	}
 
 	@Override
