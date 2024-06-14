@@ -56,20 +56,25 @@ public class CustomerServiceImpl implements CustomerService {
 	public Customer update(long id, Customer customerRequest) {
 		Customer updateObj = cusRepo.getReferenceById(id);
 		if (updateObj != null) {
-			updateObj.setAddress(customerRequest.getAddress());
-			updateObj.setCustomerTypeId(customerRequest.getCustomerTypeId());
-			updateObj.setName(customerRequest.getName());
-			updateObj.setPhone1(customerRequest.getPhone1());
-			updateObj.setPhone2(customerRequest.getPhone2());
-			updateObj.setSurrogateId(customerRequest.getSurrogateId());
-			Customer updated = cusRepo.save(updateObj);
-			if (updated != null) {
-				return updated;
-			} else {
-				throw new RuntimeException("Can't update Customer:" + String.valueOf(id));
-			}
+			return updateCustomer(customerRequest, updateObj);
 		} else {
 			throw new RuntimeException("Not found Customer" + String.valueOf(id));
+		}
+	}
+
+	private Customer updateCustomer(Customer customerRequest, Customer updateObj) {
+		updateObj.setAddress1(customerRequest.getAddress1());
+		updateObj.setAddress2(customerRequest.getAddress2());
+		updateObj.setCustomerTypeId(customerRequest.getCustomerTypeId());
+		updateObj.setName(customerRequest.getName());
+		updateObj.setPhone1(customerRequest.getPhone1());
+		updateObj.setPhone2(customerRequest.getPhone2());
+		
+		Customer updated = cusRepo.save(updateObj);
+		if (updated != null) {
+			return updated;
+		} else {
+			throw new RuntimeException("Can't update Customer:" + updateObj.getId());
 		}
 	}
 
@@ -87,18 +92,7 @@ public class CustomerServiceImpl implements CustomerService {
 	public Customer updateByUUID(UUID genID, Customer customerRequest) {
 		Customer updateObj = cusRepo.findByUUID(genID);
 		if (updateObj != null) {
-			updateObj.setAddress(customerRequest.getAddress());
-			updateObj.setCustomerTypeId(customerRequest.getCustomerTypeId());
-			updateObj.setName(customerRequest.getName());
-			updateObj.setPhone1(customerRequest.getPhone1());
-			updateObj.setPhone2(customerRequest.getPhone2());
-			updateObj.setSurrogateId(customerRequest.getSurrogateId());
-			Customer inserted = cusRepo.save(updateObj);
-			if (inserted != null) {
-				return inserted;
-			} else {
-				throw new RuntimeException("Can't update Customer" + String.valueOf(genID));
-			}
+			return updateCustomer(customerRequest, updateObj);
 		} else {
 			throw new RuntimeException("Not found Customer:" + String.valueOf(genID));
 		}

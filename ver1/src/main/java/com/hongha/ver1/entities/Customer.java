@@ -23,13 +23,14 @@ public class Customer extends BaseEntityAudit{
 	@Column(nullable = false)
 	private String name;
 	@Column
-	private String address="Giao Thủy, Nam Định";//set as default
+	private String address1="Giao Thủy, Nam Định";//set as default
+	@Column
+	private String address2;
 	@Column
 	private String phone1;
 	@Column
 	private String phone2;
-	@Column(nullable = false)
+	@Column(nullable = false,name="customer_type_id")
 	private long customerTypeId;
-	@Column(name = "surrogate_id")
-	private long surrogateId;
+	
 }
