@@ -18,19 +18,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hongha.ver1.entities.ProductBrand;
+import com.hongha.ver1.entities.Brand;
 import com.hongha.ver1.repositories.ProductBrandRepository;
-import com.hongha.ver1.services.ProductBrandService;
+import com.hongha.ver1.services.BrandService;
 
 @Service
-public class ProductBrandServiceImpl implements ProductBrandService {
+public class BrandServiceImpl implements BrandService {
 	@Autowired
 	private ProductBrandRepository proBrandRepo;
 
 	@Override
 	@Transactional
-	public ProductBrand save(ProductBrand proBrandRequest) {
-		ProductBrand isInserted = proBrandRepo.save(proBrandRequest);
+	public Brand save(Brand proBrandRequest) {
+		Brand isInserted = proBrandRepo.save(proBrandRequest);
 		if (isInserted != null) {
 			return isInserted;
 		} else {
@@ -40,8 +40,8 @@ public class ProductBrandServiceImpl implements ProductBrandService {
 	}
 
 	@Override
-	public ProductBrand findById(long id) {
-		ProductBrand selected = proBrandRepo.getReferenceById(id);
+	public Brand findById(long id) {
+		Brand selected = proBrandRepo.getReferenceById(id);
 		if (selected != null) {
 			return selected;
 		} else {
@@ -50,8 +50,8 @@ public class ProductBrandServiceImpl implements ProductBrandService {
 	}
 
 	@Override
-	public ProductBrand findByUUID(UUID genId) {
-		ProductBrand selected = proBrandRepo.findByUUID(genId);
+	public Brand findByUUID(UUID genId) {
+		Brand selected = proBrandRepo.findByUUID(genId);
 		if (selected != null) {
 			return selected;
 		} else {
@@ -60,8 +60,8 @@ public class ProductBrandServiceImpl implements ProductBrandService {
 	}
 
 	@Override
-	public List<ProductBrand> getAll() throws IOException {
-		List<ProductBrand> list = proBrandRepo.findAll();
+	public List<Brand> getAll() throws IOException {
+		List<Brand> list = proBrandRepo.findAll();
 		if (list.isEmpty()) {
 			loadBrandExcel();
 		}
@@ -70,12 +70,12 @@ public class ProductBrandServiceImpl implements ProductBrandService {
 
 	@Override
 	@Transactional
-	public ProductBrand update(long id, ProductBrand proBrandRequest) {
-		ProductBrand selected = proBrandRepo.getReferenceById(id);
+	public Brand update(long id, Brand proBrandRequest) {
+		Brand selected = proBrandRepo.getReferenceById(id);
 		if (selected != null) {
 			selected.setCountry(proBrandRequest.getCountry());
 			selected.setName(proBrandRequest.getName());
-			ProductBrand updated = proBrandRepo.save(selected);
+			Brand updated = proBrandRepo.save(selected);
 			if (updated != null) {
 				return updated;
 			} else {
@@ -89,7 +89,7 @@ public class ProductBrandServiceImpl implements ProductBrandService {
 	@Override
 	@Transactional
 	public void delete(long id) {
-		ProductBrand selected = proBrandRepo.getReferenceById(id);
+		Brand selected = proBrandRepo.getReferenceById(id);
 		if (selected != null) {
 			proBrandRepo.deleteById(id);
 		} else {
@@ -99,12 +99,12 @@ public class ProductBrandServiceImpl implements ProductBrandService {
 
 	@Override
 	@Transactional
-	public ProductBrand updateByUUID(UUID genID, ProductBrand proBrandRequest) {
-		ProductBrand selected = proBrandRepo.findByUUID(genID);
+	public Brand updateByUUID(UUID genID, Brand proBrandRequest) {
+		Brand selected = proBrandRepo.findByUUID(genID);
 		if (selected != null) {
 			selected.setCountry(proBrandRequest.getCountry());
 			selected.setName(proBrandRequest.getName());
-			ProductBrand updated = proBrandRepo.save(selected);
+			Brand updated = proBrandRepo.save(selected);
 			if (updated != null) {
 				return updated;
 			} else {
@@ -118,7 +118,7 @@ public class ProductBrandServiceImpl implements ProductBrandService {
 	@Override
 	@Transactional
 	public void deleteByUUID(UUID genID) {
-		ProductBrand selected = proBrandRepo.findByUUID(genID);
+		Brand selected = proBrandRepo.findByUUID(genID);
 		if (selected != null) {
 			proBrandRepo.deleteById(selected.getId());
 		} else {
@@ -141,7 +141,7 @@ public class ProductBrandServiceImpl implements ProductBrandService {
 //				 Get all cells
 			Iterator<Cell> cellIterator = nextRow.cellIterator();
 			// Read cells and set value for object
-			ProductBrand proBrand = new ProductBrand();
+			Brand proBrand = new Brand();
 			while (cellIterator.hasNext()) {
 				// Read cell
 				Cell cell = cellIterator.next();

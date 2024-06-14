@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hongha.ver1.entities.ProductBrand;
+import com.hongha.ver1.entities.Brand;
 import com.hongha.ver1.entities.History;
 import com.hongha.ver1.entities.enums.EAction;
 import com.hongha.ver1.utils.BeanUtil;
@@ -20,20 +20,20 @@ import lombok.RequiredArgsConstructor;
 public class ProductBrandListener {
 	@PostPersist
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	private void afterCreate(ProductBrand target) {
+	private void afterCreate(Brand target) {
 		perform(EAction.CREATE, target.getId());
 	}
 
 	@PostUpdate
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	private void afterUpdate(ProductBrand target) {
+	private void afterUpdate(Brand target) {
 		perform(EAction.UPDATE, target.getId());
 		// clear cache
 	}
 
 	@PostRemove
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	private void afterRemove(ProductBrand target) {
+	private void afterRemove(Brand target) {
 		perform(EAction.DELETE, target.getId());
 		// clear cache
 	}
@@ -41,6 +41,6 @@ public class ProductBrandListener {
 	@Transactional(propagation = Propagation.MANDATORY)
 	private void perform(EAction action, Long id) {
 		EntityManager entityManager = BeanUtil.getBean(EntityManager.class);
-		entityManager.persist(new History(ProductBrand.class.getName(), action, String.valueOf(id)));
+		entityManager.persist(new History(Brand.class.getName(), action, String.valueOf(id)));
 	}
 }

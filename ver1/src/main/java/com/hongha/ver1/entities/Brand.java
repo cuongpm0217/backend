@@ -18,7 +18,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductBrand extends BaseEntityAudit {
+public class Brand extends BaseEntityAudit {
 
 	private static final long serialVersionUID = 1L;
 	@Column(nullable = false)

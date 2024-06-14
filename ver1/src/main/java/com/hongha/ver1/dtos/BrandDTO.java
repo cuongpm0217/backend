@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductBrandDTO extends BaseDTO{
+public class BrandDTO extends BaseDTO{
 	private String name;
 	private String country;
 }
