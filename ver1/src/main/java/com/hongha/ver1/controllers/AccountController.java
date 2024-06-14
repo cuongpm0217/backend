@@ -31,8 +31,6 @@ import com.hongha.ver1.services.AccountService;
 public class AccountController {
 	@Autowired
 	private ModelMapper mapper;
-//	@Autowired
-//	private UserDetailsService userService;
 	@Autowired
 	private AccountService accountService;
 
@@ -52,34 +50,32 @@ public class AccountController {
 		return mapper.map(accountCreated, AccountDTO.class);
 	}
 
-	@GetMapping("/id={id}")
-	@ResponseBody
-	public AccountDTO getOne(@PathVariable("id") long id) {
-		Account acc = accountService.findById(id);
-		AccountDTO accDTO = mapper.map(acc, AccountDTO.class);
-		return accDTO;
-	}
-
+	// use id
+	/*
+	 * @GetMapping("/id={id}")
+	 * 
+	 * @ResponseBody public AccountDTO getOne(@PathVariable("id") long id) { Account
+	 * acc = accountService.findById(id); AccountDTO accDTO = mapper.map(acc,
+	 * AccountDTO.class); return accDTO; }
+	 * 
+	 * @PutMapping("/update-id={id}")
+	 * 
+	 * @ResponseStatus(HttpStatus.OK) public void update(@PathVariable("id") long
+	 * id, @RequestBody AccountDTO accountDTO) { if (!Objects.equals(id,
+	 * accountDTO.getId())) { throw new IllegalArgumentException("IDs don't match");
+	 * } Account account = mapper.map(accountDTO, Account.class);
+	 * accountService.update(id, account); }
+	 * 
+	 * @DeleteMapping("/delete-id={id}")
+	 * 
+	 * @ResponseStatus(HttpStatus.OK) public void delete(@PathVariable("id") long
+	 * id) { accountService.delete(id); }
+	 */
+	// use uuid
 	@GetMapping("/uuid={uuid}")
 	@ResponseBody
 	public AccountDTO getOneByUUID(@PathVariable("uuid") UUID uuid) {
 		return mapper.map(accountService.findByUUID(uuid), AccountDTO.class);
-	}
-
-	@PutMapping("/update-id={id}")
-	@ResponseStatus(HttpStatus.OK)
-	public void update(@PathVariable("id") long id, @RequestBody AccountDTO accountDTO) {
-		if (!Objects.equals(id, accountDTO.getId())) {
-			throw new IllegalArgumentException("IDs don't match");
-		}
-		Account account = mapper.map(accountDTO, Account.class);
-		accountService.update(id, account);
-	}
-
-	@DeleteMapping("/delete-id={id}")
-	@ResponseStatus(HttpStatus.OK)
-	public void delete(@PathVariable("id") long id) {
-		accountService.delete(id);
 	}
 
 	@PutMapping("/update-acc={uuid}")

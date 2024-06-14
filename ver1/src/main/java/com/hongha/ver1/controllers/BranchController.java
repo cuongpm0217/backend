@@ -9,7 +9,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
-
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,8 +31,6 @@ import com.hongha.ver1.services.BranchService;
 public class BranchController {
 	@Autowired
 	private ModelMapper mapper;
-//	@Autowired
-//	private UserDetailsService userService;
 	@Autowired
 	private BranchService branchService;
 
@@ -42,14 +39,14 @@ public class BranchController {
 		this.branchService = branchService;
 	}
 
-	@GetMapping
+	@GetMapping("/")
 	@ResponseBody
 	public List<BranchDTO> getAll() {
 		return branchService.getAll().stream().map(branch -> mapper.map(branch, BranchDTO.class))
 				.collect(Collectors.toList());
 	}
 
-	@PostMapping
+	@PostMapping("/create")
 	@ResponseStatus(HttpStatus.CREATED)
 	@ResponseBody
 	public BranchDTO save(@RequestBody BranchDTO branchDTO) {
@@ -57,46 +54,46 @@ public class BranchController {
 		Branch branchCreated = branchService.save(branch);
 		return mapper.map(branchCreated, BranchDTO.class);
 	}
-
-	@GetMapping(value = "/{id}")
-	@ResponseBody
-	public BranchDTO getOne(@PathVariable("id") long id) {
-		return mapper.map(branchService.findById(id), BranchDTO.class);
-	}
-
-	@GetMapping(value = "/{uuid}")
+	//use id	
+//	@GetMapping(value = "/id={id}")
+//	@ResponseBody
+//	public BranchDTO getOne(@PathVariable("id") long id) {
+//		return mapper.map(branchService.findById(id), BranchDTO.class);
+//	}
+//
+//	@PutMapping(value = "/update-id={id}")
+//	@ResponseStatus(HttpStatus.OK)
+//	public void update(@PathVariable("id") long id, @RequestBody BranchDTO branchDTO) {
+//		if (!Objects.equals(id, branchDTO.getId())) {
+//			throw new IllegalArgumentException("ID don't match");
+//		}
+//		Branch branch = mapper.map(branchDTO, Branch.class);
+//		branchService.update(id, branch);
+//	}
+//
+//	@DeleteMapping(value = "/delete-id={id}")
+//	@ResponseStatus(HttpStatus.OK)
+//	public void delete(@PathVariable("id") long id) {
+//		branchService.delete(id);
+//	}
+	//use uuid
+	@GetMapping(value = "/uuid={uuid}")
 	@ResponseBody
 	public BranchDTO getOneByUUID(@PathVariable("uuid") UUID uuid) {
 		return mapper.map(branchService.findByUUID(uuid), BranchDTO.class);
 	}
 
-	@PutMapping(value = "/{id}")
-	@ResponseStatus(HttpStatus.OK)
-	public void update(@PathVariable("id") long id, @RequestBody BranchDTO branchDTO) {
-		if (!Objects.equals(id, branchDTO.getId())) {
-			throw new IllegalArgumentException("IDs don't match");
-		}
-		Branch branch = mapper.map(branchDTO, Branch.class);
-		branchService.update(id, branch);
-	}
-
-	@DeleteMapping(value = "/{id}")
-	@ResponseStatus(HttpStatus.OK)
-	public void delete(@PathVariable("id") long id) {
-		branchService.delete(id);
-	}
-
-	@PutMapping(value = "/{uuid}")
+	@PutMapping(value = "/update-uid={uuid}")
 	@ResponseStatus(HttpStatus.OK)
 	public void updateByUUID(@PathVariable("uuid") UUID uuid, @RequestBody BranchDTO branchDTO) {
 		if (!Objects.equals(uuid, branchDTO.getGenId())) {
-			throw new IllegalArgumentException("UUIDs don't match");
+			throw new IllegalArgumentException("UUID don't match");
 		}
 		Branch branch = mapper.map(branchDTO, Branch.class);
 		branchService.updateByUUID(uuid, branch);
 	}
 
-	@DeleteMapping(value = "/{uuid}")
+	@DeleteMapping(value = "/delete-uid={uuid}")
 	@ResponseStatus(HttpStatus.OK)
 	public void deleteByUUID(@PathVariable("uuid") UUID uuid) {
 		branchService.deleteByUUID(uuid);
