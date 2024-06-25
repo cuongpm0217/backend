@@ -25,6 +25,6 @@ public class ProductType extends BaseEntityAudit {
 	private static final long serialVersionUID = 1L;
 	@Enumerated(EnumType.STRING)
 	@Column(unique = true, nullable = false)
-	private EProductType name = EProductType.EProductType_Product;// set as default
+	private EProductType name = EProductType.EProductType_PRODUCT;// set as default
 
 }

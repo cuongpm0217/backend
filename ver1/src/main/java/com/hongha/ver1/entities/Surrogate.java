@@ -24,6 +24,8 @@ public class Surrogate extends BaseEntityAudit{
 	@Column(nullable = false)
 	private String name;
 	@Column
+	private boolean gender=true;//default man
+	@Column
 	private String phone;
 	@Column
 	private String address;

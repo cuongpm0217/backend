@@ -21,7 +21,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Purchase extends BaseEntityAudit{
-	
 	private static final long serialVersionUID = 1L;
 	@Column
 	private String code;
@@ -35,4 +34,6 @@ public class Purchase extends BaseEntityAudit{
 	private long employeeId;	
 	@Column(name="branch_id")
 	private long branchId;
+	@Column
+	private double total;
 }

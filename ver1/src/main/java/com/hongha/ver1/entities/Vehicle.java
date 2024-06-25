@@ -1,6 +1,6 @@
 package com.hongha.ver1.entities;
 
-import com.hongha.ver1.entities.listeners.ProposalListener;
+import com.hongha.ver1.entities.listeners.VehicleListener;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,23 +12,21 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@EntityListeners(ProposalListener.class)
-@Table(name = "_proposal")
+@EntityListeners(VehicleListener.class)
+@Table(name="_vehicle")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Proposal extends BaseEntityAudit {
-
+public class Vehicle extends BaseEntityAudit {
+	
 	private static final long serialVersionUID = 1L;
+	@Column(name="license_plate")
+	private String licensePlate;
 	@Column
-	private long customerId;	
-	@Column(name="vehicle_id")
-	private long vehicleId;
-	@Column
-	private long branchId;
-	@Column
-	private long employeeId;
-	@Column
-	private double total;
+	private String model;
+	@Column(name="vehicle_type_id")
+	private String vehicleTypeId;
+	@Column(name="yearOfFactory")
+	private int yearOfFactory;
 }

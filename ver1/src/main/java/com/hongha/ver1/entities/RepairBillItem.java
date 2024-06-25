@@ -1,7 +1,5 @@
 package com.hongha.ver1.entities;
 
-import java.math.BigInteger;
-
 import com.hongha.ver1.entities.listeners.RepairBillItemListener;
 
 import jakarta.persistence.Column;
@@ -30,7 +28,7 @@ public class RepairBillItem extends BaseEntityAudit{
 	@Column
 	private int quantity;
 	@Column
-	private BigInteger price;
+	private double price;
 	@Column
 	private int warranty;// follow month
 	@Column

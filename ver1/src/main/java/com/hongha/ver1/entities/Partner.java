@@ -31,8 +31,8 @@ public class Partner extends BaseEntityAudit {
 	private String phone1;
 	@Column
 	private String phone2;
-	@Column
+	@Column(name="bank_account_no")
 	private String bankAccountNo;
-	@Column
-	private String bank;
+	@Column(name="bank_id")
+	private long bankId;
 }

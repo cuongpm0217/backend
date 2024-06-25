@@ -1,7 +1,5 @@
 package com.hongha.ver1.entities;
 
-import java.math.BigInteger;
-
 import com.hongha.ver1.entities.listeners.ProductListener;
 
 import jakarta.persistence.Column;
@@ -27,13 +25,14 @@ public class Product extends BaseEntityAudit {
 	private String name;
 	@Column(name = "product_type_id", nullable = false)
 	private long productTypeId;
-	@Column(name = "product_brand_id")
-	private long productBrandId;
+	@Column(name = "brand_id")
+	private long brandId;
 	@Column
-	private BigInteger price;// saling price
+	private double price;// saling price
 	@Column(name = "currency_id")
 	private long currencyId;
 	@Column(name = "unit_id")
 	private long unitId;
-
+	@Column
+	private String country;
 }

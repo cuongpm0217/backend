@@ -20,31 +20,26 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RepairBill extends BaseEntityAudit{
-	
+public class RepairBill extends BaseEntityAudit {
 	private static final long serialVersionUID = 1L;
 	@Column
 	private String code;
 	@Column
 	private String detail;
-	@Column
+	@Column(name = "customer_id")
 	private long customerId;
-	@Column
+	@Column(name = "started_date")
 	private Date startedDate;
-	@Column
-	private Date endDate;
-	@Column
-	private String licensePlate;
-	@Column
-	private String vehicle;
-	@Column
+	@Column(name = "end_date")
+	private Date endDate = startedDate;//default
+	@Column(name = "vehicle_id")
+	private long vehicleId;
+	@Column(name = "branch_id")
 	private long branchId;
-	@Column
+	@Column(name = "employee_id")
 	private long employeeId;
-	@Column(name="surrogate_id")
+	@Column(name = "surrogate_id")
 	private long surrogateId;
-	//default payer = surrogate
-	@Column(name="payer_id")
-	private long payerId;
-	
+	@Column
+	private double total;
 }

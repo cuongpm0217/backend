@@ -1,7 +1,5 @@
 package com.hongha.ver1.entities;
 
-import java.math.BigInteger;
-
 import com.hongha.ver1.entities.listeners.ProposalItemListener;
 
 import jakarta.persistence.Column;
@@ -30,7 +28,7 @@ public class ProposalItem extends BaseEntityAudit{
 	@Column
 	private int quantity;
 	@Column
-	private BigInteger price;
+	private double price;
 	@Column
 	private int warranty;
 	@Column

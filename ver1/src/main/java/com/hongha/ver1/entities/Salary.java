@@ -1,7 +1,5 @@
 package com.hongha.ver1.entities;
 
-import java.math.BigInteger;
-
 import com.hongha.ver1.entities.listeners.SalaryListener;
 
 import jakarta.persistence.Column;
@@ -20,16 +18,16 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Salary extends BaseEntityAudit{
-	
+public class Salary extends BaseEntityAudit {
+
 	private static final long serialVersionUID = 1L;
 	@Column
 	private String name;
-	@Column
+	@Column(name = "salary_type_id", nullable = false)
 	private long salaryTypeId;
-	@Column
+	@Column(name = "employee_id")
 	private long employeeId;
 	@Column
-	private BigInteger wage;
-	
+	private double wage;
+
 }
