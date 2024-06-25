@@ -9,7 +9,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class BrandDTO extends BaseDTO{
+public class VehicleTypeDTO extends BaseDTO{
 	private String name;
-	private int no;
 }

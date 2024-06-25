@@ -11,6 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PositionDTO extends BaseDTO {
 	private String name;
-
-	private int level = 8;// 1 tgd 2 ptgd 3 gd 4 pgd 5 tp 6 pp 7 t nhom 8 nv
+	private String vname;
+	private int level;
 }

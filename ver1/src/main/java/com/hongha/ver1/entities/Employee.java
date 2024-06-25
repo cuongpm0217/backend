@@ -25,17 +25,19 @@ public class Employee extends BaseEntityAudit {
 	private static final long serialVersionUID = 1L;
 	@Column
 	private String name;
-	@Column
+	@Column(name="user_id")
 	private long userId;
-	@Column
+	@Column(name="position_id")
 	private long positionId;
-	@Column
+	@Column(name="department_id")
 	private long departmentId;
-	@Column
+	@Column(name="branch_id")
 	private long branchId;
 	@Column
 	private Date dob;
 	@Column
+	private boolean gender;
+	@Column(name = "national_id")
 	private String nationalID;/// cmt cccd
 	@Column
 	private String phone1;

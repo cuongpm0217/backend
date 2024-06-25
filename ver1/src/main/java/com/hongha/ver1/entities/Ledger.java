@@ -1,7 +1,5 @@
 package com.hongha.ver1.entities;
 
-import java.math.BigInteger;
-
 import com.hongha.ver1.entities.listeners.LedgerListener;
 
 import jakarta.persistence.Column;
@@ -23,14 +21,16 @@ import lombok.Setter;
 public class Ledger extends BaseEntityAudit{
 	
 	private static final long serialVersionUID = 1L;
-	@Column
-	private long accountingVoucherId;//code PM0000001.... 
+	@Column(name="voucher_code")
+	private long voucherCode;//code PM0000001....
+	@Column(name="voucher_id")
+	private long voucherId;
 	@Column
 	private long accountingId;
 	@Column
 	private String detail;
 	@Column
-	private BigInteger credit;//tk có
+	private double credit;//tk có
 	@Column
-	private BigInteger debit;//tk nợ
+	private double debit;//tk nợ
 }

@@ -1,6 +1,7 @@
 package com.hongha.ver1.dtos;
 
 import java.util.Date;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,10 @@ public class RepairBillDTO extends BaseDTO {
 	private long customerId;
 	private Date startedDate;
 	private Date endDate;
-	private String licensePlate;
-	private String vehicle;
-
+	private long vehicleId;
+	private long branchId;
+	private long employeeId;
+	private long surrogateId;
+	private double total;
+	private int no;
 }

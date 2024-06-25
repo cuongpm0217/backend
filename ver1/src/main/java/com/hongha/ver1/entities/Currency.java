@@ -21,11 +21,11 @@ import lombok.Setter;
 public class Currency extends BaseEntityAudit{
 	private static final long serialVersionUID = 1L;
 	@Column(nullable = false)
-	private String name;//VND
+	private String code;//VND
 	@Column
 	private String fullName;//Việt Nam Đồng
 	@Column
 	private String symbol;//₫
 	@Column(name="exchange_VND")
-	private long exchangeVND;//vnd > 1 usd > 24500
+	private double exchangeVND;//vnd > 1 usd > 24500.0
 }

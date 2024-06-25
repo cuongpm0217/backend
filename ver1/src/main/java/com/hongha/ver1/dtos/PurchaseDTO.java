@@ -16,5 +16,8 @@ public class PurchaseDTO extends BaseDTO{
 	private String detail;
 	private Date dateReceipt;
 	private long partnerId;
-	private long employeeId;	
+	private long employeeId;
+	private long branchId;
+	private double total;
+	private int no;
 }

@@ -13,16 +13,14 @@ import lombok.Setter;
 
 @Entity
 @EntityListeners(ProductBrandListener.class)
-@Table(name = "_product_brand")
+@Table(name = "_brand")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Brand extends BaseEntityAudit {
-
 	private static final long serialVersionUID = 1L;
 	@Column(nullable = false)
 	private String name;
-	@Column
-	private String country;
+	
 }

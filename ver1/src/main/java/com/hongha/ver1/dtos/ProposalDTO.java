@@ -11,6 +11,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ProposalDTO extends BaseDTO {
 	private long customerId;
-	private String liencePlate;
-	private String vehicle;
+	private long vehicleId;	
+	private long branchId;	
+	private long employeeId;
+	private double total;
+	private int no;
 }

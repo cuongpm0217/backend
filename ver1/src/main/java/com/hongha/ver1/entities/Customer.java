@@ -1,5 +1,7 @@
 package com.hongha.ver1.entities;
 
+import java.util.Date;
+
 import com.hongha.ver1.entities.listeners.CustomerListener;
 
 import jakarta.persistence.Column;
@@ -22,6 +24,10 @@ public class Customer extends BaseEntityAudit{
 	private static final long serialVersionUID = 1L;
 	@Column(nullable = false)
 	private String name;
+	@Column
+	private Date dob;
+	@Column
+	private Boolean gender=null;
 	@Column
 	private String address1="Giao Thủy, Nam Định";//set as default
 	@Column

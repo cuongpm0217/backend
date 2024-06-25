@@ -16,5 +16,5 @@ public class PartnerDTO extends BaseDTO {
 	private String phone1;
 	private String phone2;
 	private String bankAccountNo;
-	private String bank;
+	private long bankId;
 }

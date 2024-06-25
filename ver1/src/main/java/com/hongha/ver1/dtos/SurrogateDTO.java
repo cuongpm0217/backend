@@ -11,8 +11,11 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SurrogateDTO extends BaseDTO {
 	private String name;
+	private boolean gender;
 	private String phone;
 	private String address;
 	private String company;
 	private long customerId;
+	private int no;
+	private String tittle;
 }

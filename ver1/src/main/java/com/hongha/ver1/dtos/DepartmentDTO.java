@@ -11,6 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class DepartmentDTO extends BaseDTO {
 	private String name;
+	private String vname;
 	private long branchId;
 	private String code;
 }
