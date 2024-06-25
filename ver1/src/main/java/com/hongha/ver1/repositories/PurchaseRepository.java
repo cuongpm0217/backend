@@ -1,16 +1,18 @@
 package com.hongha.ver1.repositories;
 
+import java.util.Date;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.hongha.ver1.entities.Purchase;
 
 @Repository
-public interface PurchaseRepository extends JpaRepository<Purchase, Long>{
-	@Query(value = "select b from _purchase b where b._gen_id= :uuid", nativeQuery = true)
-	Purchase findByUUID(@Param("uuid") UUID gen_id);
+public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
+	Purchase findByGenId(UUID genId);
+
+	Page<Purchase> findByPartnerIdAndCreateAtBetween(long partnerId, Date fromDate, Date toDate, Pageable paging);
 }

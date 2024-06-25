@@ -11,6 +11,6 @@ import com.hongha.ver1.entities.Product;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-	@Query(value = "select b from _product b where b._gen_id= :uuid", nativeQuery = true)
+	@Query(value = "select b from _product b where b.gen_id= :uuid", nativeQuery = true)
 	Product findByUUID(@Param("uuid") UUID gen_id);
 }
