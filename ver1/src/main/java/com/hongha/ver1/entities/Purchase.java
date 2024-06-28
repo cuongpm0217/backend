@@ -1,7 +1,5 @@
 package com.hongha.ver1.entities;
 
-import java.util.Date;
-
 import com.hongha.ver1.entities.listeners.PurchaseListener;
 
 import jakarta.persistence.Column;
@@ -26,8 +24,6 @@ public class Purchase extends BaseEntityAudit{
 	private String code;
 	@Column
 	private String detail;	
-	@Column(name="date_receipt")
-	private Date dateReceipt;
 	@Column(name="partner_id")
 	private long partnerId;
 	@Column(name="employee_id")
