@@ -11,9 +11,10 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ProductDTO extends BaseDTO {
 	private String name;
-	private long productTypeId;
+	private long categoryId;
 	private long brandId;
 	private double price;
+	private double salePrice;
 	private long currencyId;
 	private long unitId;
 	private String country;

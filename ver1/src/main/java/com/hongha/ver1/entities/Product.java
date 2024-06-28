@@ -19,16 +19,18 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Product extends BaseEntityAudit {
-
 	private static final long serialVersionUID = 1L;
+
 	@Column(nullable = false)
 	private String name;
-	@Column(name = "product_type_id", nullable = false)
-	private long productTypeId;
+	@Column(name = "category_id")
+	private long productCategoryId;
 	@Column(name = "brand_id")
 	private long brandId;
 	@Column
 	private double price;// saling price
+	@Column(name = "sale_price")
+	private double salePrice;
 	@Column(name = "currency_id")
 	private long currencyId;
 	@Column(name = "unit_id")
