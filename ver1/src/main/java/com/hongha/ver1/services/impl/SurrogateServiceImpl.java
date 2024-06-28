@@ -1,9 +1,12 @@
 package com.hongha.ver1.services.impl;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,7 +15,7 @@ import com.hongha.ver1.repositories.SurrogateRepository;
 import com.hongha.ver1.services.SurrogateService;
 
 @Service
-public class SurrogateServiceImpl implements SurrogateService{
+public class SurrogateServiceImpl implements SurrogateService {
 	@Autowired
 	private SurrogateRepository surRepo;
 
@@ -40,17 +43,12 @@ public class SurrogateServiceImpl implements SurrogateService{
 
 	@Override
 	public Surrogate findByUUID(UUID genId) {
-		Surrogate selected = surRepo.findByUUID(genId);
+		Surrogate selected = surRepo.findByGenId(genId);
 		if (selected != null) {
 			return selected;
 		} else {
 			throw new RuntimeException("Not found Surrogate:" + String.valueOf(genId));
 		}
-	}
-
-	@Override
-	public List<Surrogate> getAll() {
-		return surRepo.findAll();
 	}
 
 	@Override
@@ -60,7 +58,7 @@ public class SurrogateServiceImpl implements SurrogateService{
 		if (selected != null) {
 			updateObj(surRequest, selected);
 			return updateObj(surRequest, selected);
-			
+
 		} else {
 			throw new RuntimeException("Not found Surrogate:" + String.valueOf(id));
 		}
@@ -94,7 +92,7 @@ public class SurrogateServiceImpl implements SurrogateService{
 	@Override
 	@Transactional
 	public Surrogate updateByUUID(UUID genID, Surrogate surRequest) {
-		Surrogate selected = surRepo.findByUUID(genID);
+		Surrogate selected = surRepo.findByGenId(genID);
 		if (selected != null) {
 			return updateObj(surRequest, selected);
 		} else {
@@ -105,11 +103,48 @@ public class SurrogateServiceImpl implements SurrogateService{
 	@Override
 	@Transactional
 	public void deleteByUUID(UUID genID) {
-		Surrogate selected = surRepo.findByUUID(genID);
+		Surrogate selected = surRepo.findByGenId(genID);
 		if (selected != null) {
 			surRepo.deleteById(selected.getId());
 		} else {
 			throw new RuntimeException("Not found Surrogate:" + String.valueOf(genID));
 		}
+	}
+
+	@Override
+	public Page<Surrogate> getAll(int pageNo, int pageSize, String sortBy, String sortType) {
+		Pageable pageable = genPageable(pageNo, pageSize, sortBy, sortType);
+		Page<Surrogate> page = surRepo.findAll(pageable);
+		return page;
+	}
+
+	@Override
+	public Page<Surrogate> findByName(String name, int pageNo, int pageSize, String sortBy, String sortType) {
+		Pageable pageable = genPageable(pageNo, pageSize, sortBy, sortType);
+		Page<Surrogate> page = surRepo.findByName(name, pageable);
+		return page;
+	}
+
+	@Override
+	public Page<Surrogate> findByPhone(String phone, int pageNo, int pageSize, String sortBy, String sortType) {
+		Pageable pageable = genPageable(pageNo, pageSize, sortBy, sortType);
+		Page<Surrogate> page = surRepo.findByPhone(phone, pageable);
+		return page;
+	}
+
+	@Override
+	public Page<Surrogate> findByCustomerId(long customerId, int pageNo, int pageSize, String sortBy, String sortType) {
+		Pageable pageable = genPageable(pageNo, pageSize, sortBy, sortType);
+		Page<Surrogate> page = surRepo.findByCustomerId(customerId, pageable);
+		return page;
+	}
+
+	private Pageable genPageable(int pageNo, int pageSize, String sortBy, String sortType) {
+		Sort sort = Sort.by(sortBy);
+		if (sortType.equals("des")) {
+			sort = sort.descending();
+		}
+		Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+		return pageable;
 	}
 }

@@ -1,9 +1,12 @@
 package com.hongha.ver1.services.impl;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,7 +15,7 @@ import com.hongha.ver1.repositories.SalaryRepository;
 import com.hongha.ver1.services.SalaryService;
 
 @Service
-public class SalaryServiceImpl implements SalaryService{
+public class SalaryServiceImpl implements SalaryService {
 	@Autowired
 	private SalaryRepository salRepo;
 
@@ -40,17 +43,12 @@ public class SalaryServiceImpl implements SalaryService{
 
 	@Override
 	public Salary findByUUID(UUID genId) {
-		Salary selected = salRepo.findByUUID(genId);
+		Salary selected = salRepo.findByGenID(genId);
 		if (selected != null) {
 			return selected;
 		} else {
 			throw new RuntimeException("Not found Salary:" + String.valueOf(genId));
 		}
-	}
-
-	@Override
-	public List<Salary> getAll() {
-		return salRepo.findAll();
 	}
 
 	@Override
@@ -60,7 +58,7 @@ public class SalaryServiceImpl implements SalaryService{
 		if (selected != null) {
 			updateObj(salRequest, selected);
 			return updateObj(salRequest, selected);
-			
+
 		} else {
 			throw new RuntimeException("Not found Salary:" + String.valueOf(id));
 		}
@@ -93,7 +91,7 @@ public class SalaryServiceImpl implements SalaryService{
 	@Override
 	@Transactional
 	public Salary updateByUUID(UUID genID, Salary salRequest) {
-		Salary selected = salRepo.findByUUID(genID);
+		Salary selected = salRepo.findByGenID(genID);
 		if (selected != null) {
 			return updateObj(salRequest, selected);
 		} else {
@@ -104,11 +102,23 @@ public class SalaryServiceImpl implements SalaryService{
 	@Override
 	@Transactional
 	public void deleteByUUID(UUID genID) {
-		Salary selected = salRepo.findByUUID(genID);
+		Salary selected = salRepo.findByGenID(genID);
 		if (selected != null) {
 			salRepo.deleteById(selected.getId());
 		} else {
 			throw new RuntimeException("Not found Salary:" + String.valueOf(genID));
 		}
 	}
+
+	@Override
+	public Page<Salary> getAll(int pageNo, int pageSize, String sortBy, String sortType) {
+		Sort sort = Sort.by(sortBy);
+		if (sortType.equals("des")) {
+			sort = sort.descending();
+		}
+		Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+		Page<Salary> page = salRepo.findAll(pageable);
+		return page;
+	}
+
 }

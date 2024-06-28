@@ -1,7 +1,10 @@
 package com.hongha.ver1.services;
 
 import java.util.List;
+
 import java.util.UUID;
+
+import org.springframework.data.domain.Page;
 
 import com.hongha.ver1.entities.Product;
 
@@ -21,4 +24,10 @@ public interface ProductService {
 	void deleteByUUID(UUID genID);
 
 	Product updateByUUID(UUID genID, Product productRequest);
+
+	Page<Product> getAll(int pageNo, int pageSize, String sortBy, String sortType);
+
+	Page<Product> findByProductCategoryId(long categoryId, int pageNo, int pageSize, String sortBy, String sortType);
+
+	Page<Product> findByProductTypeId(long typeId, int pageNo, int pageSize, String sortBy, String sortType);
 }

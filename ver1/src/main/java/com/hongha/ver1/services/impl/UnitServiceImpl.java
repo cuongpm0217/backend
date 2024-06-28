@@ -1,9 +1,12 @@
 package com.hongha.ver1.services.impl;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,7 +15,7 @@ import com.hongha.ver1.repositories.UnitRepository;
 import com.hongha.ver1.services.UnitService;
 
 @Service
-public class UnitServiceImpl implements UnitService{
+public class UnitServiceImpl implements UnitService {
 	@Autowired
 	private UnitRepository unitRepo;
 
@@ -40,17 +43,12 @@ public class UnitServiceImpl implements UnitService{
 
 	@Override
 	public Unit findByUUID(UUID genId) {
-		Unit selected = unitRepo.findByUUID(genId);
+		Unit selected = unitRepo.findByGenId(genId);
 		if (selected != null) {
 			return selected;
 		} else {
 			throw new RuntimeException("Not found Unit:" + String.valueOf(genId));
 		}
-	}
-
-	@Override
-	public List<Unit> getAll() {
-		return unitRepo.findAll();
 	}
 
 	@Override
@@ -60,7 +58,7 @@ public class UnitServiceImpl implements UnitService{
 		if (selected != null) {
 			updateObj(unitRequest, selected);
 			return updateObj(unitRequest, selected);
-			
+
 		} else {
 			throw new RuntimeException("Not found Unit:" + String.valueOf(id));
 		}
@@ -90,7 +88,7 @@ public class UnitServiceImpl implements UnitService{
 	@Override
 	@Transactional
 	public Unit updateByUUID(UUID genID, Unit unitRequest) {
-		Unit selected = unitRepo.findByUUID(genID);
+		Unit selected = unitRepo.findByGenId(genID);
 		if (selected != null) {
 			return updateObj(unitRequest, selected);
 		} else {
@@ -101,11 +99,34 @@ public class UnitServiceImpl implements UnitService{
 	@Override
 	@Transactional
 	public void deleteByUUID(UUID genID) {
-		Unit selected = unitRepo.findByUUID(genID);
+		Unit selected = unitRepo.findByGenId(genID);
 		if (selected != null) {
 			unitRepo.deleteById(selected.getId());
 		} else {
 			throw new RuntimeException("Not found Unit:" + String.valueOf(genID));
 		}
+	}
+
+	@Override
+	public Slice<Unit> findByName(String name, int pageNo, int pageSize, String sortBy, String sortType) {
+		Pageable pageable = genPageable(pageNo, pageSize, sortBy, sortType);
+		Slice<Unit> page = unitRepo.findByName(name, pageable);
+		return page;
+	}
+
+	@Override
+	public Slice<Unit> getAll(int pageNo, int pageSize, String sortBy, String sortType) {
+		Pageable pageable = genPageable(pageNo, pageSize, sortBy, sortType);
+		Slice<Unit> page = unitRepo.findAll(pageable);
+		return page;
+	}
+
+	private Pageable genPageable(int pageNo, int pageSize, String sortBy, String sortType) {
+		Sort sort = Sort.by(sortBy);
+		if (sortType.equals("des")) {
+			sort = sort.descending();
+		}
+		Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+		return pageable;
 	}
 }

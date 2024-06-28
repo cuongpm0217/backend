@@ -1,7 +1,8 @@
 package com.hongha.ver1.services;
 
-import java.util.List;
 import java.util.UUID;
+
+import org.springframework.data.domain.Slice;
 
 import com.hongha.ver1.entities.Unit;
 
@@ -12,8 +13,6 @@ public interface UnitService {
 
 	Unit findByUUID(UUID genId);
 
-	List<Unit> getAll();
-
 	Unit update(long id, Unit unitRequest);
 
 	void delete(long id);
@@ -21,4 +20,8 @@ public interface UnitService {
 	Unit updateByUUID(UUID genID, Unit unitRequest);
 
 	void deleteByUUID(UUID genID);
+
+	Slice<Unit> findByName(String name, int pageNo, int pageSize, String sortBy, String sortType);
+
+	Slice<Unit> getAll(int pageNo, int pageSize, String sortBy, String sortType);
 }

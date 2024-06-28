@@ -40,7 +40,7 @@ public class SalaryTypeServiceImpl implements SalaryTypeService{
 
 	@Override
 	public SalaryType findByUUID(UUID genId) {
-		SalaryType selected = salTypeRepo.findByUUID(genId);
+		SalaryType selected = salTypeRepo.findByGenId(genId);
 		if (selected != null) {
 			return selected;
 		} else {
@@ -90,7 +90,7 @@ public class SalaryTypeServiceImpl implements SalaryTypeService{
 	@Override
 	@Transactional
 	public SalaryType updateByUUID(UUID genID, SalaryType salTypeRequest) {
-		SalaryType selected = salTypeRepo.findByUUID(genID);
+		SalaryType selected = salTypeRepo.findByGenId(genID);
 		if (selected != null) {
 			return updateObj(salTypeRequest, selected);
 		} else {
@@ -101,7 +101,7 @@ public class SalaryTypeServiceImpl implements SalaryTypeService{
 	@Override
 	@Transactional
 	public void deleteByUUID(UUID genID) {
-		SalaryType selected = salTypeRepo.findByUUID(genID);
+		SalaryType selected = salTypeRepo.findByGenId(genID);
 		if (selected != null) {
 			salTypeRepo.deleteById(selected.getId());
 		} else {

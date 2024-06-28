@@ -3,6 +3,8 @@ package com.hongha.ver1.services;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+
 import com.hongha.ver1.entities.RepairBillItem;
 
 public interface RepairBillItemService {
@@ -21,4 +23,6 @@ public interface RepairBillItemService {
 	RepairBillItem updateByUUID(UUID genID, RepairBillItem repairBillItemRequest);
 
 	void deleteByUUID(UUID genID);
+	
+	Page<RepairBillItem> findByRepairBillId(long repairBillId,int pageNo, int pageSize, String sortBy, String sortType);
 }

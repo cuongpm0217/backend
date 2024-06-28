@@ -1,8 +1,10 @@
 package com.hongha.ver1.services;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
 import com.hongha.ver1.entities.Ledger;
 
 public interface LedgerService {
@@ -21,4 +23,8 @@ public interface LedgerService {
 	Ledger updateByUUID(UUID genID, Ledger ledgerRequest);
 
 	void deleteByUUID(UUID genID);
+
+	Page<Ledger> findByCreateAtBetween(Date fromDate, Date toDate, int pageSize, String sortBy, String sortType);
+
+	Page<Ledger> getAll(int pageNo, int pageSize, String sortBy, String sortType);
 }

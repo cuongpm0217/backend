@@ -39,7 +39,7 @@ public class CustomerTypeServiceImpl implements CustomerTypeService {
 
 	@Override
 	public CustomerType findByUUID(UUID genId) {
-		CustomerType selected = cusTypeRepo.findByUUID(genId);
+		CustomerType selected = cusTypeRepo.findByGenId(genId);
 		if (selected != null) {
 			return selected;
 		} else {
@@ -96,7 +96,7 @@ public class CustomerTypeServiceImpl implements CustomerTypeService {
 	@Override
 	@Transactional
 	public CustomerType updateByUUID(UUID genID, CustomerType customerTypeRequest) {
-		CustomerType updateObj = cusTypeRepo.findByUUID(genID);
+		CustomerType updateObj = cusTypeRepo.findByGenId(genID);
 		if (updateObj != null) {
 			updateObj.setName(customerTypeRequest.getName());
 			CustomerType updated = cusTypeRepo.save(updateObj);
@@ -113,7 +113,7 @@ public class CustomerTypeServiceImpl implements CustomerTypeService {
 	@Override
 	@Transactional
 	public void deleteByUUID(UUID genID) {
-		CustomerType updateObj = cusTypeRepo.findByUUID(genID);
+		CustomerType updateObj = cusTypeRepo.findByGenId(genID);
 		if (updateObj != null) {
 			cusTypeRepo.deleteById(updateObj.getId());
 		} else {

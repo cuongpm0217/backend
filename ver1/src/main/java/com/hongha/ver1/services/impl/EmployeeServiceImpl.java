@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +44,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public Employee findByUUID(UUID genId) {
-		Employee selected = empRepo.findByUUID(genId);
+		Employee selected = empRepo.findByGenId(genId);
 		if (selected != null) {
 			return selected;
 		} else {
@@ -95,7 +99,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	@Transactional
 	public Employee updateByUUID(UUID genID, Employee employeeRequest) {
-		Employee selected = empRepo.findByUUID(genID);
+		Employee selected = empRepo.findByGenId(genID);
 		if (selected != null) {
 			selected.setAddress1(employeeRequest.getAddress1());
 			selected.setAddress2(employeeRequest.getAddress2());
@@ -122,11 +126,50 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	@Transactional
 	public void deleteByUUID(UUID genID) {
-		Employee selected = empRepo.findByUUID(genID);
+		Employee selected = empRepo.findByGenId(genID);
 		if (selected != null) {
 			empRepo.deleteById(selected.getId());
 		} else {
 			throw new RuntimeException("Not found Employee:" + String.valueOf(genID));
 		}
+	}
+
+	@Override
+	public Page<Employee> getAll(int pageNo, int pageSize, String sortBy, String sortType) {
+		Pageable pageable = genPageable(pageNo, pageSize, sortBy, sortType);
+		Page<Employee> page = empRepo.findAll(pageable);
+		return page;
+	}
+
+	@Override
+	public Page<Employee> findByNameLike(String name, int pageNo, int pageSize, String sortBy, String sortType) {
+		Pageable pageable = genPageable(pageNo, pageSize, sortBy, sortType);
+		Page<Employee> page = empRepo.findByNameLike(name, pageable);
+		return page;
+	}
+
+	@Override
+	public Page<Employee> findByPhone1OrPhone2Like(String phone, int pageNo, int pageSize, String sortBy,
+			String sortType) {
+		Pageable pageable = genPageable(pageNo, pageSize, sortBy, sortType);
+		Page<Employee> page = empRepo.findByPhone1OrPhone2Like(phone, pageable);
+		return page;
+	}
+
+	@Override
+	public Page<Employee> findByBranchIdAndDepartmentId(long branchId, long departmentId, int pageNo, int pageSize,
+			String sortBy, String sortType) {
+		Pageable pageable = genPageable(pageNo, pageSize, sortBy, sortType);
+		Page<Employee> page = empRepo.findByBranchIdAndDepartmentId(branchId, departmentId, pageable);
+		return page;
+	}
+
+	private Pageable genPageable(int pageNo, int pageSize, String sortBy, String sortType) {
+		Sort sort = Sort.by(sortBy);
+		if (sortType.equals("des")) {
+			sort = sort.descending();
+		}
+		Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+		return pageable;
 	}
 }

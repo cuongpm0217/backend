@@ -1,9 +1,13 @@
 package com.hongha.ver1.services.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,7 +43,7 @@ public class AccountInvoiceServiceImpl implements AccountInvoiceService {
 
 	@Override
 	public AccountInvoice findByUUID(UUID genId) {
-		AccountInvoice selected = accInvRepo.findByUUID(genId);
+		AccountInvoice selected = accInvRepo.findByGenId(genId);
 		if (selected != null) {
 			return selected;
 		} else {
@@ -48,8 +52,10 @@ public class AccountInvoiceServiceImpl implements AccountInvoiceService {
 	}
 
 	@Override
-	public List<AccountInvoice> getAll() {
-		return accInvRepo.findAll();
+	public Page<AccountInvoice> getAll(int pageNo, int pageSize, String sortBy) {
+		Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+		Page<AccountInvoice> pageResult = accInvRepo.findAll(paging);
+		return pageResult;
 	}
 
 	@Override
@@ -88,7 +94,7 @@ public class AccountInvoiceServiceImpl implements AccountInvoiceService {
 	@Override
 	@Transactional
 	public AccountInvoice updateByUUID(UUID genID, AccountInvoice accountInvoiceRequest) {
-		AccountInvoice updateObj = accInvRepo.findByUUID(genID);
+		AccountInvoice updateObj = accInvRepo.findByGenId(genID);
 		if (updateObj != null) {
 			updateObj.setAccountId(accountInvoiceRequest.getAccountId());
 			updateObj.setCredit(accountInvoiceRequest.getCredit());
@@ -110,12 +116,29 @@ public class AccountInvoiceServiceImpl implements AccountInvoiceService {
 	@Override
 	@Transactional
 	public void deleteByUUID(UUID genID) {
-		AccountInvoice updateObj = accInvRepo.findByUUID(genID);
+		AccountInvoice updateObj = accInvRepo.findByGenId(genID);
 		if (updateObj != null)
 			accInvRepo.deleteById(updateObj.getId());
 		else
 			throw new RuntimeException("Not found:" + String.valueOf(genID));
 
+	}
+
+	@Override
+	public Page<AccountInvoice> findByInvoiceId(long invoiceId, int pageNo, int pageSize, String sortBy) {
+		Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+		Page<AccountInvoice> page = accInvRepo.findByInvoiceId(invoiceId, pageable);
+		return page;
+	}
+
+	@Override
+	public List<AccountInvoice> findByInvoiceId(long invoiceId) {
+		List<AccountInvoice> list = accInvRepo.findByInvoiceId(invoiceId);
+		if (!list.isEmpty()) {
+			return list;
+		} else {
+			return new ArrayList<AccountInvoice>();
+		}
 	}
 
 }

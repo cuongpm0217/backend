@@ -1,9 +1,8 @@
 package com.hongha.ver1.services;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.UUID;
-
+import org.springframework.data.domain.Page;
 import com.hongha.ver1.entities.Account;
 
 public interface AccountService {
@@ -12,8 +11,7 @@ public interface AccountService {
 	Account findById(long id);
 
 	Account findByUUID(UUID genId);
-
-	List<Account> getAll() throws IOException;
+	Page<Account> findByCodeContaining(String code,int pageNo, int pageSize, String sortBy, String sortType);
 
 	Account update(long id, Account accountRequest);
 
@@ -22,4 +20,6 @@ public interface AccountService {
 	Account updateByUUID(UUID genID, Account accountRequest);
 
 	void deleteByUUID(UUID genID);
+
+	Page<Account> getAll(int pageNo, int pageSize, String sortBy, String sortType) throws IOException;
 }

@@ -15,6 +15,10 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,7 +55,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
 	@Override
 	public Department findByUUID(UUID genId) {
-		Department selected = depRepo.findByUUID(genId);
+		Department selected = depRepo.findByGenId(genId);
 		if (selected != null) {
 			return selected;
 		} else {
@@ -61,8 +65,8 @@ public class DepartmentServiceImpl implements DepartmentService {
 
 	@Override
 	public List<Department> getAll() throws IOException {
-		List<Department> list= depRepo.findAll();
-		if(list.isEmpty()) {
+		List<Department> list = depRepo.findAll();
+		if (list.isEmpty()) {
 			loadDepartmentExcel();
 		}
 		return list;
@@ -76,39 +80,39 @@ public class DepartmentServiceImpl implements DepartmentService {
 			selected.setCode(departmentRequest.getCode());
 			selected.setName(departmentRequest.getName());
 			Department updated = depRepo.save(selected);
-			if(updated!=null) {
+			if (updated != null) {
 				return updated;
-			}else {
-				throw new RuntimeException("Can't update Department:"+String.valueOf(id));
+			} else {
+				throw new RuntimeException("Can't update Department:" + String.valueOf(id));
 			}
 		} else {
 			throw new RuntimeException("Not found Department:" + String.valueOf(id));
-		}		
+		}
 	}
 
 	@Override
 	@Transactional
 	public void delete(long id) {
 		Department selected = depRepo.getReferenceById(id);
-		if(selected!=null) {
+		if (selected != null) {
 			depRepo.deleteById(id);
-		}else {
-			throw new RuntimeException("Not found Department:"+String.valueOf(id));
+		} else {
+			throw new RuntimeException("Not found Department:" + String.valueOf(id));
 		}
 	}
 
 	@Override
 	@Transactional
 	public Department updateByUUID(UUID genID, Department departmentRequest) {
-		Department selected = depRepo.findByUUID(genID);
+		Department selected = depRepo.findByGenId(genID);
 		if (selected != null) {
 			selected.setCode(departmentRequest.getCode());
-			selected.setName(departmentRequest.getName());			
+			selected.setName(departmentRequest.getName());
 			Department updated = depRepo.save(selected);
-			if(updated!=null) {
+			if (updated != null) {
 				return updated;
-			}else {
-				throw new RuntimeException("Can't update Department:"+String.valueOf(genID));
+			} else {
+				throw new RuntimeException("Can't update Department:" + String.valueOf(genID));
 			}
 		} else {
 			throw new RuntimeException("Not found Department:" + String.valueOf(genID));
@@ -118,77 +122,107 @@ public class DepartmentServiceImpl implements DepartmentService {
 	@Override
 	@Transactional
 	public void deleteByUUID(UUID genID) {
-		Department selected = depRepo.findByUUID(genID);
-		if(selected!=null) {
+		Department selected = depRepo.findByGenId(genID);
+		if (selected != null) {
 			depRepo.deleteById(selected.getId());
-		}else {
-			throw new RuntimeException("Not found Department:"+String.valueOf(genID));
+		} else {
+			throw new RuntimeException("Not found Department:" + String.valueOf(genID));
 		}
 	}
 
+	@Override
+	public Slice<Department> findByBranchIdAndVnameLike(long branchId, String vName, int pageNo, int pageSize,
+			String sortBy, String sortType) {
+		Sort sort = Sort.by(sortBy);
+		if (sortType.equals("des")) {
+			sort = sort.descending();
+		}
+		Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+		Slice<Department> page = depRepo.findByBranchIdAndVnameLike(branchId, vName, pageable);
+		return page;
+	}
+
+	@Override
+	public Slice<Department> getAll(int pageNo, int pageSize, String sortBy, String sortType) {
+		Sort sort = Sort.by(sortBy);
+		if (sortType.equals("des")) {
+			sort = sort.descending();
+		}
+		Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+		Slice<Department> page = depRepo.findAll(pageable);
+		if(!page.hasContent()) {
+			try {
+				loadDepartmentExcel();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return page;
+	}
+
 	// Load data sample
-		private void loadDepartmentExcel() throws IOException {
-			String excelFilePath = "src/main/resources/static/data.xlsx";
+	private void loadDepartmentExcel() throws IOException {
+		String excelFilePath = "src/main/resources/static/data.xlsx";
 
-			InputStream inputStream = new FileInputStream(new File(excelFilePath));
+		InputStream inputStream = new FileInputStream(new File(excelFilePath));
 
-			Workbook wb = new XSSFWorkbook(inputStream);
+		Workbook wb = new XSSFWorkbook(inputStream);
 
-			Sheet sheet = wb.getSheet("department");
-			Iterator<Row> rows = sheet.iterator();
-			while (rows.hasNext()) {
-				Row nextRow = rows.next();
+		Sheet sheet = wb.getSheet("department");
+		Iterator<Row> rows = sheet.iterator();
+		while (rows.hasNext()) {
+			Row nextRow = rows.next();
 //				 Get all cells
-				Iterator<Cell> cellIterator = nextRow.cellIterator();
-	// Read cells and set value for object
-				Department dep = new Department();
-				while (cellIterator.hasNext()) {
-					// Read cell
-					Cell cell = cellIterator.next();
-					Object cellValue = getCellValue(cell);
-					if (cellValue == null || cellValue.toString().isEmpty()) {
-						continue;
-					}
-					// Set value for object
-					int columnIndex = cell.getColumnIndex();
-					switch (columnIndex) {
-					case 0:
-						dep.setName((String) getCellValue(cell));
-						break;
-					case 1:
-						dep.setVname((String) getCellValue(cell));
-						break;
-					case 2:
-						dep.setBranchId((long) cellValue);
-						break;
-
-					default:
-						break;
-					}
+			Iterator<Cell> cellIterator = nextRow.cellIterator();
+			// Read cells and set value for object
+			Department dep = new Department();
+			while (cellIterator.hasNext()) {
+				// Read cell
+				Cell cell = cellIterator.next();
+				Object cellValue = getCellValue(cell);
+				if (cellValue == null || cellValue.toString().isEmpty()) {
+					continue;
 				}
-				depRepo.save(dep);
-			}
-			wb.close();
-			inputStream.close();
-		}
+				// Set value for object
+				int columnIndex = cell.getColumnIndex();
+				switch (columnIndex) {
+				case 0:
+					dep.setName((String) getCellValue(cell));
+					break;
+				case 1:
+					dep.setVname((String) getCellValue(cell));
+					break;
+				case 2:
+					dep.setBranchId((long) cellValue);
+					break;
 
-		private Object getCellValue(Cell cell) {
-			CellType cellType = cell.getCellType();
-			Object cellValue = null;
-			switch (cellType) {
-			case NUMERIC:
-				cellValue = cell.getNumericCellValue();
-				break;
-			case STRING:
-				cellValue = cell.getStringCellValue();
-				break;
-			case _NONE:
-			case BLANK:
-			case ERROR:
-				break;
-			default:
-				break;
+				default:
+					break;
+				}
 			}
-			return cellValue;
+			depRepo.save(dep);
 		}
+		wb.close();
+		inputStream.close();
+	}
+
+	private Object getCellValue(Cell cell) {
+		CellType cellType = cell.getCellType();
+		Object cellValue = null;
+		switch (cellType) {
+		case NUMERIC:
+			cellValue = cell.getNumericCellValue();
+			break;
+		case STRING:
+			cellValue = cell.getStringCellValue();
+			break;
+		case _NONE:
+		case BLANK:
+		case ERROR:
+			break;
+		default:
+			break;
+		}
+		return cellValue;
+	}
 }

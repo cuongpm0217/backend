@@ -3,6 +3,7 @@ package com.hongha.ver1.services;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
 import com.hongha.ver1.entities.ProposalItem;
 
 public interface ProposalItemService {
@@ -21,4 +22,8 @@ public interface ProposalItemService {
 	ProposalItem updateByUUID(UUID genID, ProposalItem proposalItemRequest);
 
 	void deleteByUUID(UUID genID);
+
+	Page<ProposalItem> getAll(int pageNo, int pageSize, String sortBy, String sortType);
+
+	Page<ProposalItem> findByProposalId(long proposalId, int pageNo, int pageSize, String sortBy, String sortType);
 }

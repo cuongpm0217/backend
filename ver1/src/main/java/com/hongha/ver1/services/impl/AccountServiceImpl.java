@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Iterator;
-import java.util.List;
 import java.util.UUID;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -16,6 +15,10 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +36,7 @@ public class AccountServiceImpl implements AccountService {
 	public Account save(Account accountRequest) {
 		Account isInserted = accountRepo.save(accountRequest);
 		if (isInserted != null) {
+
 			return isInserted;
 		} else {
 			throw new RuntimeException("Can't save");
@@ -51,21 +55,37 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	public Account findByUUID(UUID genId) {
-		Account acc = accountRepo.findByUUID(genId);
+		Account acc = accountRepo.findByGenId(genId);
 		if (acc != null) {
 			return acc;
 		} else {
 			throw new RuntimeException("Not found:" + String.valueOf(genId));
 		}
 	}
-
 	@Override
-	public List<Account> getAll() throws IOException {
-		List<Account> accounts = accountRepo.findAll();
-		if (accounts.isEmpty()) {
+	public Page<Account> findByCodeContaining(String code, int pageNo, int pageSize, String sortBy, String sortType) {
+		Sort sorted = Sort.by(sortBy);
+		if(sortType.equals("des")) {
+			sorted = Sort.by(sortBy).descending();
+		}
+		Pageable paging = PageRequest.of(pageNo, pageSize, sorted);
+		Page<Account> result = accountRepo.findByCodeContaining(code,paging);
+		return result;
+	}
+	
+	@Override
+	public Page<Account> getAll(int pageNo, int pageSize, String sortBy, String sortType) throws IOException {
+		long counter = accountRepo.count();
+		if (counter == 0) {
 			loadAccountExcel();
 		}
-		return accounts;
+		Sort sorted = Sort.by(sortBy);
+		if(sortType.equals("des")) {
+			sorted = sorted.descending();
+		}
+		Pageable paging = PageRequest.of(pageNo, pageSize, sorted);
+		Page<Account> pageResult = accountRepo.findAll(paging);		
+		return pageResult;
 	}
 
 	@Override
@@ -101,7 +121,7 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	@Transactional
 	public Account updateByUUID(UUID genID, Account accountRequest) {
-		Account accountUpdate = accountRepo.findByUUID(genID);
+		Account accountUpdate = accountRepo.findByGenId(genID);
 		if (accountUpdate != null) {
 			accountUpdate.setCode(accountRequest.getCode());
 			accountUpdate.setLevel(accountRequest.getLevel());
@@ -120,7 +140,7 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	@Transactional
 	public void deleteByUUID(UUID genID) {
-		Account accountUpdate = accountRepo.findByUUID(genID);
+		Account accountUpdate = accountRepo.findByGenId(genID);
 		if (accountUpdate != null) {
 			accountRepo.deleteById(accountUpdate.getId());
 		} else {

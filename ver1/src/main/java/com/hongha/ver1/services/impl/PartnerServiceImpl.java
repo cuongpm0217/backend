@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +44,7 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	public Partner findByUUID(UUID genId) {
-		Partner selected = partnerRepo.findByUUID(genId);
+		Partner selected = partnerRepo.findByGenId(genId);
 		if (selected != null) {
 			return selected;
 		} else {
@@ -60,11 +64,11 @@ public class PartnerServiceImpl implements PartnerService {
 		if (selected != null) {
 			selected.setAddress1(partnerRequest.getAddress1());
 			selected.setAddress2(partnerRequest.getAddress2());
-			selected.setBank(partnerRequest.getBank());
+			selected.setBankId(partnerRequest.getBankId());
 			selected.setBankAccountNo(partnerRequest.getBankAccountNo());
 			selected.setName(partnerRequest.getName());
 			selected.setPhone1(partnerRequest.getPhone1());
-			selected.setPhone2(partnerRequest.getPhone2());			
+			selected.setPhone2(partnerRequest.getPhone2());
 			Partner updated = partnerRepo.save(selected);
 			if (updated != null) {
 				return updated;
@@ -90,11 +94,11 @@ public class PartnerServiceImpl implements PartnerService {
 	@Override
 	@Transactional
 	public Partner updateByUUID(UUID genID, Partner partnerRequest) {
-		Partner selected = partnerRepo.findByUUID(genID);
+		Partner selected = partnerRepo.findByGenId(genID);
 		if (selected != null) {
 			selected.setAddress1(partnerRequest.getAddress1());
 			selected.setAddress2(partnerRequest.getAddress2());
-			selected.setBank(partnerRequest.getBank());
+			selected.setBankId(partnerRequest.getBankId());
 			selected.setBankAccountNo(partnerRequest.getBankAccountNo());
 			selected.setName(partnerRequest.getName());
 			selected.setPhone1(partnerRequest.getPhone1());
@@ -113,11 +117,35 @@ public class PartnerServiceImpl implements PartnerService {
 	@Override
 	@Transactional
 	public void deleteByUUID(UUID genID) {
-		Partner selected = partnerRepo.findByUUID(genID);
+		Partner selected = partnerRepo.findByGenId(genID);
 		if (selected != null) {
 			partnerRepo.deleteById(selected.getId());
 		} else {
 			throw new RuntimeException("Not found Partner:" + String.valueOf(genID));
 		}
+	}
+
+	@Override
+	public Page<Partner> findByPhone1OrPhone2Like(String phone, int pageNo, int pageSize, String sortBy,
+			String sortType) {
+		Pageable pageable = genPageable(pageNo, pageSize, sortBy, sortType);
+		Page<Partner> page = partnerRepo.findByPhone1OrPhone2Like(phone, pageable);
+		return page;
+	}
+
+	@Override
+	public Page<Partner> getAll(int pageNo, int pageSize, String sortBy, String sortType) {
+		Pageable pageable = genPageable(pageNo, pageSize, sortBy, sortType);
+		Page<Partner> page = partnerRepo.findAll(pageable);
+		return page;
+	}
+
+	private Pageable genPageable(int pageNo, int pageSize, String sortBy, String sortType) {
+		Sort sort = Sort.by(sortBy);
+		if (sortType.equals("des")) {
+			sort = sort.descending();
+		}
+		Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+		return pageable;
 	}
 }

@@ -15,22 +15,26 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hongha.ver1.entities.Brand;
-import com.hongha.ver1.repositories.ProductBrandRepository;
+import com.hongha.ver1.repositories.BrandRepository;
 import com.hongha.ver1.services.BrandService;
 
 @Service
 public class BrandServiceImpl implements BrandService {
 	@Autowired
-	private ProductBrandRepository proBrandRepo;
+	private BrandRepository brandRepo;
 
 	@Override
 	@Transactional
 	public Brand save(Brand proBrandRequest) {
-		Brand isInserted = proBrandRepo.save(proBrandRequest);
+		Brand isInserted = brandRepo.save(proBrandRequest);
 		if (isInserted != null) {
 			return isInserted;
 		} else {
@@ -41,7 +45,7 @@ public class BrandServiceImpl implements BrandService {
 
 	@Override
 	public Brand findById(long id) {
-		Brand selected = proBrandRepo.getReferenceById(id);
+		Brand selected = brandRepo.getReferenceById(id);
 		if (selected != null) {
 			return selected;
 		} else {
@@ -51,7 +55,7 @@ public class BrandServiceImpl implements BrandService {
 
 	@Override
 	public Brand findByUUID(UUID genId) {
-		Brand selected = proBrandRepo.findByUUID(genId);
+		Brand selected = brandRepo.findByGenId(genId);
 		if (selected != null) {
 			return selected;
 		} else {
@@ -61,7 +65,7 @@ public class BrandServiceImpl implements BrandService {
 
 	@Override
 	public List<Brand> getAll() throws IOException {
-		List<Brand> list = proBrandRepo.findAll();
+		List<Brand> list = brandRepo.findAll();
 		if (list.isEmpty()) {
 			loadBrandExcel();
 		}
@@ -71,11 +75,10 @@ public class BrandServiceImpl implements BrandService {
 	@Override
 	@Transactional
 	public Brand update(long id, Brand proBrandRequest) {
-		Brand selected = proBrandRepo.getReferenceById(id);
+		Brand selected = brandRepo.getReferenceById(id);
 		if (selected != null) {
-			selected.setCountry(proBrandRequest.getCountry());
 			selected.setName(proBrandRequest.getName());
-			Brand updated = proBrandRepo.save(selected);
+			Brand updated = brandRepo.save(selected);
 			if (updated != null) {
 				return updated;
 			} else {
@@ -89,9 +92,9 @@ public class BrandServiceImpl implements BrandService {
 	@Override
 	@Transactional
 	public void delete(long id) {
-		Brand selected = proBrandRepo.getReferenceById(id);
+		Brand selected = brandRepo.getReferenceById(id);
 		if (selected != null) {
-			proBrandRepo.deleteById(id);
+			brandRepo.deleteById(id);
 		} else {
 			throw new RuntimeException("Not found ProductBrand:" + String.valueOf(id));
 		}
@@ -100,11 +103,10 @@ public class BrandServiceImpl implements BrandService {
 	@Override
 	@Transactional
 	public Brand updateByUUID(UUID genID, Brand proBrandRequest) {
-		Brand selected = proBrandRepo.findByUUID(genID);
+		Brand selected = brandRepo.findByGenId(genID);
 		if (selected != null) {
-			selected.setCountry(proBrandRequest.getCountry());
 			selected.setName(proBrandRequest.getName());
-			Brand updated = proBrandRepo.save(selected);
+			Brand updated = brandRepo.save(selected);
 			if (updated != null) {
 				return updated;
 			} else {
@@ -118,12 +120,41 @@ public class BrandServiceImpl implements BrandService {
 	@Override
 	@Transactional
 	public void deleteByUUID(UUID genID) {
-		Brand selected = proBrandRepo.findByUUID(genID);
+		Brand selected = brandRepo.findByGenId(genID);
 		if (selected != null) {
-			proBrandRepo.deleteById(selected.getId());
+			brandRepo.deleteById(selected.getId());
 		} else {
 			throw new RuntimeException("Not found ProductBrand:" + String.valueOf(genID));
 		}
+	}
+
+	@Override
+	public Page<Brand> getAll(int pageNo, int pageSize, String sortBy, String sortType) {
+		Sort sorted = Sort.by(sortBy);
+		if (sortType.equals("des")) {
+			sorted = sorted.descending();
+		}
+		Pageable pageable = PageRequest.of(pageNo, pageSize, sorted);
+		Page<Brand> page = brandRepo.findAll(pageable);
+		if (page.isEmpty()) {
+			try {
+				loadBrandExcel();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return page;
+	}
+
+	@Override
+	public Page<Brand> findByNameLike(String name, int pageNo, int pageSize, String sortBy, String sortType) {
+		Sort sort = Sort.by(sortBy);
+		if (sortType.equals("des")) {
+			sort = sort.descending();
+		}
+		Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+		Page<Brand> page = brandRepo.findByNameLike(name, pageable);
+		return page;
 	}
 
 	// Load data sample
@@ -155,14 +186,11 @@ public class BrandServiceImpl implements BrandService {
 				case 0:
 					proBrand.setName((String) getCellValue(cell));
 					break;
-				case 1:
-					proBrand.setCountry((String) getCellValue(cell));
-					break;
 				default:
 					break;
 				}
 			}
-			proBrandRepo.save(proBrand);
+			brandRepo.save(proBrand);
 		}
 		wb.close();
 		inputStream.close();
@@ -187,4 +215,5 @@ public class BrandServiceImpl implements BrandService {
 		}
 		return cellValue;
 	}
+
 }

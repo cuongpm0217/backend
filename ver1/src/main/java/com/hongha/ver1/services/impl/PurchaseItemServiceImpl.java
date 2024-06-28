@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +44,7 @@ public class PurchaseItemServiceImpl implements PurchaseItemService {
 
 	@Override
 	public PurchaseItem findByUUID(UUID genId) {
-		PurchaseItem selected = purItemRepo.findByUUID(genId);
+		PurchaseItem selected = purItemRepo.findByGenId(genId);
 		if (selected != null) {
 			return selected;
 		} else {
@@ -95,7 +99,7 @@ public class PurchaseItemServiceImpl implements PurchaseItemService {
 	@Override
 	@Transactional
 	public PurchaseItem updateByUUID(UUID genID, PurchaseItem purRequest) {
-		PurchaseItem selected = purItemRepo.findByUUID(genID);
+		PurchaseItem selected = purItemRepo.findByGenId(genID);
 		if (selected != null) {
 			return updateObj(purRequest, selected);
 		} else {
@@ -106,11 +110,32 @@ public class PurchaseItemServiceImpl implements PurchaseItemService {
 	@Override
 	@Transactional
 	public void deleteByUUID(UUID genID) {
-		PurchaseItem selected = purItemRepo.findByUUID(genID);
+		PurchaseItem selected = purItemRepo.findByGenId(genID);
 		if (selected != null) {
 			purItemRepo.deleteById(selected.getId());
 		} else {
 			throw new RuntimeException("Not found PurchaseItem:" + String.valueOf(genID));
 		}
 	}
+
+	@Override
+	public Page<PurchaseItem> findByPurchaseId(long purchaseId, int pageNo, int pageSize, String sortBy,
+			String sortType) {
+		Sort sort = Sort.by(sortBy);
+		if (sortType.equals("des")) {
+			sort = sort.descending();
+		}
+		Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+		Page<PurchaseItem> page = purItemRepo.findByPurchaseId(purchaseId, pageable);
+		return page;
+	}
+
+//	private Pageable genPageable(int pageNo, int pageSize, String sortBy, String sortType) {
+//		Sort sort = Sort.by(sortBy);
+//		if (sortType.equals("des")) {
+//			sort = sort.descending();
+//		}
+//		Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+//		return pageable;
+//	}
 }

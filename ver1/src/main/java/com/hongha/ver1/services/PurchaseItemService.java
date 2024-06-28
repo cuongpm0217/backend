@@ -3,6 +3,8 @@ package com.hongha.ver1.services;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+
 import com.hongha.ver1.entities.PurchaseItem;
 
 public interface PurchaseItemService {
@@ -21,4 +23,6 @@ public interface PurchaseItemService {
 	PurchaseItem updateByUUID(UUID genID, PurchaseItem purchaseItemRequest);
 
 	void deleteByUUID(UUID genID);
+
+	Page<PurchaseItem> findByPurchaseId(long purchaseId, int pageNo, int pageSize, String sortBy, String sortType);
 }

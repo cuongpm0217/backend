@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Slice;
+
 import com.hongha.ver1.entities.Department;
 
 public interface DepartmentService {
@@ -22,4 +24,9 @@ public interface DepartmentService {
 	Department updateByUUID(UUID genID, Department departmentRequest);
 
 	void deleteByUUID(UUID genID);
+
+	Slice<Department> findByBranchIdAndVnameLike(long branchId, String vName, int pageNo, int pageSize, String sortBy,
+			String sortType);
+
+	Slice<Department> getAll(int pageNo, int pageSize, String sortBy, String sortType);
 }

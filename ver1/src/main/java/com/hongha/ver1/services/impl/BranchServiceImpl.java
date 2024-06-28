@@ -76,7 +76,7 @@ public class BranchServiceImpl implements BranchService {
 
 	@Override
 	public Branch findByUUID(UUID genId) {
-		Branch branch = branchRepo.findByUUID(genId);
+		Branch branch = branchRepo.findByGenId(genId);
 		if (branch != null) {
 			return branch;
 		} else
@@ -86,7 +86,7 @@ public class BranchServiceImpl implements BranchService {
 	@Override
 	@Transactional
 	public Branch updateByUUID(UUID genID, Branch branchRequest) {
-		Branch branchUpdate = branchRepo.findByUUID(genID);
+		Branch branchUpdate = branchRepo.findByGenId(genID);
 		if (branchUpdate != null) {
 			branchUpdate.setAddress(branchRequest.getAddress());
 			branchUpdate.setLevel(branchRequest.getLevel());
@@ -107,7 +107,7 @@ public class BranchServiceImpl implements BranchService {
 	@Override
 	@Transactional
 	public void deleteByUUID(UUID genID) {
-		Branch branch = branchRepo.findByUUID(genID);
+		Branch branch = branchRepo.findByGenId(genID);
 		if (branch != null) {
 			branchRepo.deleteById(branch.getId());
 		} else

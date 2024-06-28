@@ -71,7 +71,7 @@ public class RoleServiceImpl implements RoleService {
 
 	@Override
 	public Role findByUUID(UUID genId) {
-		Role selected = roleRepo.findByUUID(genId);
+		Role selected = roleRepo.findByGenId(genId);
 		if (selected != null) {
 			return selected;
 		} else {
@@ -82,7 +82,7 @@ public class RoleServiceImpl implements RoleService {
 	@Override
 	@Transactional
 	public Role updateByUUID(UUID genID, Role roleRequest) {
-		Role roleUpdate = roleRepo.findByUUID(genID);
+		Role roleUpdate = roleRepo.findByGenId(genID);
 		if (roleUpdate != null) {
 			roleUpdate.setName(roleRequest.getName());
 			Role updated = roleRepo.save(roleUpdate);
@@ -99,7 +99,7 @@ public class RoleServiceImpl implements RoleService {
 	@Override
 	@Transactional
 	public void deleteByUUID(UUID genID) {
-		Role role = roleRepo.findByUUID(genID);
+		Role role = roleRepo.findByGenId(genID);
 		if (role != null) {
 			roleRepo.deleteById(role.getId());
 		} else {

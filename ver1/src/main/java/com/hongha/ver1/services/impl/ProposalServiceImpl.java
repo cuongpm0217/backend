@@ -1,9 +1,15 @@
 package com.hongha.ver1.services.impl;
 
+import java.util.Date;
+
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +46,7 @@ public class ProposalServiceImpl implements ProposalService {
 
 	@Override
 	public Proposal findByUUID(UUID genId) {
-		Proposal selected = proposalRepo.findByUUID(genId);
+		Proposal selected = proposalRepo.findByGenId(genId);
 		if (selected != null) {
 			return selected;
 		} else {
@@ -58,19 +64,23 @@ public class ProposalServiceImpl implements ProposalService {
 	public Proposal update(long id, Proposal proposalRequest) {
 		Proposal selected = proposalRepo.getReferenceById(id);
 		if (selected != null) {
-			selected.setBranchId(proposalRequest.getBranchId());
-			selected.setCustomerId(proposalRequest.getCustomerId());
-			selected.setEmployeeId(proposalRequest.getEmployeeId());
-			selected.setLicensePlate(proposalRequest.getLicensePlate());
-			selected.setVehicle(proposalRequest.getVehicle());
-			Proposal updated = proposalRepo.save(selected);
-			if (updated != null) {
-				return updated;
-			} else {
-				throw new RuntimeException("Can't update Proposal:" + String.valueOf(id));
-			}
+			return updateObj(proposalRequest, selected);
 		} else {
 			throw new RuntimeException("Not found Proposal:" + String.valueOf(id));
+		}
+	}
+
+	private Proposal updateObj(Proposal proposalRequest, Proposal selected) {
+		selected.setBranchId(proposalRequest.getBranchId());
+		selected.setCustomerId(proposalRequest.getCustomerId());
+		selected.setEmployeeId(proposalRequest.getEmployeeId());
+		selected.setVehicleId(proposalRequest.getVehicleId());
+		selected.setTotal(proposalRequest.getTotal());
+		Proposal updated = proposalRepo.save(selected);
+		if (updated != null) {
+			return updated;
+		} else {
+			throw new RuntimeException("Can't update Proposal:" + selected.getId());
 		}
 	}
 
@@ -88,19 +98,9 @@ public class ProposalServiceImpl implements ProposalService {
 	@Override
 	@Transactional
 	public Proposal updateByUUID(UUID genID, Proposal proposalRequest) {
-		Proposal selected = proposalRepo.findByUUID(genID);
+		Proposal selected = proposalRepo.findByGenId(genID);
 		if (selected != null) {
-			selected.setBranchId(proposalRequest.getBranchId());
-			selected.setCustomerId(proposalRequest.getCustomerId());
-			selected.setEmployeeId(proposalRequest.getEmployeeId());
-			selected.setLicensePlate(proposalRequest.getLicensePlate());
-			selected.setVehicle(proposalRequest.getVehicle());
-			Proposal updated = proposalRepo.save(selected);
-			if (updated != null) {
-				return updated;
-			} else {
-				throw new RuntimeException("Can't update Proposal:" + String.valueOf(genID));
-			}
+			return updateObj(proposalRequest, selected);
 		} else {
 			throw new RuntimeException("Not found Proposal:" + String.valueOf(genID));
 		}
@@ -109,11 +109,35 @@ public class ProposalServiceImpl implements ProposalService {
 	@Override
 	@Transactional
 	public void deleteByUUID(UUID genID) {
-		Proposal selected = proposalRepo.findByUUID(genID);
+		Proposal selected = proposalRepo.findByGenId(genID);
 		if (selected != null) {
 			proposalRepo.deleteById(selected.getId());
 		} else {
 			throw new RuntimeException("Not found Proposal:" + String.valueOf(genID));
 		}
+	}
+
+	@Override
+	public Slice<Proposal> getAll(int pageNo, int pageSize, String sortBy, String sortType) {
+		Pageable pageable = genPageable(pageNo, pageSize, sortBy, sortType);
+		Slice<Proposal> page = proposalRepo.findAll(pageable);
+		return page;
+	}
+
+	@Override
+	public Slice<Proposal> findByCreateAt(Date fromDate, Date toDate, int pageNo, int pageSize, String sortBy,
+			String sortType) {
+		Pageable pageable = genPageable(pageNo, pageSize, sortBy, sortType);
+		Slice<Proposal> page = proposalRepo.findByCreateAtBetween(fromDate, toDate, pageable);
+		return page;
+	}
+
+	private Pageable genPageable(int pageNo, int pageSize, String sortBy, String sortType) {
+		Sort sort = Sort.by(sortBy);
+		if (sortType.equals("des")) {
+			sort = sort.descending();
+		}
+		Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+		return pageable;
 	}
 }

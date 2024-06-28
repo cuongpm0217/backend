@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +44,7 @@ public class RepairBillItemServiceImpl implements RepairBillItemService{
 
 	@Override
 	public RepairBillItem findByUUID(UUID genId) {
-		RepairBillItem selected = billItemRepo.findByUUID(genId);
+		RepairBillItem selected = billItemRepo.findByGenId(genId);
 		if (selected != null) {
 			return selected;
 		} else {
@@ -96,7 +100,7 @@ public class RepairBillItemServiceImpl implements RepairBillItemService{
 	@Override
 	@Transactional
 	public RepairBillItem updateByUUID(UUID genID, RepairBillItem billItemRequest) {
-		RepairBillItem selected = billItemRepo.findByUUID(genID);
+		RepairBillItem selected = billItemRepo.findByGenId(genID);
 		if (selected != null) {
 			return updateObj(billItemRequest, selected);
 		} else {
@@ -107,11 +111,25 @@ public class RepairBillItemServiceImpl implements RepairBillItemService{
 	@Override
 	@Transactional
 	public void deleteByUUID(UUID genID) {
-		RepairBillItem selected = billItemRepo.findByUUID(genID);
+		RepairBillItem selected = billItemRepo.findByGenId(genID);
 		if (selected != null) {
 			billItemRepo.deleteById(selected.getId());
 		} else {
 			throw new RuntimeException("Not found RepairBillItem:" + String.valueOf(genID));
 		}
 	}
+
+	@Override
+	public Page<RepairBillItem> findByRepairBillId(long repairBillId, int pageNo, int pageSize, String sortBy,
+			String sortType) {
+		Sort sort = Sort.by(sortBy);
+		if (sortType.equals("des")) {
+			sort = sort.descending();
+		}
+		Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+		Page<RepairBillItem> page = billItemRepo.findByRepairBillId(repairBillId, pageable);
+		return page;
+	}
+
+	
 }

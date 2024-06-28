@@ -1,7 +1,8 @@
 package com.hongha.ver1.services;
 
-import java.util.List;
 import java.util.UUID;
+
+import org.springframework.data.domain.Page;
 
 import com.hongha.ver1.entities.Surrogate;
 
@@ -12,8 +13,6 @@ public interface SurrogateService {
 
 	Surrogate findByUUID(UUID genId);
 
-	List<Surrogate> getAll();
-
 	Surrogate update(long id, Surrogate surrogateRequest);
 
 	void delete(long id);
@@ -21,4 +20,12 @@ public interface SurrogateService {
 	Surrogate updateByUUID(UUID genID, Surrogate surrogateRequest);
 
 	void deleteByUUID(UUID genID);
+
+	Page<Surrogate> getAll(int pageNo, int pageSize, String sortBy, String sortType);
+
+	Page<Surrogate> findByName(String name, int pageNo, int pageSize, String sortBy, String sortType);
+
+	Page<Surrogate> findByPhone(String phone, int pageNo, int pageSize, String sortBy, String sortType);
+
+	Page<Surrogate> findByCustomerId(long customerId, int pageNo, int pageSize, String sortBy, String sortType);
 }

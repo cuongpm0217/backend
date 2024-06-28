@@ -4,6 +4,10 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +44,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 
 	@Override
 	public Expense findByUUID(UUID genId) {
-		Expense selected = expRepo.findByUUID(genId);
+		Expense selected = expRepo.findByGenId(genId);
 		if (selected != null) {
 			return selected;
 		} else {
@@ -86,7 +90,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 	@Override
 	@Transactional
 	public Expense updateByUUID(UUID genID, Expense expenseRequest) {
-		Expense selected = expRepo.findByUUID(genID);
+		Expense selected = expRepo.findByGenId(genID);
 		if (selected != null) {
 			selected.setName(expenseRequest.getName());
 			selected.setDetail(expenseRequest.getDetail());
@@ -105,11 +109,34 @@ public class ExpenseServiceImpl implements ExpenseService {
 	@Override
 	@Transactional
 	public void deleteByUUID(UUID genID) {
-		Expense selected = expRepo.findByUUID(genID);
+		Expense selected = expRepo.findByGenId(genID);
 		if (selected != null) {
 			expRepo.deleteById(selected.getId());
 		} else {
 			throw new RuntimeException("Not found Expense:" + String.valueOf(genID));
 		}
+	}
+
+	@Override
+	public Page<Expense> getAll(int pageNo, int pageSize, String sortBy, String sortType) {
+		Pageable pageable = genPageable(pageNo, pageSize, sortBy, sortType);
+		Page<Expense> page = expRepo.findAll(pageable);
+		return page;
+	}
+
+	@Override
+	public Page<Expense> findByNameLike(String name, int pageNo, int pageSize, String sortBy, String sortType) {
+		Pageable pageable = genPageable(pageNo, pageSize, sortBy, sortType);
+		Page<Expense> page = expRepo.findByNameLike(name, pageable);
+		return page;
+	}
+
+	private Pageable genPageable(int pageNo, int pageSize, String sortBy, String sortType) {
+		Sort sort = Sort.by(sortBy);
+		if (sortType.equals("des")) {
+			sort = sort.descending();
+		}
+		Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+		return pageable;
 	}
 }

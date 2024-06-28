@@ -14,5 +14,9 @@ import com.hongha.ver1.entities.Purchase;
 public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
 	Purchase findByGenId(UUID genId);
 
+	Purchase findByCode(String code);
+
 	Page<Purchase> findByPartnerIdAndCreateAtBetween(long partnerId, Date fromDate, Date toDate, Pageable paging);
+
+	Page<Purchase> findByCreateAtBetween(Date fromDate, Date toDate, Pageable paging);
 }

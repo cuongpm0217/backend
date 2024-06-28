@@ -1,8 +1,8 @@
 package com.hongha.ver1.services;
 
-import java.util.List;
+import java.util.Date;
 import java.util.UUID;
-
+import org.springframework.data.domain.Page;
 import com.hongha.ver1.entities.RepairBill;
 
 public interface RepairBillService {
@@ -12,8 +12,6 @@ public interface RepairBillService {
 
 	RepairBill findByUUID(UUID genId);
 
-	List<RepairBill> getAll();
-
 	RepairBill update(long id, RepairBill repairBillRequest);
 
 	void delete(long id);
@@ -21,4 +19,12 @@ public interface RepairBillService {
 	RepairBill updateByUUID(UUID genID, RepairBill repairBillRequest);
 
 	void deleteByUUID(UUID genID);
+
+	Page<RepairBill> getAll(int pageNo, int pageSize, String sortBy, String sortType);
+
+	Page<RepairBill> findByStartedDateBetween(Date fromDate, Date toDate, int pageNo, int pageSize, String sortBy,
+			String sortType);
+
+	Page<RepairBill> findByLicensePlate(String licensePlate, int pageNo, int pageSize, String sortBy, String sortType);
+
 }
