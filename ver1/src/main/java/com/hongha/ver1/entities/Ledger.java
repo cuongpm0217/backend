@@ -13,24 +13,24 @@ import lombok.Setter;
 
 @Entity
 @EntityListeners(LedgerListener.class)
-@Table(name="_ledger")
+@Table(name = "_ledger")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Ledger extends BaseEntityAudit{
-	
+public class Ledger extends BaseEntityAudit {
+
 	private static final long serialVersionUID = 1L;
-	@Column(name="voucher_code")
-	private long voucherCode;//code PM0000001....
-	@Column(name="voucher_id")
-	private long voucherId;
-	@Column
-	private long accountingId;
+	@Column(name = "invoice_code")
+	private long invoiceCode;// code PM0000001....
+	@Column(name = "invoice_id")
+	private long invoiceId;
+	@Column(name = "account_id")
+	private long accountId;
 	@Column
 	private String detail;
 	@Column
-	private double credit;//tk có
+	private double credit;// tk có
 	@Column
-	private double debit;//tk nợ
+	private double debit;// tk nợ
 }

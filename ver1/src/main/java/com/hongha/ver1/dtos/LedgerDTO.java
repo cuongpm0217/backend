@@ -10,8 +10,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LedgerDTO extends BaseDTO {
-	private long voucherId;
-	private long accountingId;
+	private String invoiceCode;
+	private long invoiceId;
+	private long accountId;
 	private String detail;
 	private double credit;// tk có
 	private double debit;// tk nợ
