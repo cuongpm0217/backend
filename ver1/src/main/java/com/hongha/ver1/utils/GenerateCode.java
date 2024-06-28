@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class GenerateCode {
-	
+
 	public String GenInvoiceCode(int countInYear, String invoiceType) {
 		String code = "";
 		SimpleDateFormat df = new SimpleDateFormat("yyyy");
