@@ -26,7 +26,7 @@ public class Vehicle extends BaseEntityAudit {
 	@Column
 	private String model;
 	@Column(name="vehicle_type_id")
-	private String vehicleTypeId;
+	private long vehicleTypeId;
 	@Column(name="yearOfFactory")
 	private int yearOfFactory;
 }
