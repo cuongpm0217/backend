@@ -1,6 +1,5 @@
 package com.hongha.ver1.services.impl;
 
-import java.util.Calendar;
 import java.util.Date;
 
 import java.util.List;
@@ -29,8 +28,11 @@ public class PurchaseServiceImpl implements PurchaseService {
 	@Override
 	@Transactional
 	public Purchase save(Purchase purRequest) {
-		String code = genCode.GenInvoiceCode(getCountInYear(), Purchase.class.getName());
+		//mq generate purchase code
+		int countInYear = purRepo.countInYear();
+		String code = genCode.GenInvoiceCode(countInYear, Purchase.class.getName());
 		purRequest.setCode(code);
+		//mq insert then generate code 
 		Purchase isInserted = purRepo.save(purRequest);
 		if (isInserted != null) {
 			return isInserted;
@@ -146,20 +148,6 @@ public class PurchaseServiceImpl implements PurchaseService {
 		Pageable pageable = genPageable(pageNo, pageSize, sortBy, sortType);
 		Page<Purchase> page = purRepo.findByCreateAtBetween(fromDate, toDate, pageable);
 		return page;
-	}
-
-	private int getCountInYear() {
-		Date today = new Date();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(today);
-		cal.set(Calendar.DAY_OF_YEAR, 1);
-		Date firstDay = cal.getTime();
-		cal.set(Calendar.MONTH, 11);
-		cal.set(Calendar.DAY_OF_MONTH, 31);
-		Date lastDay = cal.getTime();
-		Pageable pageable = PageRequest.of(0, Integer.MAX_VALUE);
-		int count = purRepo.findByCreateAtBetween(firstDay, lastDay, pageable).getContent().size();
-		return count;
 	}
 
 	private Pageable genPageable(int pageNo, int pageSize, String sortBy, String sortType) {

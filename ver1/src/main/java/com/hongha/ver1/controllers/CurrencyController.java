@@ -16,14 +16,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.hongha.ver1.dtos.CurrencyDTO;
 import com.hongha.ver1.entities.Currency;
 import com.hongha.ver1.services.CurrencyService;
 
 @CrossOrigin(origins = "*",maxAge = 3600)
+@RestController
+@RequestMapping("/api/currency")
 public class CurrencyController {
 	@Autowired
 	private ModelMapper mapper;
@@ -34,6 +38,7 @@ public class CurrencyController {
 	@ResponseBody
 	public List<CurrencyDTO> getAll() throws IOException {
 		List<Currency> currencys = currencyService.getAll();
+		
 		return currencys.stream().map(currency -> mapper.map(currency, CurrencyDTO.class)).collect(Collectors.toList());
 	}
 
@@ -67,4 +72,5 @@ public class CurrencyController {
 	public void deleteByUUID(@PathVariable("uuid") UUID uuid) {
 		currencyService.deleteByUUID(uuid);
 	}
+	
 }

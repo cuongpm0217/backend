@@ -1,6 +1,5 @@
 package com.hongha.ver1.services.impl;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
@@ -23,11 +22,12 @@ public class RepairBillServiceImpl implements RepairBillService {
 	private RepairBillRepository billRepo;
 	@Autowired
 	private GenerateCode genCode;
-	
+
 	@Override
 	@Transactional
 	public RepairBill save(RepairBill billRequest) {
-		String code = genCode.GenInvoiceCode(getCountInYear(), RepairBill.class.getName());
+		int countInYear = billRepo.countInYear();
+		String code = genCode.GenInvoiceCode(countInYear, RepairBill.class.getName());
 		billRequest.setCode(code);
 		RepairBill isInserted = billRepo.save(billRequest);
 		if (isInserted != null) {
@@ -152,17 +152,5 @@ public class RepairBillServiceImpl implements RepairBillService {
 		Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
 		return pageable;
 	}
-	private int getCountInYear() {
-		Date today = new Date();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(today);
-		cal.set(Calendar.DAY_OF_YEAR, 1);
-		Date firstDay = cal.getTime();
-		cal.set(Calendar.MONTH, 11);
-		cal.set(Calendar.DAY_OF_MONTH, 31);
-		Date lastDay = cal.getTime();
-		Pageable pageable = PageRequest.of(0, Integer.MAX_VALUE);
-		int count = billRepo.findByStartedDateBetween(firstDay, lastDay, pageable).getContent().size();
-		return count;
-	}
+
 }
