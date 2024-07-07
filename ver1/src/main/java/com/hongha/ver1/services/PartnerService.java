@@ -24,7 +24,7 @@ public interface PartnerService {
 
 	void deleteByUUID(UUID genID);
 
-	Page<Partner> findByPhone1OrPhone2Like(String phone, int pageNo, int pageSize, String sortBy, String sortType);
+	Page<Partner> findByPhone1OrPhone2Like(String phone1,String phone2, int pageNo, int pageSize, String sortBy, String sortType);
 
 	Page<Partner> getAll(int pageNo, int pageSize, String sortBy, String sortType);
 }

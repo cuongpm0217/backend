@@ -13,6 +13,6 @@ import com.hongha.ver1.entities.Employee;
 public interface EmployeeRepository extends JpaRepository<Employee, Long>{
 	Employee findByGenId(UUID genId);
 	Page<Employee> findByNameLike(String name,Pageable paging);
-	Page<Employee> findByPhone1OrPhone2Like(String phone,Pageable paging);
+	Page<Employee> findByPhone1OrPhone2Like(String phone1,String phone2,Pageable paging);
 	Page<Employee> findByBranchIdAndDepartmentId(long branchId,long departmentId,Pageable paging);
 }

@@ -126,10 +126,10 @@ public class PartnerServiceImpl implements PartnerService {
 	}
 
 	@Override
-	public Page<Partner> findByPhone1OrPhone2Like(String phone, int pageNo, int pageSize, String sortBy,
+	public Page<Partner> findByPhone1OrPhone2Like(String phone1,String phone2, int pageNo, int pageSize, String sortBy,
 			String sortType) {
 		Pageable pageable = genPageable(pageNo, pageSize, sortBy, sortType);
-		Page<Partner> page = partnerRepo.findByPhone1OrPhone2Like(phone, pageable);
+		Page<Partner> page = partnerRepo.findByPhone1OrPhone2Like(phone1,phone2, pageable);
 		return page;
 	}
 

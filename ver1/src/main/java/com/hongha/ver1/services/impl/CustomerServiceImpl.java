@@ -134,10 +134,10 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public Page<Customer> findByPhone1OrPhone2Like(String phone, int pageNo, int pageSize, String sortBy,
+	public Page<Customer> findByPhone1OrPhone2Like(String phone1,String phone2, int pageNo, int pageSize, String sortBy,
 			String sortType) {
 		Pageable pageable = genPageable(pageNo, pageSize, sortBy, sortType);
-		Page<Customer> page = cusRepo.findByPhone1OrPhone2Like(phone, pageable);
+		Page<Customer> page = cusRepo.findByPhone1OrPhone2Like(phone1,phone2, pageable);
 		return page;
 	}
 

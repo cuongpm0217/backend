@@ -28,7 +28,7 @@ public interface EmployeeService {
 
 	Page<Employee> findByNameLike(String name, int pageNo, int pageSize, String sortBy, String sortType);
 
-	Page<Employee> findByPhone1OrPhone2Like(String phone, int pageNo, int pageSize, String sortBy, String sortType);
+	Page<Employee> findByPhone1OrPhone2Like(String phone1,String phone2, int pageNo, int pageSize, String sortBy, String sortType);
 
 	Page<Employee> findByBranchIdAndDepartmentId(long branchId, long departmentId, int pageNo, int pageSize,
 			String sortBy, String sortType);

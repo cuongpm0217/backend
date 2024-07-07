@@ -13,5 +13,5 @@ import com.hongha.ver1.entities.Customer;
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 	Customer findByGenId(UUID genId);
 	Page<Customer> findByNameLike(String name,Pageable paging);
-	Page<Customer> findByPhone1OrPhone2Like(String phone,Pageable paging);
+	Page<Customer> findByPhone1OrPhone2Like(String phone1,String phone2,Pageable paging);
 }
