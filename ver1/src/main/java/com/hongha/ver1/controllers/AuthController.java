@@ -50,16 +50,19 @@ public class AuthController {
 
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+		if (authentication.isAuthenticated()) {
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+			CustomUserDetail userDetail = (CustomUserDetail) authentication.getPrincipal();
+			String jwt = provider.generateToken(userDetail);
 
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-		CustomUserDetail userDetail = (CustomUserDetail) authentication.getPrincipal();
-		String jwt = provider.generateToken(userDetail);
+			List<String> roles = userDetail.getAuthorities().stream().map(item -> item.getAuthority())
+					.collect(Collectors.toList());
 
-		List<String> roles = userDetail.getAuthorities().stream().map(item -> item.getAuthority())
-				.collect(Collectors.toList());
-
-		return ResponseEntity
-				.ok(new JwtResponse(jwt, userDetail.getId(), userDetail.getUsername(), userDetail.getEmail(), roles));
+			return ResponseEntity.ok(new JwtResponse(jwt, userDetail.getGenId(), userDetail.getUsername(),
+					userDetail.getEmail(), roles));
+		} else {
+			return ResponseEntity.badRequest().body(new MessageResponse("Đăng nhập không thành công"));
+		}
 	}
 
 	@PostMapping("/signup")

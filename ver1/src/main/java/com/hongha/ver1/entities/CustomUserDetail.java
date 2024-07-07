@@ -2,6 +2,7 @@ package com.hongha.ver1.entities;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -27,6 +28,9 @@ public class CustomUserDetail implements UserDetails{
 	}
 	public Long getId() {
 		return user.getId();
+	}
+	public UUID getGenId() {
+		return user.getGenId();
 	}
 	public String getEmail() {
 		return user.getEmail();
