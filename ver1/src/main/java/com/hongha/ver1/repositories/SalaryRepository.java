@@ -9,5 +9,5 @@ import com.hongha.ver1.entities.Salary;
 
 @Repository
 public interface SalaryRepository extends JpaRepository<Salary, Long> {
-	Salary findByGenID(UUID genId);
+	Salary findByGenId(UUID genId);
 }

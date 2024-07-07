@@ -118,10 +118,10 @@ public class LedgerServiceImpl implements LedgerService {
 	}
 
 	@Override
-	public Page<Ledger> findByCreateAtBetween(Date fromDate, Date toDate, int pageSize, String sortBy,
+	public Page<Ledger> findByCreatedAtBetween(Date fromDate, Date toDate, int pageSize, String sortBy,
 			String sortType) {
 		Pageable pageable = genPageable(pageSize, pageSize, sortBy, sortType);
-		Page<Ledger> page = ledRepo.findByCreateAtBetween(fromDate, toDate, pageable);
+		Page<Ledger> page = ledRepo.findByCreatedAtBetween(fromDate, toDate, pageable);
 		return page;
 	}
 

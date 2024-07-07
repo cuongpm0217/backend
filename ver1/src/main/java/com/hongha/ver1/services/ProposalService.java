@@ -28,6 +28,6 @@ public interface ProposalService {
 
 	Slice<Proposal> getAll(int pageNo, int pageSize, String sortBy, String sortType);
 
-	Slice<Proposal> findByCreateAt(Date fromDate, Date toDate, int pageNo, int pageSize, String sortBy,
+	Slice<Proposal> findByCreatedAt(Date fromDate, Date toDate, int pageNo, int pageSize, String sortBy,
 			String sortType);
 }

@@ -24,7 +24,7 @@ public interface LedgerService {
 
 	void deleteByUUID(UUID genID);
 
-	Page<Ledger> findByCreateAtBetween(Date fromDate, Date toDate, int pageSize, String sortBy, String sortType);
+	Page<Ledger> findByCreatedAtBetween(Date fromDate, Date toDate, int pageSize, String sortBy, String sortType);
 
 	Page<Ledger> getAll(int pageNo, int pageSize, String sortBy, String sortType);
 }

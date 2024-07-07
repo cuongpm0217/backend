@@ -29,6 +29,6 @@ public interface PurchaseService {
 	Page<Purchase> findByPartnerIdAndCreateAtBetween(long partnerId, Date fromDate, Date toDate, int pageNo,
 			int pageSize, String sortBy, String sortType);
 
-	Page<Purchase> findByCreateAtBetween(Date fromDate, Date toDate, int pageNo, int pageSize, String sortBy,
+	Page<Purchase> findByCreatedAtBetween(Date fromDate, Date toDate, int pageNo, int pageSize, String sortBy,
 			String sortType);
 }

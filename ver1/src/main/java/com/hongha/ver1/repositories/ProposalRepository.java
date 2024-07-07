@@ -13,5 +13,5 @@ import com.hongha.ver1.entities.Proposal;
 @Repository
 public interface ProposalRepository extends JpaRepository<Proposal, Long>{
 	Proposal findByGenId(UUID genId);
-	Slice<Proposal> findByCreateAtBetween(Date fromDate,Date toDate,Pageable pageable); 
+	Slice<Proposal> findByCreatedAtBetween(Date fromDate,Date toDate,Pageable pageable); 
 }

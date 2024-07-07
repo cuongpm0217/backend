@@ -125,10 +125,10 @@ public class ProposalServiceImpl implements ProposalService {
 	}
 
 	@Override
-	public Slice<Proposal> findByCreateAt(Date fromDate, Date toDate, int pageNo, int pageSize, String sortBy,
+	public Slice<Proposal> findByCreatedAt(Date fromDate, Date toDate, int pageNo, int pageSize, String sortBy,
 			String sortType) {
 		Pageable pageable = genPageable(pageNo, pageSize, sortBy, sortType);
-		Slice<Proposal> page = proposalRepo.findByCreateAtBetween(fromDate, toDate, pageable);
+		Slice<Proposal> page = proposalRepo.findByCreatedAtBetween(fromDate, toDate, pageable);
 		return page;
 	}
 
