@@ -1,6 +1,5 @@
 package com.hongha.ver1.controllers;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,12 +38,11 @@ public class AccountController {
 	private AccountService accountService;
 
 	@GetMapping("/")
-	@ResponseStatus(HttpStatus.OK)
+//	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> getAll(@RequestParam(required = false) String code,
 			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size,
-			@RequestParam(defaultValue = "code") String sortBy, @RequestParam(defaultValue = "asc") String sortType)
-			throws IOException {
+			@RequestParam(defaultValue = "code") String sortBy, @RequestParam(defaultValue = "asc") String sortType) {
 		try {
 			Page<Account> accounts;
 			if (code == null) {
@@ -57,6 +55,7 @@ public class AccountController {
 			for (int i = 0; i < accountDTOs.size(); i++) {
 				accountDTOs.get(i).setNo(i + 1);
 			}
+
 			Map<String, Object> response = new HashMap<>();
 			response.put("accounts", accountDTOs);
 			response.put("currentPage", accounts.getNumber());
