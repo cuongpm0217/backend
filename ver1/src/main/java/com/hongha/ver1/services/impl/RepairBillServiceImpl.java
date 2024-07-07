@@ -14,7 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.hongha.ver1.entities.RepairBill;
 import com.hongha.ver1.repositories.RepairBillRepository;
 import com.hongha.ver1.services.RepairBillService;
+import com.hongha.ver1.utils.BeanUtil;
 import com.hongha.ver1.utils.GenerateCode;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 
 @Service
 public class RepairBillServiceImpl implements RepairBillService {
@@ -26,7 +30,7 @@ public class RepairBillServiceImpl implements RepairBillService {
 	@Override
 	@Transactional
 	public RepairBill save(RepairBill billRequest) {
-		int countInYear = billRepo.countInYear();
+		int countInYear = getCountInYearUsingJPQL();
 		String code = genCode.GenInvoiceCode(countInYear, RepairBill.class.getName());
 		billRequest.setCode(code);
 		RepairBill isInserted = billRepo.save(billRequest);
@@ -136,13 +140,13 @@ public class RepairBillServiceImpl implements RepairBillService {
 		return page;
 	}
 
-	@Override
-	public Page<RepairBill> findByLicensePlate(String licensePlate, int pageNo, int pageSize, String sortBy,
-			String sortType) {
-		Pageable pageable = genPageable(pageNo, pageSize, sortBy, sortType);
-		Page<RepairBill> page = billRepo.findByLicensePlate(licensePlate, pageable);
-		return page;
-	}
+//	@Override
+//	public Page<RepairBill> findByLicensePlate(String licensePlate, int pageNo, int pageSize, String sortBy,
+//			String sortType) {
+//		Pageable pageable = genPageable(pageNo, pageSize, sortBy, sortType);
+//		Page<RepairBill> page = billRepo.findByLicensePlate(licensePlate, pageable);
+//		return page;
+//	}
 
 	private Pageable genPageable(int pageNo, int pageSize, String sortBy, String sortType) {
 		Sort sort = Sort.by(sortBy);
@@ -152,5 +156,11 @@ public class RepairBillServiceImpl implements RepairBillService {
 		Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
 		return pageable;
 	}
-
+	private int getCountInYearUsingJPQL() {
+		int countInYear = 0;
+		EntityManager entityManager = BeanUtil.getBean(EntityManager.class);
+		Query query = entityManager.createQuery("select count(r.id) from _repair_bill r where year(r.started_date)=year(now())");
+		countInYear = (int) query.getSingleResult();
+		return countInYear;
+	}
 }

@@ -25,6 +25,6 @@ public interface RepairBillService {
 	Page<RepairBill> findByStartedDateBetween(Date fromDate, Date toDate, int pageNo, int pageSize, String sortBy,
 			String sortType);
 
-	Page<RepairBill> findByLicensePlate(String licensePlate, int pageNo, int pageSize, String sortBy, String sortType);
+//	Page<RepairBill> findByLicensePlate(String licensePlate, int pageNo, int pageSize, String sortBy, String sortType);
 
 }

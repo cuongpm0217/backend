@@ -16,7 +16,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.hongha.ver1.entities.Purchase;
 import com.hongha.ver1.repositories.PurchaseRepository;
 import com.hongha.ver1.services.PurchaseService;
+import com.hongha.ver1.utils.BeanUtil;
 import com.hongha.ver1.utils.GenerateCode;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 
 @Service
 public class PurchaseServiceImpl implements PurchaseService {
@@ -29,7 +33,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 	@Transactional
 	public Purchase save(Purchase purRequest) {
 		//mq generate purchase code
-		int countInYear = purRepo.countInYear();
+		int countInYear = getCountInYearUsingJPQL();
 		String code = genCode.GenInvoiceCode(countInYear, Purchase.class.getName());
 		purRequest.setCode(code);
 		//mq insert then generate code 
@@ -138,15 +142,15 @@ public class PurchaseServiceImpl implements PurchaseService {
 	public Page<Purchase> findByPartnerIdAndCreateAtBetween(long partnerId, Date fromDate, Date toDate, int pageNo,
 			int pageSize, String sortBy, String sortType) {
 		Pageable pageable = genPageable(pageNo, pageSize, sortBy, sortType);
-		Page<Purchase> page = purRepo.findByPartnerIdAndCreateAtBetween(partnerId, fromDate, toDate, pageable);
+		Page<Purchase> page = purRepo.findByPartnerIdAndCreatedAtBetween(partnerId, fromDate, toDate, pageable);
 		return page;
 	}
 
 	@Override
-	public Page<Purchase> findByCreateAtBetween(Date fromDate, Date toDate, int pageNo, int pageSize, String sortBy,
+	public Page<Purchase> findByCreatedAtBetween(Date fromDate, Date toDate, int pageNo, int pageSize, String sortBy,
 			String sortType) {
 		Pageable pageable = genPageable(pageNo, pageSize, sortBy, sortType);
-		Page<Purchase> page = purRepo.findByCreateAtBetween(fromDate, toDate, pageable);
+		Page<Purchase> page = purRepo.findByCreatedAtBetween(fromDate, toDate, pageable);
 		return page;
 	}
 
@@ -157,5 +161,12 @@ public class PurchaseServiceImpl implements PurchaseService {
 		}
 		Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
 		return pageable;
+	}
+	private int getCountInYearUsingJPQL() {
+		int countInYear = 0;
+		EntityManager entityManager = BeanUtil.getBean(EntityManager.class);
+		Query query = entityManager.createQuery("select count(p.id) from _purchase p where year(p.created_at)=year(now())");
+		countInYear = (int) query.getSingleResult();
+		return countInYear;
 	}
 }

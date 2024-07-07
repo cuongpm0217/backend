@@ -20,9 +20,11 @@ public interface RepairBillRepository extends JpaRepository<RepairBill, Long> {
 
 	RepairBill findByCode(String code);
 
-	@Query("select r.* from _repair_bill r left join _vehicle v on r.vehicle_id = v.id where v.license_plate like :licensePlate")
-	Page<RepairBill> findByLicensePlate(@Param("licensePlate") String licensePlate, Pageable pageable);
-	
-	@Query("select count(r.id) from _repair_bill r where year(r.started_date)=year(now())")
-	int countInYear();
+//	@Query("select _repair_bill.id,_repair_bill.gen_id,_repair_bill.code,_repair_bill.detail,"
+//			+ "_repair_bill.customer_id,_repair_bill.started_date,_repair_bill.end_date,_repair_bill.vehicle_id,"
+//			+ "_repair_bill.branch_id,_repair_bill.employee_id,_repair_bill.surrogate_id"
+//			+ "from _repair_bill left join _vehicle  on _repair_bill.vehicle_id = _vehicle.id where _vehicle.license_plate like :licensePlate")
+//	Page<RepairBill> findByLicensePlate(@Param("licensePlate") String licensePlate, Pageable pageable);
+
+
 }

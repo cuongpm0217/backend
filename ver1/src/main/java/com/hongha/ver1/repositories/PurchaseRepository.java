@@ -17,10 +17,10 @@ public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
 
 	Purchase findByCode(String code);
 
-	Page<Purchase> findByPartnerIdAndCreateAtBetween(long partnerId, Date fromDate, Date toDate, Pageable paging);
+	Page<Purchase> findByPartnerIdAndCreatedAtBetween(long partnerId, Date fromDate, Date toDate, Pageable paging);
 
-	Page<Purchase> findByCreateAtBetween(Date fromDate, Date toDate, Pageable paging);
+	Page<Purchase> findByCreatedAtBetween(Date fromDate, Date toDate, Pageable paging);
 	
-	@Query("select count(p.id) from _purchase p where year(p.created_at)=year(now())")
-	int countInYear();
+//	@Query("select count(p.id) from _purchase p where year(p.created_at)=year(now())")
+//	double total();
 }
