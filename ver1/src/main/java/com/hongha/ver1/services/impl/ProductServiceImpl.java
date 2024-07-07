@@ -19,7 +19,7 @@ import com.hongha.ver1.services.ProductService;
 public class ProductServiceImpl implements ProductService {
 	@Autowired
 	private ProductRepository productRepo;
-	
+
 	@Override
 	@Transactional
 	public Product save(Product productRequest) {
@@ -129,13 +129,6 @@ public class ProductServiceImpl implements ProductService {
 			String sortType) {
 		Pageable pageable = genPageable(pageNo, pageSize, sortBy, sortType);
 		Page<Product> page = productRepo.findByProductCategoryId(categoryId, pageable);
-		return page;
-	}
-
-	@Override
-	public Page<Product> findByProductTypeId(long typeId, int pageNo, int pageSize, String sortBy, String sortType) {
-		Pageable pageable = genPageable(pageNo, pageSize, sortBy, sortType);
-		Page<Product> page = productRepo.findByProductTypeId(typeId, pageable);
 		return page;
 	}
 

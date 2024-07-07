@@ -29,5 +29,4 @@ public interface ProductService {
 
 	Page<Product> findByProductCategoryId(long categoryId, int pageNo, int pageSize, String sortBy, String sortType);
 
-	Page<Product> findByProductTypeId(long typeId, int pageNo, int pageSize, String sortBy, String sortType);
 }
