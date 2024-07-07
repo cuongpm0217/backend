@@ -124,8 +124,8 @@ public class CurrencyServiceImpl implements CurrencyService {
 			throw new RuntimeException("Not found " + genID);
 		}
 	}
-
-	private void loadExchangeFromVCB() {
+	@Scheduled(cron = "0 0 */4 ? * *")
+	public void loadExchangeFromVCB() {
 		moneyRepo.deleteAll();
 		// default VND
 		Currency vnd = new Currency();
@@ -179,7 +179,7 @@ public class CurrencyServiceImpl implements CurrencyService {
 	}
 
 	@Override
-	@Scheduled(cron = "0 0 */4 ? * *")
+	
 	public Page<Currency> getAll(int pageNo, int pageSize, String sortBy, String sortType) {
 		loadExchangeFromVCB();
 		Sort sort = Sort.by(sortBy);
