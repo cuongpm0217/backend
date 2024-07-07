@@ -109,12 +109,14 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	@Transactional
-	public void delete(long id) {
+	public boolean delete(long id) {
 		Account acc = accountRepo.getReferenceById(id);
 		if (acc != null) {
 			accountRepo.deleteById(id);
+			return true;
 		} else {
-			throw new RuntimeException("Not found:" + String.valueOf(id));
+			return false;
+//			throw new RuntimeException("Not found:" + String.valueOf(id));
 		}
 	}
 
@@ -139,12 +141,13 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	@Transactional
-	public void deleteByUUID(UUID genID) {
+	public boolean deleteByUUID(UUID genID) {
 		Account accountUpdate = accountRepo.findByGenId(genID);
 		if (accountUpdate != null) {
 			accountRepo.deleteById(accountUpdate.getId());
+			return true;
 		} else {
-			throw new RuntimeException("Not found " + genID);
+			return false;
 		}
 	}
 
