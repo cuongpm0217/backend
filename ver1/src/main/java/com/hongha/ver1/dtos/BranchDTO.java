@@ -16,4 +16,5 @@ public class BranchDTO extends BaseDTO{
 	private String address;
 	private String phone1;
 	private String phone2;
+	private int no;
 }

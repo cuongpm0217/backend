@@ -11,4 +11,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CustomerTypeDTO extends BaseDTO {
 	private String name;
+	private int no;
 }

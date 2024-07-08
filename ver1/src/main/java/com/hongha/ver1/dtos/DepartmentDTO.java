@@ -14,4 +14,5 @@ public class DepartmentDTO extends BaseDTO {
 	private String vname;
 	private long branchId;
 	private String code;
+	private int no;
 }
