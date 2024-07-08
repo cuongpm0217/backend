@@ -1,14 +1,17 @@
 package com.hongha.ver1.controllers;
 
-import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,8 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hongha.ver1.dtos.CurrencyDTO;
@@ -35,42 +37,120 @@ public class CurrencyController {
 	private CurrencyService currencyService;
 
 	@GetMapping("/")
-	@ResponseBody
-	public List<CurrencyDTO> getAll() throws IOException {
-		List<Currency> currencys = currencyService.getAll();
-		
-		return currencys.stream().map(currency -> mapper.map(currency, CurrencyDTO.class)).collect(Collectors.toList());
+	public ResponseEntity<Map<String, Object>> getAll(
+			@RequestParam(required = false) String code,
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size,
+			@RequestParam(defaultValue = "code") String sortBy,
+			@RequestParam(defaultValue = "des") String sortType) {
+		try {
+			Page<Currency> currencies;
+			if (code == null || code!="") {
+				currencies = currencyService.getAll(page, size, sortBy, sortType);
+			} else {
+				currencies = currencyService.findByCodeContaining(code, page, size, sortBy, sortType);
+			}
+			// set No > DTO
+			List<CurrencyDTO> currencyDTOs = currencies.stream().map(currency -> mapper.map(currency, CurrencyDTO.class))
+					.collect(Collectors.toList());
+			for (int i = 0; i < currencyDTOs.size(); i++) {
+				currencyDTOs.get(i).setNo(i + 1);
+			}
+
+			Map<String, Object> response = new HashMap<>();
+			response.put("currency", currencyDTOs);
+			response.put("currentPage", currencies.getNumber());
+			response.put("totalItems", currencies.getTotalElements());
+			response.put("totalPages", currencies.getTotalPages());
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	@PostMapping("/create")
-	@ResponseStatus(HttpStatus.CREATED)
-	@ResponseBody
-	public CurrencyDTO save(@RequestBody CurrencyDTO currencyDTO) {
+	public ResponseEntity<Map<String, Object>> save(@RequestBody CurrencyDTO currencyDTO) {
 		Currency currency = mapper.map(currencyDTO, Currency.class);
 		Currency currencyCreated = currencyService.save(currency);
-		return mapper.map(currencyCreated, CurrencyDTO.class);
+		CurrencyDTO result = mapper.map(currencyCreated, CurrencyDTO.class);
+		String msg = "";
+		Map<String, Object> response = new HashMap<>();
+		HttpStatus status;
+		if (result != null) {
+			msg = "create Success";
+			status = HttpStatus.CREATED;
+		} else {
+			msg = "create Fail";
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		response.put("currency", result);
+		response.put("message", msg);
+		return new ResponseEntity<>(response, status);
 	}
 
-	@GetMapping("/uuid={uuid}")
-	@ResponseBody
-	public CurrencyDTO getOneByUUID(@PathVariable("uuid") UUID uuid) {
-		return mapper.map(currencyService.findByUUID(uuid), CurrencyDTO.class);
+	// use uuid
+	@GetMapping("/{uuid}")
+	public ResponseEntity<Map<String, Object>> getOneByUUID(@PathVariable("uuid") UUID uuid) {
+		CurrencyDTO result = mapper.map(currencyService.findByUUID(uuid), CurrencyDTO.class);
+		Map<String, Object> response = new HashMap<>();
+		String msg = "";
+		HttpStatus status;
+		if (result != null) {
+			status = HttpStatus.OK;
+			msg = "Found:" + result.getCode();
+		} else {
+			status = HttpStatus.NOT_FOUND;
+			msg = "Not found " + String.valueOf(uuid);
+		}
+		response.put("currency", result);
+		response.put("message", msg);
+		return new ResponseEntity<>(response, status);
 	}
 
-	@PutMapping("/update-currency={uuid}")
-	@ResponseStatus(HttpStatus.OK)
-	public void updateByUUID(@PathVariable("uuid") UUID uuid, @RequestBody CurrencyDTO currencyDTO) {
+	@PutMapping("/update={uuid}")
+	public ResponseEntity<Map<String, Object>> updateByUUID(
+			@PathVariable("uuid") UUID uuid,
+			@RequestBody CurrencyDTO currencyDTO) {
+		Map<String, Object> response = new HashMap<>();
+		String msg = "";
+		HttpStatus status;
 		if (!Objects.equals(uuid, currencyDTO.getGenId())) {
-			throw new IllegalArgumentException("UUIDs don't match");
+			status = HttpStatus.NO_CONTENT;
+			msg = "Not match " + String.valueOf(uuid);
+			response.put("message", msg);
+			return new ResponseEntity<>(response,status);
 		}
 		Currency currency = mapper.map(currencyDTO, Currency.class);
-		currencyService.updateByUUID(uuid, currency);
+		CurrencyDTO result = mapper.map(currencyService.updateByUUID(uuid, currency),CurrencyDTO.class);
+		
+		if (result != null) {
+			status = HttpStatus.OK;
+			msg = "Found:" + result.getCode();
+		} else {
+			status = HttpStatus.NOT_FOUND;
+			msg = "Not found " + String.valueOf(uuid);
+		}
+		response.put("currency", result);
+		response.put("message", msg);
+		return new ResponseEntity<>(response, status);
 	}
 
-	@DeleteMapping("/delete-currency={uuid}")
-	@ResponseStatus(HttpStatus.OK)
-	public void deleteByUUID(@PathVariable("uuid") UUID uuid) {
-		currencyService.deleteByUUID(uuid);
+	@DeleteMapping("/delete={uuid}")
+	public ResponseEntity<Map<String, Object>> deleteByUUID(@PathVariable("uuid") UUID uuid) {
+		boolean result = currencyService.deleteByUUID(uuid);
+		Map<String, Object> response = new HashMap<>();
+		String msg = "";
+		HttpStatus status;
+		if (result) {
+			status = HttpStatus.OK;
+			msg = "DELETED";
+		} else {
+			status = HttpStatus.NOT_FOUND;
+			msg = "Not found " + String.valueOf(uuid);
+		}
+		response.put("result", result);
+		response.put("message", msg);
+		return new ResponseEntity<>(response, status);
 	}
 	
 }
