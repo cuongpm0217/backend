@@ -78,12 +78,13 @@ public class ExpenseServiceImpl implements ExpenseService {
 
 	@Override
 	@Transactional
-	public void delete(long id) {
+	public boolean delete(long id) {
 		Expense selected = expRepo.getReferenceById(id);
 		if (selected != null) {
 			expRepo.deleteById(id);
+			return true;
 		} else {
-			throw new RuntimeException("Not found Expense:" + String.valueOf(id));
+			return false;
 		}
 	}
 
@@ -108,12 +109,13 @@ public class ExpenseServiceImpl implements ExpenseService {
 
 	@Override
 	@Transactional
-	public void deleteByUUID(UUID genID) {
+	public boolean deleteByUUID(UUID genID) {
 		Expense selected = expRepo.findByGenId(genID);
 		if (selected != null) {
 			expRepo.deleteById(selected.getId());
+			return true;
 		} else {
-			throw new RuntimeException("Not found Expense:" + String.valueOf(genID));
+			return false;
 		}
 	}
 

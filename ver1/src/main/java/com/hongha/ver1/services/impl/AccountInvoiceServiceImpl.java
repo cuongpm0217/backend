@@ -82,12 +82,13 @@ public class AccountInvoiceServiceImpl implements AccountInvoiceService {
 
 	@Override
 	@Transactional
-	public void delete(long id) {
+	public boolean delete(long id) {
 		AccountInvoice del = accInvRepo.getReferenceById(id);
 		if (del != null) {
 			accInvRepo.deleteById(id);
+			return true;
 		} else {
-			throw new RuntimeException("Not found:" + String.valueOf(id));
+			return false;
 		}
 	}
 
@@ -115,12 +116,14 @@ public class AccountInvoiceServiceImpl implements AccountInvoiceService {
 
 	@Override
 	@Transactional
-	public void deleteByUUID(UUID genID) {
+	public boolean deleteByUUID(UUID genID) {
 		AccountInvoice updateObj = accInvRepo.findByGenId(genID);
-		if (updateObj != null)
+		if (updateObj != null) {
 			accInvRepo.deleteById(updateObj.getId());
-		else
-			throw new RuntimeException("Not found:" + String.valueOf(genID));
+			return true;
+		} else {
+			return false;
+		}
 
 	}
 

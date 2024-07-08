@@ -18,11 +18,11 @@ public interface EmployeeService {
 
 	Employee update(long id, Employee employeeRequest);
 
-	void delete(long id);
+	boolean delete(long id);
 
 	Employee updateByUUID(UUID genID, Employee employeeRequest);
 
-	void deleteByUUID(UUID genID);
+	boolean deleteByUUID(UUID genID);
 
 	Page<Employee> getAll(int pageNo, int pageSize, String sortBy, String sortType);
 
@@ -32,4 +32,5 @@ public interface EmployeeService {
 
 	Page<Employee> findByBranchIdAndDepartmentId(long branchId, long departmentId, int pageNo, int pageSize,
 			String sortBy, String sortType);
+	
 }

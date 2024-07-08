@@ -89,12 +89,13 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public void delete(long id) {
+	public boolean delete(long id) {
 		Customer updateObj = cusRepo.getReferenceById(id);
 		if (updateObj != null) {
 			cusRepo.deleteById(updateObj.getId());
+			return true;
 		} else {
-			throw new RuntimeException("Not found Customer:" + String.valueOf(id));
+			return false;
 		}
 	}
 
@@ -109,12 +110,13 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public void deleteByUUID(UUID genID) {
+	public boolean deleteByUUID(UUID genID) {
 		Customer updateObj = cusRepo.findByGenId(genID);
 		if (updateObj != null) {
 			cusRepo.deleteById(updateObj.getId());
+			return true;
 		} else {
-			throw new RuntimeException("Not found Customer" + String.valueOf(genID));
+			return false;
 		}
 
 	}

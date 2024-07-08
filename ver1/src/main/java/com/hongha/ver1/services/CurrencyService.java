@@ -18,12 +18,15 @@ public interface CurrencyService {
 
 	Currency update(long id, Currency currencyRequest);
 
-	void delete(long id);
+	boolean delete(long id);
 
 	Currency updateByUUID(UUID genID, Currency currencyRequest);
 
-	void deleteByUUID(UUID genID);
+	boolean deleteByUUID(UUID genID);
 
 	Currency getExchangeVNDByCode(String code);
+
 	Page<Currency> getAll(int pageNo, int pageSize, String sortBy, String sortType);
+
+	Page<Currency> findByCodeContaining(String code, int pageNo, int pageSize, String sortBy, String sortType);
 }

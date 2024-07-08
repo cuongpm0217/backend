@@ -82,12 +82,13 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	@Transactional
-	public void delete(long id) {
+	public boolean delete(long id) {
 		Partner selected = partnerRepo.getReferenceById(id);
 		if (selected != null) {
 			partnerRepo.deleteById(id);
+			return true;
 		} else {
-			throw new RuntimeException("Not found Partner:" + String.valueOf(id));
+			return false;
 		}
 	}
 
@@ -116,12 +117,13 @@ public class PartnerServiceImpl implements PartnerService {
 
 	@Override
 	@Transactional
-	public void deleteByUUID(UUID genID) {
+	public boolean deleteByUUID(UUID genID) {
 		Partner selected = partnerRepo.findByGenId(genID);
 		if (selected != null) {
 			partnerRepo.deleteById(selected.getId());
+			return true;
 		} else {
-			throw new RuntimeException("Not found Partner:" + String.valueOf(genID));
+			return false;
 		}
 	}
 

@@ -76,12 +76,13 @@ public class UnitServiceImpl implements UnitService {
 
 	@Override
 	@Transactional
-	public void delete(long id) {
+	public boolean delete(long id) {
 		Unit selected = unitRepo.getReferenceById(id);
 		if (selected != null) {
 			unitRepo.deleteById(id);
+			return true;
 		} else {
-			throw new RuntimeException("Not found Unit:" + String.valueOf(id));
+			return false;
 		}
 	}
 
@@ -98,12 +99,13 @@ public class UnitServiceImpl implements UnitService {
 
 	@Override
 	@Transactional
-	public void deleteByUUID(UUID genID) {
+	public boolean deleteByUUID(UUID genID) {
 		Unit selected = unitRepo.findByGenId(genID);
 		if (selected != null) {
 			unitRepo.deleteById(selected.getId());
+			return true;
 		} else {
-			throw new RuntimeException("Not found Unit:" + String.valueOf(genID));
+			return false;
 		}
 	}
 

@@ -86,12 +86,13 @@ public class ProposalServiceImpl implements ProposalService {
 
 	@Override
 	@Transactional
-	public void delete(long id) {
+	public boolean delete(long id) {
 		Proposal selected = proposalRepo.getReferenceById(id);
 		if (selected != null) {
 			proposalRepo.deleteById(id);
+			return true;
 		} else {
-			throw new RuntimeException("Not found Proposal:" + String.valueOf(id));
+			return false;
 		}
 	}
 
@@ -108,12 +109,13 @@ public class ProposalServiceImpl implements ProposalService {
 
 	@Override
 	@Transactional
-	public void deleteByUUID(UUID genID) {
+	public boolean deleteByUUID(UUID genID) {
 		Proposal selected = proposalRepo.findByGenId(genID);
 		if (selected != null) {
 			proposalRepo.deleteById(selected.getId());
+			return true;
 		} else {
-			throw new RuntimeException("Not found Proposal:" + String.valueOf(genID));
+			return false;
 		}
 	}
 

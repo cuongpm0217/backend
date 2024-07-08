@@ -18,11 +18,11 @@ public interface CustomerService {
 
 	Customer update(long id, Customer customerRequest);
 
-	void delete(long id);
+	boolean delete(long id);
 
 	Customer updateByUUID(UUID genID, Customer customerRequest);
 
-	void deleteByUUID(UUID genID);
+	boolean deleteByUUID(UUID genID);
 
 	Page<Customer> getAll(int pageNo, int pageSize, String sortBy, String sortType);
 

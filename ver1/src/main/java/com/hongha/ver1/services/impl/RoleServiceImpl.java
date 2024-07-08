@@ -62,10 +62,13 @@ public class RoleServiceImpl implements RoleService {
 
 	@Override
 	@Transactional
-	public void delete(long id) {
+	public boolean delete(long id) {
 		Role role = roleRepo.getReferenceById(id);
 		if (role.getId() != null) {
 			roleRepo.deleteById(id);
+			return true;
+		} else {
+			return false;
 		}
 	}
 
@@ -98,12 +101,14 @@ public class RoleServiceImpl implements RoleService {
 
 	@Override
 	@Transactional
-	public void deleteByUUID(UUID genID) {
+	public boolean deleteByUUID(UUID genID) {
 		Role role = roleRepo.findByGenId(genID);
 		if (role != null) {
 			roleRepo.deleteById(role.getId());
+			//delete user_role
+			return true;
 		} else {
-			throw new RuntimeException("Not found Role:" + String.valueOf(genID));
+			return false;
 		}
 	}
 

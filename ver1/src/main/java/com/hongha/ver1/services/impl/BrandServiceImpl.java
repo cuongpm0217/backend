@@ -91,12 +91,13 @@ public class BrandServiceImpl implements BrandService {
 
 	@Override
 	@Transactional
-	public void delete(long id) {
+	public boolean delete(long id) {
 		Brand selected = brandRepo.getReferenceById(id);
 		if (selected != null) {
 			brandRepo.deleteById(id);
+			return true;
 		} else {
-			throw new RuntimeException("Not found ProductBrand:" + String.valueOf(id));
+			return false;
 		}
 	}
 
@@ -119,12 +120,13 @@ public class BrandServiceImpl implements BrandService {
 
 	@Override
 	@Transactional
-	public void deleteByUUID(UUID genID) {
+	public boolean deleteByUUID(UUID genID) {
 		Brand selected = brandRepo.findByGenId(genID);
 		if (selected != null) {
 			brandRepo.deleteById(selected.getId());
+			return true;
 		} else {
-			throw new RuntimeException("Not found ProductBrand:" + String.valueOf(genID));
+			return false;
 		}
 	}
 

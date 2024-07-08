@@ -4,8 +4,13 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.hongha.ver1.entities.Branch;
 import com.hongha.ver1.repositories.BranchRepository;
 import com.hongha.ver1.services.BranchService;
@@ -47,30 +52,35 @@ public class BranchServiceImpl implements BranchService {
 	public Branch update(long id, Branch branchRequest) {
 		Branch branchUpdate = branchRepo.getReferenceById(id);
 		if (branchUpdate != null) {
-			branchUpdate.setAddress(branchRequest.getAddress());
-			branchUpdate.setLevel(branchRequest.getLevel());
-			branchUpdate.setName(branchRequest.getName());
-			branchUpdate.setPhone1(branchRequest.getPhone1());
-			branchUpdate.setPhone2(branchRequest.getPhone2());
-			Branch updated = branchRepo.save(branchUpdate);
-			if (updated != null) {
-				return updated;
-			} else {
-				throw new RuntimeException("Can't update");
-			}
+			return updateObj(branchRequest, branchUpdate);
 		} else {
 			throw new RuntimeException("Not found:" + String.valueOf(id));
 		}
 	}
 
+	private Branch updateObj(Branch branchRequest, Branch branchUpdate) {
+		branchUpdate.setAddress(branchRequest.getAddress());
+		branchUpdate.setLevel(branchRequest.getLevel());
+		branchUpdate.setName(branchRequest.getName());
+		branchUpdate.setPhone1(branchRequest.getPhone1());
+		branchUpdate.setPhone2(branchRequest.getPhone2());
+		Branch updated = branchRepo.save(branchUpdate);
+		if (updated != null) {
+			return updated;
+		} else {
+			throw new RuntimeException("Can't update");
+		}
+	}
+
 	@Override
 	@Transactional
-	public void delete(long id) {
+	public boolean delete(long id) {
 		Branch branch = branchRepo.getReferenceById(id);
 		if (branch.getId() != null) {
 			branchRepo.deleteById(id);
+			return true;
 		} else {
-			throw new RuntimeException("Not found");
+			return false;
 		}
 	}
 
@@ -88,17 +98,7 @@ public class BranchServiceImpl implements BranchService {
 	public Branch updateByUUID(UUID genID, Branch branchRequest) {
 		Branch branchUpdate = branchRepo.findByGenId(genID);
 		if (branchUpdate != null) {
-			branchUpdate.setAddress(branchRequest.getAddress());
-			branchUpdate.setLevel(branchRequest.getLevel());
-			branchUpdate.setName(branchRequest.getName());
-			branchUpdate.setPhone1(branchRequest.getPhone1());
-			branchUpdate.setPhone2(branchRequest.getPhone2());
-			Branch updated = branchRepo.save(branchUpdate);
-			if (updated != null) {
-				return updated;
-			} else {
-				throw new RuntimeException("Can't update");
-			}
+			return updateObj(branchRequest, branchUpdate);
 		} else {
 			throw new RuntimeException("Not found:" + String.valueOf(genID));
 		}
@@ -106,12 +106,38 @@ public class BranchServiceImpl implements BranchService {
 
 	@Override
 	@Transactional
-	public void deleteByUUID(UUID genID) {
+	public boolean deleteByUUID(UUID genID) {
 		Branch branch = branchRepo.findByGenId(genID);
 		if (branch != null) {
 			branchRepo.deleteById(branch.getId());
-		} else
-			throw new RuntimeException("Not found");
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public Page<Branch> findByNameOrAddressLike(String name, String address, int pageNo, int pageSize, String sortBy,
+			String sortType) {
+		Pageable paging = genPage(pageNo, pageSize, sortBy, sortType);
+		Page<Branch> pageResult = branchRepo.findByNameOrAddressLike(name, address, paging);
+		return pageResult;
+	}
+
+	@Override
+	public Page<Branch> getAll(int pageNo, int pageSize, String sortBy, String sortType) {
+		Pageable paging = genPage(pageNo, pageSize, sortBy, sortType);
+		Page<Branch> pageResult = branchRepo.findAll(paging);
+		return pageResult;
+	}
+
+	private Pageable genPage(int pageNo, int pageSize, String sortBy, String sortType) {
+		Sort sorted = Sort.by(sortBy);
+		if (sortType.equals("des")) {
+			sorted = sorted.descending();
+		}
+		Pageable paging = PageRequest.of(pageNo, pageSize, sorted);
+		return paging;
 	}
 
 }

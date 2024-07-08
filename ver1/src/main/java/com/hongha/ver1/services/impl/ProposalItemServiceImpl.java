@@ -69,12 +69,13 @@ public class ProposalItemServiceImpl implements ProposalItemService {
 
 	@Override
 	@Transactional
-	public void delete(long id) {
+	public boolean delete(long id) {
 		ProposalItem selected = propItemRepo.getReferenceById(id);
 		if (selected != null) {
 			propItemRepo.deleteById(id);
+			return true;
 		} else {
-			throw new RuntimeException("Not found ProposalItem:" + String.valueOf(id));
+			return false;
 		}
 	}
 
@@ -91,12 +92,13 @@ public class ProposalItemServiceImpl implements ProposalItemService {
 
 	@Override
 	@Transactional
-	public void deleteByUUID(UUID genID) {
+	public boolean deleteByUUID(UUID genID) {
 		ProposalItem selected = propItemRepo.findByGenId(genID);
 		if (selected != null) {
 			propItemRepo.deleteById(selected.getId());
+			return true;
 		} else {
-			throw new RuntimeException("Not found ProposalItem:" + String.valueOf(genID));
+			return false;
 		}
 	}
 

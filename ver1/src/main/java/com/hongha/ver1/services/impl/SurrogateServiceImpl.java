@@ -80,12 +80,13 @@ public class SurrogateServiceImpl implements SurrogateService {
 
 	@Override
 	@Transactional
-	public void delete(long id) {
+	public boolean delete(long id) {
 		Surrogate selected = surRepo.getReferenceById(id);
 		if (selected != null) {
 			surRepo.deleteById(id);
+			return true;
 		} else {
-			throw new RuntimeException("Not found Surrogate:" + String.valueOf(id));
+			return false;
 		}
 	}
 
@@ -102,12 +103,13 @@ public class SurrogateServiceImpl implements SurrogateService {
 
 	@Override
 	@Transactional
-	public void deleteByUUID(UUID genID) {
+	public boolean deleteByUUID(UUID genID) {
 		Surrogate selected = surRepo.findByGenId(genID);
 		if (selected != null) {
 			surRepo.deleteById(selected.getId());
+			return true;
 		} else {
-			throw new RuntimeException("Not found Surrogate:" + String.valueOf(genID));
+			return false;
 		}
 	}
 

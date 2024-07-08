@@ -78,12 +78,13 @@ public class SalaryTypeServiceImpl implements SalaryTypeService{
 
 	@Override
 	@Transactional
-	public void delete(long id) {
+	public boolean delete(long id) {
 		SalaryType selected = salTypeRepo.getReferenceById(id);
 		if (selected != null) {
 			salTypeRepo.deleteById(id);
+			return true;
 		} else {
-			throw new RuntimeException("Not found SalaryType:" + String.valueOf(id));
+			return false;
 		}
 	}
 
@@ -100,12 +101,13 @@ public class SalaryTypeServiceImpl implements SalaryTypeService{
 
 	@Override
 	@Transactional
-	public void deleteByUUID(UUID genID) {
+	public boolean deleteByUUID(UUID genID) {
 		SalaryType selected = salTypeRepo.findByGenId(genID);
 		if (selected != null) {
 			salTypeRepo.deleteById(selected.getId());
+			return true;
 		} else {
-			throw new RuntimeException("Not found SalaryType:" + String.valueOf(genID));
+			return false;
 		}
 	}
 }

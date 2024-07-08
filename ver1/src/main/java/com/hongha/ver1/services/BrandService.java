@@ -19,11 +19,11 @@ public interface BrandService {
 
 	Brand update(long id, Brand productBrandRequest);
 
-	void delete(long id);
+	boolean delete(long id);
 
 	Brand updateByUUID(UUID genID, Brand productBrandRequest);
 
-	void deleteByUUID(UUID genID);
+	boolean deleteByUUID(UUID genID);
 
 	Page<Brand> getAll(int pageNo, int pageSize, String sortBy, String sortType);
 

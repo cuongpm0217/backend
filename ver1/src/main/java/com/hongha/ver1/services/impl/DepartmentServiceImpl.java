@@ -92,12 +92,13 @@ public class DepartmentServiceImpl implements DepartmentService {
 
 	@Override
 	@Transactional
-	public void delete(long id) {
+	public boolean delete(long id) {
 		Department selected = depRepo.getReferenceById(id);
 		if (selected != null) {
 			depRepo.deleteById(id);
+			return true;
 		} else {
-			throw new RuntimeException("Not found Department:" + String.valueOf(id));
+			return false;
 		}
 	}
 
@@ -121,12 +122,13 @@ public class DepartmentServiceImpl implements DepartmentService {
 
 	@Override
 	@Transactional
-	public void deleteByUUID(UUID genID) {
+	public boolean deleteByUUID(UUID genID) {
 		Department selected = depRepo.findByGenId(genID);
 		if (selected != null) {
 			depRepo.deleteById(selected.getId());
+			return true;
 		} else {
-			throw new RuntimeException("Not found Department:" + String.valueOf(genID));
+			return false;
 		}
 	}
 
@@ -195,7 +197,9 @@ public class DepartmentServiceImpl implements DepartmentService {
 				case 2:
 					dep.setBranchId((long) cellValue);
 					break;
-
+				case 3:
+					dep.setCode((String)getCellValue(cell));
+					break;
 				default:
 					break;
 				}

@@ -88,12 +88,13 @@ public class RepairBillItemServiceImpl implements RepairBillItemService{
 
 	@Override
 	@Transactional
-	public void delete(long id) {
+	public boolean delete(long id) {
 		RepairBillItem selected = billItemRepo.getReferenceById(id);
 		if (selected != null) {
 			billItemRepo.deleteById(id);
+			return true;
 		} else {
-			throw new RuntimeException("Not found RepairBillItem:" + String.valueOf(id));
+			return false;
 		}
 	}
 
@@ -110,12 +111,13 @@ public class RepairBillItemServiceImpl implements RepairBillItemService{
 
 	@Override
 	@Transactional
-	public void deleteByUUID(UUID genID) {
+	public boolean deleteByUUID(UUID genID) {
 		RepairBillItem selected = billItemRepo.findByGenId(genID);
 		if (selected != null) {
 			billItemRepo.deleteById(selected.getId());
+			return true;
 		} else {
-			throw new RuntimeException("Not found RepairBillItem:" + String.valueOf(genID));
+			return false;
 		}
 	}
 

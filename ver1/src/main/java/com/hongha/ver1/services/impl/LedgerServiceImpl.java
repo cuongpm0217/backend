@@ -86,12 +86,13 @@ public class LedgerServiceImpl implements LedgerService {
 
 	@Override
 	@Transactional
-	public void delete(long id) {
+	public boolean delete(long id) {
 		Ledger selected = ledRepo.getReferenceById(id);
 		if (selected != null) {
 			ledRepo.deleteById(id);
+			return true;
 		} else {
-			throw new RuntimeException("Not found Ledger:" + String.valueOf(id));
+			return false;
 		}
 	}
 
@@ -108,12 +109,13 @@ public class LedgerServiceImpl implements LedgerService {
 
 	@Override
 	@Transactional
-	public void deleteByUUID(UUID genID) {
+	public boolean deleteByUUID(UUID genID) {
 		Ledger selected = ledRepo.findByGenId(genID);
 		if (selected != null) {
 			ledRepo.deleteById(selected.getId());
+			return true;
 		} else {
-			throw new RuntimeException("Not found Ledger:" + String.valueOf(genID));
+			return false;
 		}
 	}
 

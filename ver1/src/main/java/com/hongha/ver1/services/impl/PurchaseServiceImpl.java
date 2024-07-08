@@ -100,12 +100,13 @@ public class PurchaseServiceImpl implements PurchaseService {
 
 	@Override
 	@Transactional
-	public void delete(long id) {
+	public boolean delete(long id) {
 		Purchase selected = purRepo.getReferenceById(id);
 		if (selected != null) {
 			purRepo.deleteById(id);
+			return true;
 		} else {
-			throw new RuntimeException("Not found Purchase:" + String.valueOf(id));
+			return false;
 		}
 	}
 
@@ -122,12 +123,13 @@ public class PurchaseServiceImpl implements PurchaseService {
 
 	@Override
 	@Transactional
-	public void deleteByUUID(UUID genID) {
+	public boolean deleteByUUID(UUID genID) {
 		Purchase selected = purRepo.findByGenId(genID);
 		if (selected != null) {
 			purRepo.deleteById(selected.getId());
+			return true;
 		} else {
-			throw new RuntimeException("Not found Purchase:" + String.valueOf(genID));
+			return false;
 		}
 	}
 

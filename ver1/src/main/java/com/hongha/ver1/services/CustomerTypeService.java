@@ -16,9 +16,9 @@ public interface CustomerTypeService {
 
 	CustomerType update(long id, CustomerType customerTypeRequest);
 
-	void delete(long id);
+	boolean delete(long id);
 
 	CustomerType updateByUUID(UUID genID, CustomerType customerTypeRequest);
 
-	void deleteByUUID(UUID genID);
+	boolean deleteByUUID(UUID genID);
 }

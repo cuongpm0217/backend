@@ -84,12 +84,13 @@ public class CustomerTypeServiceImpl implements CustomerTypeService {
 
 	@Override
 	@Transactional
-	public void delete(long id) {
+	public boolean delete(long id) {
 		CustomerType updateObj = cusTypeRepo.getReferenceById(id);
 		if (updateObj != null) {
 			cusTypeRepo.deleteById(id);
+			return true;
 		} else {
-			throw new RuntimeException("Not found Customer Type:" + String.valueOf(id));
+			return false;
 		}
 	}
 
@@ -112,12 +113,13 @@ public class CustomerTypeServiceImpl implements CustomerTypeService {
 
 	@Override
 	@Transactional
-	public void deleteByUUID(UUID genID) {
+	public boolean deleteByUUID(UUID genID) {
 		CustomerType updateObj = cusTypeRepo.findByGenId(genID);
 		if (updateObj != null) {
 			cusTypeRepo.deleteById(updateObj.getId());
+			return true;
 		} else {
-			throw new RuntimeException("Not found Customer Type:" + String.valueOf(genID));
+			return false;
 		}
 
 	}

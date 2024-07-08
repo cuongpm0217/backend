@@ -11,15 +11,16 @@ public interface AccountService {
 	Account findById(long id);
 
 	Account findByUUID(UUID genId);
-	Page<Account> findByCodeContaining(String code,int pageNo, int pageSize, String sortBy, String sortType);
 
 	Account update(long id, Account accountRequest);
 
-	boolean delete(long id);
-
 	Account updateByUUID(UUID genID, Account accountRequest);
 
+	boolean delete(long id);
+
 	boolean deleteByUUID(UUID genID);
+
+	Page<Account> findByCodeContaining(String code, int pageNo, int pageSize, String sortBy, String sortType);
 
 	Page<Account> getAll(int pageNo, int pageSize, String sortBy, String sortType) throws IOException;
 }

@@ -19,11 +19,11 @@ public interface DepartmentService {
 
 	Department update(long id, Department departmentRequest);
 
-	void delete(long id);
+	boolean delete(long id);
 
 	Department updateByUUID(UUID genID, Department departmentRequest);
 
-	void deleteByUUID(UUID genID);
+	boolean deleteByUUID(UUID genID);
 
 	Slice<Department> findByBranchIdAndVnameLike(long branchId, String vName, int pageNo, int pageSize, String sortBy,
 			String sortType);

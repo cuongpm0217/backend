@@ -18,11 +18,11 @@ public interface ExpenseService {
 
 	Expense update(long id, Expense expenseRequest);
 
-	void delete(long id);
+	boolean delete(long id);
 
 	Expense updateByUUID(UUID genID, Expense expenseRequest);
 
-	void deleteByUUID(UUID genID);
+	boolean deleteByUUID(UUID genID);
 
 	Page<Expense> getAll(int pageNo, int pageSize, String sortBy, String sortType);
 

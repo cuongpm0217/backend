@@ -79,12 +79,13 @@ public class VehicleServiceImpl implements VehicleService {
 
 	@Override
 	@Transactional
-	public void delete(long id) {
+	public boolean delete(long id) {
 		Vehicle selected = vehicleRepo.getReferenceById(id);
 		if (selected != null) {
 			vehicleRepo.deleteById(id);
+			return true;
 		} else {
-			throw new RuntimeException("Not found Vehicle:" + String.valueOf(id));
+			return false;
 		}
 	}
 
@@ -101,12 +102,13 @@ public class VehicleServiceImpl implements VehicleService {
 
 	@Override
 	@Transactional
-	public void deleteByUUID(UUID genID) {
+	public boolean deleteByUUID(UUID genID) {
 		Vehicle selected = vehicleRepo.findByGenId(genID);
 		if (selected != null) {
 			vehicleRepo.deleteById(selected.getId());
+			return true;
 		} else {
-			throw new RuntimeException("Not found Vehicle:" + String.valueOf(genID));
+			return false;
 		}
 	}
 

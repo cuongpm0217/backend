@@ -84,22 +84,15 @@ public class CurrencyServiceImpl implements CurrencyService {
 		}
 	}
 
-	private Currency updateObj(Currency currencyRequest, Currency updateObj) {
-		updateObj.setExchangeVND(currencyRequest.getExchangeVND());
-		updateObj.setFullName(currencyRequest.getFullName());
-		updateObj.setCode(currencyRequest.getCode());
-		updateObj.setSymbol(currencyRequest.getSymbol());
-		return moneyRepo.save(updateObj);
-	}
-
 	@Override
 	@Transactional
-	public void delete(long id) {
+	public boolean delete(long id) {
 		Currency updateObj = moneyRepo.getReferenceById(id);
 		if (Objects.nonNull(updateObj)) {
 			moneyRepo.deleteById(updateObj.getId());
+			return true;
 		} else {
-			throw new RuntimeException("Not found");
+			return false;
 		}
 	}
 
@@ -116,14 +109,16 @@ public class CurrencyServiceImpl implements CurrencyService {
 
 	@Override
 	@Transactional
-	public void deleteByUUID(UUID genID) {
+	public boolean deleteByUUID(UUID genID) {
 		Currency updateObj = moneyRepo.findByGenId(genID);
 		if (Objects.nonNull(updateObj)) {
 			moneyRepo.deleteById(updateObj.getId());
+			return true;
 		} else {
-			throw new RuntimeException("Not found " + genID);
+			return false;
 		}
 	}
+
 	@Scheduled(cron = "0 0 */4 ? * *")
 	public void loadExchangeFromVCB() {
 		moneyRepo.deleteAll();
@@ -179,15 +174,34 @@ public class CurrencyServiceImpl implements CurrencyService {
 	}
 
 	@Override
-	
 	public Page<Currency> getAll(int pageNo, int pageSize, String sortBy, String sortType) {
 		loadExchangeFromVCB();
+		Pageable pageable = genPageable(pageNo, pageSize, sortBy, sortType);
+		Page<Currency> page = moneyRepo.findAll(pageable);
+		return page;
+	}
+
+	@Override
+	public Page<Currency> findByCodeContaining(String code, int pageNo, int pageSize, String sortBy, String sortType) {
+		Pageable pageable = genPageable(pageNo, pageSize, sortBy, sortType);
+		Page<Currency> page = moneyRepo.findByCodeContaining(code, pageable);
+		return page;
+	}
+
+	private Currency updateObj(Currency currencyRequest, Currency updateObj) {
+		updateObj.setExchangeVND(currencyRequest.getExchangeVND());
+		updateObj.setFullName(currencyRequest.getFullName());
+		updateObj.setCode(currencyRequest.getCode());
+		updateObj.setSymbol(currencyRequest.getSymbol());
+		return moneyRepo.save(updateObj);
+	}
+
+	private Pageable genPageable(int pageNo, int pageSize, String sortBy, String sortType) {
 		Sort sort = Sort.by(sortBy);
 		if (sortType.equals("asc")) {// default descending >> USD no.1
 			sort = sort.ascending();
 		}
 		Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
-		Page<Currency> page = moneyRepo.findAll(pageable);
-		return page;
+		return pageable;
 	}
 }
