@@ -17,11 +17,11 @@ public interface AccountInvoiceService {
 
 	AccountInvoice update(long id, AccountInvoice accountInvoiceRequest);
 
-	void delete(long id);
+	boolean delete(long id);
 
 	AccountInvoice updateByUUID(UUID genID, AccountInvoice accountInvoiceRequest);
 
-	void deleteByUUID(UUID genID);
+	boolean deleteByUUID(UUID genID);
 
 	Page<AccountInvoice> getAll(int pageNo, int pageSize, String sortBy);
 	Page<AccountInvoice> findByInvoiceId(long invoiceId,int pageNo, int pageSize, String sortBy);
