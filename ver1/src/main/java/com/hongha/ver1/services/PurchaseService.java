@@ -18,11 +18,11 @@ public interface PurchaseService {
 
 	Purchase update(long id, Purchase purchaseRequest);
 
-	void delete(long id);
+	boolean delete(long id);
 
 	Purchase updateByUUID(UUID genID, Purchase purchaseRequest);
 
-	void deleteByUUID(UUID genID);
+	boolean deleteByUUID(UUID genID);
 
 	Page<Purchase> getAll(int pageNo, int pageSize, String sortBy, String sortType);
 

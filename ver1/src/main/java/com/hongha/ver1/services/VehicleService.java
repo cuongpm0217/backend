@@ -13,7 +13,7 @@ public interface VehicleService {
 
 	Vehicle update(long id, Vehicle vehicleRequest);
 
-	void delete(long id);
+	boolean delete(long id);
 
 	Page<Vehicle> findByLicensePlate(String licensePlate,int pageNo, int pageSize, String sortBy, String sortType);
 
@@ -21,5 +21,5 @@ public interface VehicleService {
 
 	Vehicle updateByUUID(UUID genID, Vehicle vehicleRequest);
 
-	void deleteByUUID(UUID genID);
+	boolean deleteByUUID(UUID genID);
 }

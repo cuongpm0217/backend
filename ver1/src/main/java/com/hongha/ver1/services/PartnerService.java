@@ -18,11 +18,11 @@ public interface PartnerService {
 
 	Partner update(long id, Partner partnerRequest);
 
-	void delete(long id);
+	boolean delete(long id);
 
 	Partner updateByUUID(UUID genID, Partner partnerRequest);
 
-	void deleteByUUID(UUID genID);
+	boolean deleteByUUID(UUID genID);
 
 	Page<Partner> findByPhone1OrPhone2Like(String phone1,String phone2, int pageNo, int pageSize, String sortBy, String sortType);
 

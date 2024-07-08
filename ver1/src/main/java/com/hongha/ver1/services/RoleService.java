@@ -19,10 +19,10 @@ public interface RoleService {
 
 	Role update(long id, Role RoleRequest);
 
-	void delete(long id);
+	boolean delete(long id);
 
 	Role updateByUUID(UUID genID, Role RoleRequest);
 
-	void deleteByUUID(UUID genID);
+	boolean deleteByUUID(UUID genID);
 
 }

@@ -19,11 +19,11 @@ public interface PositionService {
 
 	Position update(long id, Position positionRequest);
 
-	void delete(long id);
+	boolean delete(long id);
 
 	Position updateByUUID(UUID genID, Position positionRequest);
 
-	void deleteByUUID(UUID genID);
+	boolean deleteByUUID(UUID genID);
 
 	Page<Position> getAll(int pageNo, int pageSize, String sortBy, String sortType);
 

@@ -15,11 +15,11 @@ public interface SalaryService {
 
 	Salary update(long id, Salary salaryRequest);
 
-	void delete(long id);
+	boolean delete(long id);
 
 	Salary updateByUUID(UUID genID, Salary salaryRequest);
 
-	void deleteByUUID(UUID genID);
+	boolean deleteByUUID(UUID genID);
 
 	Page<Salary> getAll(int pageNo, int pageSize, String sortBy, String sortType);
 }

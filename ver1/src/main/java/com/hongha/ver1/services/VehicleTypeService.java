@@ -15,7 +15,7 @@ public interface VehicleTypeService {
 
 	VehicleType update(long id, VehicleType vehicleTypeRequest);
 
-	void delete(long id);
+	boolean delete(long id);
 
 	Slice<VehicleType> findByName(String name, int pageNo, int pageSize, String sortBy, String sortType);
 
@@ -23,5 +23,5 @@ public interface VehicleTypeService {
 
 	VehicleType updateByUUID(UUID genID, VehicleType vehicleTypeRequest);
 
-	void deleteByUUID(UUID genID);
+	boolean deleteByUUID(UUID genID);
 }

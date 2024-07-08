@@ -15,11 +15,11 @@ public interface UnitService {
 
 	Unit update(long id, Unit unitRequest);
 
-	void delete(long id);
+	boolean delete(long id);
 
 	Unit updateByUUID(UUID genID, Unit unitRequest);
 
-	void deleteByUUID(UUID genID);
+	boolean deleteByUUID(UUID genID);
 
 	Slice<Unit> findByName(String name, int pageNo, int pageSize, String sortBy, String sortType);
 

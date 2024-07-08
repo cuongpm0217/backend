@@ -16,9 +16,9 @@ public interface SalaryTypeService {
 
 	SalaryType update(long id, SalaryType salaryTypeRequest);
 
-	void delete(long id);
+	boolean delete(long id);
 
 	SalaryType updateByUUID(UUID genID, SalaryType salaryTypeRequest);
 
-	void deleteByUUID(UUID genID);
+	boolean deleteByUUID(UUID genID);
 }

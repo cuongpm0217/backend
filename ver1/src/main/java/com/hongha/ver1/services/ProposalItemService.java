@@ -17,11 +17,11 @@ public interface ProposalItemService {
 
 	ProposalItem update(long id, ProposalItem proposalItemRequest);
 
-	void delete(long id);
+	boolean delete(long id);
 
 	ProposalItem updateByUUID(UUID genID, ProposalItem proposalItemRequest);
 
-	void deleteByUUID(UUID genID);
+	boolean deleteByUUID(UUID genID);
 
 	Page<ProposalItem> getAll(int pageNo, int pageSize, String sortBy, String sortType);
 

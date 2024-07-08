@@ -15,11 +15,11 @@ public interface SurrogateService {
 
 	Surrogate update(long id, Surrogate surrogateRequest);
 
-	void delete(long id);
+	boolean delete(long id);
 
 	Surrogate updateByUUID(UUID genID, Surrogate surrogateRequest);
 
-	void deleteByUUID(UUID genID);
+	boolean deleteByUUID(UUID genID);
 
 	Page<Surrogate> getAll(int pageNo, int pageSize, String sortBy, String sortType);
 

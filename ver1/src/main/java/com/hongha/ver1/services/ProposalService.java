@@ -20,11 +20,11 @@ public interface ProposalService {
 
 	Proposal update(long id, Proposal proposalRequest);
 
-	void delete(long id);
+	boolean delete(long id);
 
 	Proposal updateByUUID(UUID genID, Proposal proposalRequest);
 
-	void deleteByUUID(UUID genID);
+	boolean deleteByUUID(UUID genID);
 
 	Slice<Proposal> getAll(int pageNo, int pageSize, String sortBy, String sortType);
 

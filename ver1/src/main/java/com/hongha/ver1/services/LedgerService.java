@@ -18,11 +18,11 @@ public interface LedgerService {
 
 	Ledger update(long id, Ledger ledgerRequest);
 
-	void delete(long id);
+	boolean delete(long id);
 
 	Ledger updateByUUID(UUID genID, Ledger ledgerRequest);
 
-	void deleteByUUID(UUID genID);
+	boolean deleteByUUID(UUID genID);
 
 	Page<Ledger> findByCreatedAtBetween(Date fromDate, Date toDate, int pageSize, String sortBy, String sortType);
 

@@ -19,9 +19,9 @@ public interface ProductService {
 
 	Product update(long id, Product productRequest);
 
-	void delete(long id);
+	boolean delete(long id);
 
-	void deleteByUUID(UUID genID);
+	boolean deleteByUUID(UUID genID);
 
 	Product updateByUUID(UUID genID, Product productRequest);
 

@@ -14,11 +14,11 @@ public interface RepairBillService {
 
 	RepairBill update(long id, RepairBill repairBillRequest);
 
-	void delete(long id);
+	boolean delete(long id);
 
 	RepairBill updateByUUID(UUID genID, RepairBill repairBillRequest);
 
-	void deleteByUUID(UUID genID);
+	boolean deleteByUUID(UUID genID);
 
 	Page<RepairBill> getAll(int pageNo, int pageSize, String sortBy, String sortType);
 

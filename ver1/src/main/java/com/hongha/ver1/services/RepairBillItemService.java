@@ -18,11 +18,11 @@ public interface RepairBillItemService {
 
 	RepairBillItem update(long id, RepairBillItem repairBillItemRequest);
 
-	void delete(long id);
+	boolean delete(long id);
 
 	RepairBillItem updateByUUID(UUID genID, RepairBillItem repairBillItemRequest);
 
-	void deleteByUUID(UUID genID);
+	boolean deleteByUUID(UUID genID);
 	
 	Page<RepairBillItem> findByRepairBillId(long repairBillId,int pageNo, int pageSize, String sortBy, String sortType);
 }
