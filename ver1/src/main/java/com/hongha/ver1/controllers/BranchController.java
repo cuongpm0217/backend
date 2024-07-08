@@ -1,14 +1,17 @@
 package com.hongha.ver1.controllers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,8 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hongha.ver1.dtos.BranchDTO;
@@ -34,69 +36,117 @@ public class BranchController {
 	@Autowired
 	private BranchService branchService;
 
-	public BranchController(BranchService branchService) {
-		super();
-		this.branchService = branchService;
-	}
-
 	@GetMapping("/")
-	@ResponseBody
-	public List<BranchDTO> getAll() {
-		return branchService.getAll().stream().map(branch -> mapper.map(branch, BranchDTO.class))
-				.collect(Collectors.toList());
+	public ResponseEntity<Map<String, Object>> getAll(@RequestParam(required = false) String name,
+			@RequestParam(required = false) String address, @RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "name") String sortBy,
+			@RequestParam(defaultValue = "asc") String sortType) {
+		try {
+			Page<Branch> branches = branchService.getAll(page, size, sortBy, sortType);
+			if ((name != null || name != "") || (address != null || address != "")) {
+				branches = branchService.findByNameOrAddressLike(name, address, page, size, sortBy, sortType);
+			}
+			// set No > DTO
+			List<BranchDTO> branchDTOs = branches.stream().map(branch -> mapper.map(branch, BranchDTO.class))
+					.collect(Collectors.toList());
+			for (int i = 0; i < branchDTOs.size(); i++) {
+				branchDTOs.get(i).setNo(i + 1);
+			}
+
+			Map<String, Object> response = new HashMap<>();
+			response.put("branchs", branchDTOs);
+			response.put("currentPage", branches.getNumber());
+			response.put("totalItems", branches.getTotalElements());
+			response.put("totalPages", branches.getTotalPages());
+			return new ResponseEntity<>(response, HttpStatus.OK);
+
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
 	}
 
 	@PostMapping("/create")
-	@ResponseStatus(HttpStatus.CREATED)
-	@ResponseBody
-	public BranchDTO save(@RequestBody BranchDTO branchDTO) {
+	public ResponseEntity<Map<String, Object>> save(@RequestBody BranchDTO branchDTO) {
 		Branch branch = mapper.map(branchDTO, Branch.class);
 		Branch branchCreated = branchService.save(branch);
-		return mapper.map(branchCreated, BranchDTO.class);
-	}
-	//use id	
-//	@GetMapping(value = "/id={id}")
-//	@ResponseBody
-//	public BranchDTO getOne(@PathVariable("id") long id) {
-//		return mapper.map(branchService.findById(id), BranchDTO.class);
-//	}
-//
-//	@PutMapping(value = "/update-id={id}")
-//	@ResponseStatus(HttpStatus.OK)
-//	public void update(@PathVariable("id") long id, @RequestBody BranchDTO branchDTO) {
-//		if (!Objects.equals(id, branchDTO.getId())) {
-//			throw new IllegalArgumentException("ID don't match");
-//		}
-//		Branch branch = mapper.map(branchDTO, Branch.class);
-//		branchService.update(id, branch);
-//	}
-//
-//	@DeleteMapping(value = "/delete-id={id}")
-//	@ResponseStatus(HttpStatus.OK)
-//	public void delete(@PathVariable("id") long id) {
-//		branchService.delete(id);
-//	}
-	//use uuid
-	@GetMapping(value = "/uuid={uuid}")
-	@ResponseBody
-	public BranchDTO getOneByUUID(@PathVariable("uuid") UUID uuid) {
-		return mapper.map(branchService.findByUUID(uuid), BranchDTO.class);
+		BranchDTO result= mapper.map(branchCreated, BranchDTO.class);
+		Map<String, Object> response = new HashMap<>();
+		String msg = "";
+		HttpStatus status;
+		if (result != null) {
+			msg = "create Success";
+			status = HttpStatus.CREATED;
+		} else {
+			msg = "create Fail";
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		response.put("branch", result);
+		response.put("message", msg);
+		return new ResponseEntity<>(response, status);
 	}
 
-	@PutMapping(value = "/update-uid={uuid}")
-	@ResponseStatus(HttpStatus.OK)
-	public void updateByUUID(@PathVariable("uuid") UUID uuid, @RequestBody BranchDTO branchDTO) {
+	// use UUID
+	@GetMapping(value = "/{uuid}")
+	public ResponseEntity<Map<String, Object>> getOneByUUID(@PathVariable("uuid") UUID uuid) {
+		BranchDTO result =  mapper.map(branchService.findByUUID(uuid), BranchDTO.class);
+		Map<String, Object> response = new HashMap<>();
+		String msg = "";
+		HttpStatus status;
+		if (result != null) {
+			status = HttpStatus.OK;
+			msg = "Found:" + result.getName();
+		} else {
+			status = HttpStatus.NOT_FOUND;
+			msg = "Not found " + String.valueOf(uuid);
+		}
+		response.put("branch", result);
+		response.put("message", msg);
+		return new ResponseEntity<>(response, status);
+	}
+
+	@PutMapping(value = "/update-{uuid}")
+	public ResponseEntity<Map<String, Object>> updateByUUID(@PathVariable("uuid") UUID uuid, @RequestBody BranchDTO branchDTO) {
+		Map<String, Object> response = new HashMap<>();
+		String msg = "";
+		HttpStatus status;
 		if (!Objects.equals(uuid, branchDTO.getGenId())) {
-			throw new IllegalArgumentException("UUID don't match");
+			status = HttpStatus.NO_CONTENT;
+			msg = "Not match " + String.valueOf(uuid);
+			response.put("message", msg);
+			return new ResponseEntity<>(response,status);
 		}
 		Branch branch = mapper.map(branchDTO, Branch.class);
-		branchService.updateByUUID(uuid, branch);
+		BranchDTO result = mapper.map(branchService.updateByUUID(uuid, branch),BranchDTO.class);
+		
+		if (result != null) {
+			status = HttpStatus.OK;
+			msg = "Found:" + result.getName();
+		} else {
+			status = HttpStatus.NOT_FOUND;
+			msg = "Not found " + String.valueOf(uuid);
+		}
+		response.put("branch", result);
+		response.put("message", msg);
+		return new ResponseEntity<>(response, status);
 	}
 
-	@DeleteMapping(value = "/delete-uid={uuid}")
-	@ResponseStatus(HttpStatus.OK)
-	public void deleteByUUID(@PathVariable("uuid") UUID uuid) {
-		branchService.deleteByUUID(uuid);
+	@DeleteMapping(value = "/delete-{uuid}")
+	public ResponseEntity<Map<String, Object>> deleteByUUID(@PathVariable("uuid") UUID uuid) {
+		boolean result = branchService.deleteByUUID(uuid);
+		Map<String, Object> response = new HashMap<>();
+		String msg = "";
+		HttpStatus status;
+		if (result) {
+			status = HttpStatus.OK;
+			msg = "DELETED";
+		} else {
+			status = HttpStatus.NOT_FOUND;
+			msg = "Not found " + String.valueOf(uuid);
+		}
+		response.put("result", result);
+		response.put("message", msg);
+		return new ResponseEntity<>(response, status);
 	}
 
 }

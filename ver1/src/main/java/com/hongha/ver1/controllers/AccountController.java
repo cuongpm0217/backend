@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hongha.ver1.dtos.AccountDTO;
@@ -37,12 +36,15 @@ public class AccountController {
 	private AccountService accountService;
 
 	@GetMapping("/")
-	public ResponseEntity<Map<String, Object>> getAll(@RequestParam(required = false) String code,
-			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size,
-			@RequestParam(defaultValue = "code") String sortBy, @RequestParam(defaultValue = "asc") String sortType) {
+	public ResponseEntity<Map<String, Object>> getAll(
+			@RequestParam(required = false) String code,
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size,
+			@RequestParam(defaultValue = "code") String sortBy,
+			@RequestParam(defaultValue = "asc") String sortType) {
 		try {
 			Page<Account> accounts;
-			if (code == null) {
+			if (code == null || code!="") {
 				accounts = accountService.getAll(page, size, sortBy, sortType);
 			} else {
 				accounts = accountService.findByCodeContaining(code, page, size, sortBy, sortType);
@@ -74,10 +76,10 @@ public class AccountController {
 		Map<String, Object> response = new HashMap<>();
 		HttpStatus status;
 		if (result != null) {
-			msg = "Success";
+			msg = "create Success";
 			status = HttpStatus.CREATED;
 		} else {
-			msg = "Fail";
+			msg = "create Fail";
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
 		response.put("account", result);
@@ -85,29 +87,8 @@ public class AccountController {
 		return new ResponseEntity<>(response, status);
 	}
 
-	// use id
-	/*
-	 * @GetMapping("/id={id}")
-	 * 
-	 * @ResponseBody public AccountDTO getOne(@PathVariable("id") long id) { Account
-	 * acc = accountService.findById(id); AccountDTO accDTO = mapper.map(acc,
-	 * AccountDTO.class); return accDTO; }
-	 * 
-	 * @PutMapping("/update-id={id}")
-	 * 
-	 * @ResponseStatus(HttpStatus.OK) public void update(@PathVariable("id") long
-	 * id, @RequestBody AccountDTO accountDTO) { if (!Objects.equals(id,
-	 * accountDTO.getId())) { throw new IllegalArgumentException("IDs don't match");
-	 * } Account account = mapper.map(accountDTO, Account.class);
-	 * accountService.update(id, account); }
-	 * 
-	 * @DeleteMapping("/delete-id={id}")
-	 * 
-	 * @ResponseStatus(HttpStatus.OK) public void delete(@PathVariable("id") long
-	 * id) { accountService.delete(id); }
-	 */
 	// use uuid
-	@GetMapping("/uuid={uuid}")
+	@GetMapping("/{uuid}")
 	public ResponseEntity<Map<String, Object>> getOneByUUID(@PathVariable("uuid") UUID uuid) {
 		AccountDTO result = mapper.map(accountService.findByUUID(uuid), AccountDTO.class);
 		Map<String, Object> response = new HashMap<>();
@@ -125,16 +106,22 @@ public class AccountController {
 		return new ResponseEntity<>(response, status);
 	}
 
-	@PutMapping("/update-account={uuid}")
-	public ResponseEntity<Map<String, Object>> updateByUUID(@PathVariable("uuid") UUID uuid, @RequestBody AccountDTO accountDTO) {
-		if (!Objects.equals(uuid, accountDTO.getGenId())) {
-			throw new IllegalArgumentException("UUIDs don't match");
-		}
-		Account account = mapper.map(accountDTO, Account.class);
-		Account result =  accountService.updateByUUID(uuid, account);
+	@PutMapping("/update-{uuid}")
+	public ResponseEntity<Map<String, Object>> updateByUUID(
+			@PathVariable("uuid") UUID uuid,
+			@RequestBody AccountDTO accountDTO) {
 		Map<String, Object> response = new HashMap<>();
 		String msg = "";
 		HttpStatus status;
+		if (!Objects.equals(uuid, accountDTO.getGenId())) {
+			status = HttpStatus.NO_CONTENT;
+			msg = "Not match " + String.valueOf(uuid);
+			response.put("message", msg);
+			return new ResponseEntity<>(response,status);
+		}
+		Account account = mapper.map(accountDTO, Account.class);
+		AccountDTO result = mapper.map(accountService.updateByUUID(uuid, account),AccountDTO.class);
+		
 		if (result != null) {
 			status = HttpStatus.OK;
 			msg = "Found:" + result.getCode();
@@ -147,8 +134,7 @@ public class AccountController {
 		return new ResponseEntity<>(response, status);
 	}
 
-	@DeleteMapping("/delete-account={uuid}")
-	@ResponseStatus(HttpStatus.OK)
+	@DeleteMapping("/delete-{uuid}")
 	public ResponseEntity<Map<String, Object>> deleteByUUID(@PathVariable("uuid") UUID uuid) {
 		boolean result = accountService.deleteByUUID(uuid);
 		Map<String, Object> response = new HashMap<>();
