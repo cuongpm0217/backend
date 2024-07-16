@@ -29,23 +29,25 @@ import com.hongha.ver1.services.BranchService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/branch")
+//@RequestMapping("/auth/branch")
 public class BranchController {
 	@Autowired
 	private ModelMapper mapper;
 	@Autowired
 	private BranchService branchService;
 
-	@GetMapping("/")
+	@GetMapping("/auth/branch/")
 	public ResponseEntity<Map<String, Object>> getAll(@RequestParam(required = false) String name,
-			@RequestParam(required = false) String address, @RequestParam(defaultValue = "0") int page,
+			@RequestParam(required = false) String address, @RequestParam(defaultValue = "1") int page,
 			@RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "name") String sortBy,
 			@RequestParam(defaultValue = "asc") String sortType) {
 		try {
+			page = page - 1;// front end always start 1
 			Page<Branch> branches = branchService.getAll(page, size, sortBy, sortType);
-			if ((name != null || name != "") || (address != null || address != "")) {
-				branches = branchService.findByNameOrAddressLike(name, address, page, size, sortBy, sortType);
-			}
+//			if ((name != null || name != "") | (address != null || address != "")) {
+//				branches = branchService.findByNameOrAddressLike(name, address, page, size, sortBy, sortType);
+//			}
+						
 			// set No > DTO
 			List<BranchDTO> branchDTOs = branches.stream().map(branch -> mapper.map(branch, BranchDTO.class))
 					.collect(Collectors.toList());
@@ -66,7 +68,7 @@ public class BranchController {
 
 	}
 
-	@PostMapping("/create")
+	@PostMapping("/api/branch/create")
 	public ResponseEntity<Map<String, Object>> save(@RequestBody BranchDTO branchDTO) {
 		Branch branch = mapper.map(branchDTO, Branch.class);
 		Branch branchCreated = branchService.save(branch);
@@ -87,7 +89,7 @@ public class BranchController {
 	}
 
 	// use UUID
-	@GetMapping(value = "/{uuid}")
+	@GetMapping(value = "/api/branch/{uuid}")
 	public ResponseEntity<Map<String, Object>> getOneByUUID(@PathVariable("uuid") UUID uuid) {
 		BranchDTO result =  mapper.map(branchService.findByUUID(uuid), BranchDTO.class);
 		Map<String, Object> response = new HashMap<>();
@@ -105,7 +107,7 @@ public class BranchController {
 		return new ResponseEntity<>(response, status);
 	}
 
-	@PutMapping(value = "/update-{uuid}")
+	@PutMapping(value = "/api/branch/update-{uuid}")
 	public ResponseEntity<Map<String, Object>> updateByUUID(@PathVariable("uuid") UUID uuid, @RequestBody BranchDTO branchDTO) {
 		Map<String, Object> response = new HashMap<>();
 		String msg = "";
@@ -131,7 +133,7 @@ public class BranchController {
 		return new ResponseEntity<>(response, status);
 	}
 
-	@DeleteMapping(value = "/delete-{uuid}")
+	@DeleteMapping(value = "/api/branch/delete-{uuid}")
 	public ResponseEntity<Map<String, Object>> deleteByUUID(@PathVariable("uuid") UUID uuid) {
 		boolean result = branchService.deleteByUUID(uuid);
 		Map<String, Object> response = new HashMap<>();
