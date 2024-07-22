@@ -55,14 +55,14 @@ public class DepartmentController {
 					.map(department -> mapper.map(department, DepartmentDTO.class)).collect(Collectors.toList());
 			for (int i = 0; i < departmentDTOs.size(); i++) {
 				departmentDTOs.get(i).setNo(i + 1 + (page * size));
-				String vname = "";
+				String branchName = "";
 				if (departmentDTOs.get(i).getBranchId() != 0) {
 					Branch b = branchService.findById(departmentDTOs.get(i).getBranchId());
 					if (b != null) {
-						vname = b.getName();
+						branchName = b.getName();
 					}
 				}
-				departmentDTOs.get(i).setBranchVName(vname);
+				departmentDTOs.get(i).setBranchName(branchName);
 			}
 
 			Map<String, Object> response = new HashMap<>();
@@ -114,7 +114,7 @@ public class DepartmentController {
 					VName = b.getName();
 				}
 			}
-			result.setBranchVName(VName);
+			result.setBranchName(VName);
 			status = HttpStatus.OK;
 			msg = "Found:" + result.getName();
 		} else {
