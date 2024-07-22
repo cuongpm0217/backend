@@ -23,7 +23,7 @@ public class CustomUserDetail implements UserDetails{
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<GrantedAuthority> authorities = user.getRoles().stream()
 				.map(roles-> new SimpleGrantedAuthority(roles.getName().name()))
-				.collect(Collectors.toList());
+				.collect(Collectors.toList());		
 		return authorities;
 	}
 	public Long getId() {
@@ -34,6 +34,9 @@ public class CustomUserDetail implements UserDetails{
 	}
 	public String getEmail() {
 		return user.getEmail();
+	}
+	public Long getBranchId() {
+		return user.getBranchId();
 	}
 	@Override
 	public String getPassword() {
