@@ -87,7 +87,24 @@ public class CurrencyController {
 		response.put("message", msg);
 		return new ResponseEntity<>(response, status);
 	}
-
+	@GetMapping("/USD-VND/")
+	public ResponseEntity<Map<String, Object>> getExchangeRateUSD() {
+		String code = "USD";
+		CurrencyDTO result = mapper.map(currencyService.getExchangeVNDByCode(code), CurrencyDTO.class);
+		Map<String, Object> response = new HashMap<>();
+		String msg = "";
+		HttpStatus status;
+		if (result != null) {
+			status = HttpStatus.OK;
+			msg = "Found:" + result.getCode();
+		} else {
+			status = HttpStatus.NOT_FOUND;
+			msg = "Not found code" + code;
+		}
+		response.put("currency", result);
+		response.put("message", msg);
+		return new ResponseEntity<>(response, status);
+	}
 	// use uuid
 	@GetMapping("/{uuid}")
 	public ResponseEntity<Map<String, Object>> getOneByUUID(@PathVariable("uuid") UUID uuid) {
