@@ -51,14 +51,17 @@ public class User extends BaseEntityAudit{
 	private String phone1;
 	@Column
 	private String phone2;
-	@ManyToMany(fetch = FetchType.LAZY)
+	@Column(name="branch_id")
+	private long branchId;
+	@ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role"
             ,joinColumns =@JoinColumn(name="user_id")
             ,inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles= new HashSet<>();
-    public User(String username,String email,String password){
+    private Set<Role> roles= new HashSet<Role>();
+    public User(String username,String email,String password,long branchId){
         this.setUsername(username);
         this.setEmail(email);
         this.setPassword(password);
+        this.setBranchId(branchId);
     }
 }
