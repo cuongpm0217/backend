@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Page;
 
 import com.hongha.ver1.entities.Department;
 
@@ -23,10 +23,9 @@ public interface DepartmentService {
 
 	Department updateByUUID(UUID genID, Department departmentRequest);
 
-	boolean deleteByUUID(UUID genID);
+	boolean deleteByUUID(UUID genID);	
 
-	Slice<Department> findByBranchIdAndVnameLike(long branchId, String vName, int pageNo, int pageSize, String sortBy,
-			String sortType);
+	Page<Department> findBySearchText(String searchText, int pageNo, int pageSize, String sortBy, String sortType);
 
-	Slice<Department> getAll(int pageNo, int pageSize, String sortBy, String sortType);
+	Page<Department> getAll(int pageNo, int pageSize, String sortBy, String sortType) throws IOException;
 }
