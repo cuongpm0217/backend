@@ -10,18 +10,22 @@ import java.util.UUID;
 @Getter
 @Setter
 public class JwtResponse {
-    private String token;
-    private String type="honghaauto";
-    private UUID genId;
-    private String userName;
-    private String email;
-    private List<String> roles;
-    public JwtResponse(String accessToken, UUID genId, String username, String email, List<String> roles) {
-        this.token = accessToken;
-        this.genId = genId;
-        this.userName = username;
-        this.email = email;
-        this.roles = roles;
-    }
+	private String token;
+	private String type = "honghaauto";
+	private UUID genId;
+	private String userName;
+	private String email;
+	private List<String> roles;
+	private long branchId;
+
+	public JwtResponse(String accessToken, UUID genId, String username, String email, List<String> roles,
+			long branchId) {
+		this.token = accessToken;
+		this.genId = genId;
+		this.userName = username;
+		this.email = email;
+		this.roles = roles;
+		this.branchId = branchId;
+	}
 
 }

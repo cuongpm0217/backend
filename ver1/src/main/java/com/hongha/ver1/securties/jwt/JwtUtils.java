@@ -21,15 +21,13 @@ public class JwtUtils {
     
     public String generateToken(CustomUserDetail userDetails) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION);
-    
-        
+        Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION); 
 		return Jwts.builder()
                 .subject((userDetails.getUser().getUsername()))
+//                .claims().issuer(String.valueOf(userDetails.getBranchId())).and()
                 .issuedAt(now)
                 .expiration(expiryDate)
                 .signWith(getSigninKey())
-                
                 .compact();
     }
 
@@ -39,6 +37,7 @@ public class JwtUtils {
                 .verifyWith(getSigninKey()).build()
                 .parseSignedClaims(token)
                 .getPayload();
+       
         return claims.getSubject();
     }
 
