@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
@@ -17,7 +18,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,12 +35,19 @@ public class DepartmentServiceImpl implements DepartmentService {
 	@Override
 	@Transactional
 	public Department save(Department departmentRequest) {
-		Department isInserted = depRepo.save(departmentRequest);
-		if (isInserted != null) {
-			return isInserted;
+		// fix UUID null
+		Department clone = new Department();
+		clone.setBranchId(departmentRequest.getBranchId());
+		clone.setCode(departmentRequest.getCode());
+		clone.setName(departmentRequest.getName());
+		clone.setVname(departmentRequest.getVname());
+		Department isInserted;
+		if (departmentRequest.getGenId() != null) {
+			isInserted = depRepo.save(departmentRequest);
 		} else {
-			throw new RuntimeException("Can't create Department");
+			isInserted = depRepo.save(clone);
 		}
+		return isInserted;
 
 	}
 
@@ -107,8 +115,10 @@ public class DepartmentServiceImpl implements DepartmentService {
 	public Department updateByUUID(UUID genID, Department departmentRequest) {
 		Department selected = depRepo.findByGenId(genID);
 		if (selected != null) {
+			selected.setBranchId(departmentRequest.getBranchId());
 			selected.setCode(departmentRequest.getCode());
 			selected.setName(departmentRequest.getName());
+			selected.setVname(departmentRequest.getVname());
 			Department updated = depRepo.save(selected);
 			if (updated != null) {
 				return updated;
@@ -133,33 +143,30 @@ public class DepartmentServiceImpl implements DepartmentService {
 	}
 
 	@Override
-	public Slice<Department> findByBranchIdAndVnameLike(long branchId, String vName, int pageNo, int pageSize,
-			String sortBy, String sortType) {
-		Sort sort = Sort.by(sortBy);
-		if (sortType.equals("des")) {
-			sort = sort.descending();
-		}
-		Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
-		Slice<Department> page = depRepo.findByBranchIdAndVnameLike(branchId, vName, pageable);
+	public Page<Department> findBySearchText(String searchText, int pageNo, int pageSize, String sortBy,
+			String sortType) {
+		Pageable pageable = genPageable(pageNo, pageSize, sortBy, sortType);
+		Page<Department> page = depRepo.findBySearchText(searchText, pageable);
 		return page;
 	}
 
 	@Override
-	public Slice<Department> getAll(int pageNo, int pageSize, String sortBy, String sortType) {
+	public Page<Department> getAll(int pageNo, int pageSize, String sortBy, String sortType) throws IOException {
+		if (depRepo.count() == 0) {
+			loadDepartmentExcel();
+		}
+		Pageable pageable = genPageable(pageNo, pageSize, sortBy, sortType);
+		Page<Department> page = depRepo.findAll(pageable);
+		return page;
+	}
+
+	private Pageable genPageable(int pageNo, int pageSize, String sortBy, String sortType) {
 		Sort sort = Sort.by(sortBy);
-		if (sortType.equals("des")) {
+		if (sortType.startsWith("des")) {
 			sort = sort.descending();
 		}
 		Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
-		Slice<Department> page = depRepo.findAll(pageable);
-		if(!page.hasContent()) {
-			try {
-				loadDepartmentExcel();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return page;
+		return pageable;
 	}
 
 	// Load data sample
@@ -195,10 +202,10 @@ public class DepartmentServiceImpl implements DepartmentService {
 					dep.setVname((String) getCellValue(cell));
 					break;
 				case 2:
-					dep.setBranchId((long) cellValue);
+					dep.setBranchId(new BigDecimal((double) cellValue).longValue());
 					break;
 				case 3:
-					dep.setCode((String)getCellValue(cell));
+					dep.setCode((String) getCellValue(cell));
 					break;
 				default:
 					break;
