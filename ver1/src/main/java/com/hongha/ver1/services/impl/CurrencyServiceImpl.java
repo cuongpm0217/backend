@@ -119,7 +119,7 @@ public class CurrencyServiceImpl implements CurrencyService {
 		}
 	}
 
-	@Scheduled(cron = "0 0 */4 ? * *")
+	@Scheduled(cron = "0 0 */24 ? * *")
 	public void loadExchangeFromVCB() {
 		moneyRepo.deleteAll();
 		// default VND
@@ -152,6 +152,8 @@ public class CurrencyServiceImpl implements CurrencyService {
 						currencyDB.setFullName(curName);
 						currencyDB.setExchangeVND(d);
 						currencyDB.setSymbol(java.util.Currency.getInstance(curCode).getSymbol());
+						currencyDB.setCreatedBy("BOT VCB");
+						currencyDB.setUpdatedBy("BOT VCB");
 					}
 				}
 				if (currencyDB.getCode() != null) {
