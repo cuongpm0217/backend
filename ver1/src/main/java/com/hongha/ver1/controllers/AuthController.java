@@ -59,7 +59,7 @@ public class AuthController {
 					.collect(Collectors.toList());
 
 			return ResponseEntity.ok(new JwtResponse(jwt, userDetail.getGenId(), userDetail.getUsername(),
-					userDetail.getEmail(), roles));
+					userDetail.getEmail(), roles,userDetail.getBranchId()));
 		} else {
 			return ResponseEntity.badRequest().body(new MessageResponse("Đăng nhập không thành công"));
 		}
@@ -77,32 +77,17 @@ public class AuthController {
 
 		// Create new user's account
 		User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(),
-				passwordEncoder.encode(signUpRequest.getPassword()));
+				passwordEncoder.encode(signUpRequest.getPassword()),signUpRequest.getBranchId());
 
 		Set<String> strRoles;
 		strRoles = signUpRequest.getRoles();
 		Set<Role> roles = new HashSet<>();
-		// check role in db
-		List<Role> allRole = roleRepository.findAll();
-		if (allRole.isEmpty()) {
-			Role roleAdmin = new Role();
-			roleAdmin.setName(ERole.ROLE_ADMIN);
-			roleAdmin.setCreatedAt(new Date());
-			roleAdmin.setCreatedBy("admin");
-			Role roleManager = new Role();
-			roleManager.setName(ERole.ROLE_MANAGER);
-			roleManager.setCreatedAt(new Date());
-			roleManager.setCreatedBy("admin");
-			Role roleUser = new Role();
-			roleUser.setName(ERole.ROLE_USER);
-			roleUser.setCreatedAt(new Date());
-			roleUser.setCreatedBy("admin");
-			roleRepository.save(roleAdmin);
-			roleRepository.save(roleManager);
-			roleRepository.save(roleUser);
+		// check role in DB
+		if (roleRepository.count()==0) {
+			loadDefaultRole();
 		}
+		//check role in FE
 		if (strRoles == null || strRoles.isEmpty()) {
-
 			Role userRole = roleRepository.findByName(ERole.ROLE_USER)
 					.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 			roles.add(userRole);
@@ -128,11 +113,28 @@ public class AuthController {
 				}
 			});
 		}
-
 		user.setRoles(roles);
 		user.setCreatedBy(user.getUsername());
 		userRepository.save(user);
-
 		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
 	}
+
+	private void loadDefaultRole() {
+		Role roleAdmin = new Role();
+		roleAdmin.setName(ERole.ROLE_ADMIN);
+		roleAdmin.setCreatedAt(new Date());
+		roleAdmin.setCreatedBy("admin");
+		Role roleManager = new Role();
+		roleManager.setName(ERole.ROLE_MANAGER);
+		roleManager.setCreatedAt(new Date());
+		roleManager.setCreatedBy("admin");
+		Role roleUser = new Role();
+		roleUser.setName(ERole.ROLE_USER);
+		roleUser.setCreatedAt(new Date());
+		roleUser.setCreatedBy("admin");
+		roleRepository.save(roleAdmin);
+		roleRepository.save(roleManager);
+		roleRepository.save(roleUser);
+	}
+	
 }
