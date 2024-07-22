@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.springframework.context.annotation.Bean;
+
 public class Convertor {
 	public Date ddMMYYYY2Date(String ddMMYYYY) {
 		String pattern = "dd/MM/yyyy";
@@ -31,7 +33,17 @@ public class Convertor {
 		String result = df.format(date);
 		return result;
 	}
-
+	public Date Date2ddMMyyyyhhmmDate(Date date) {
+		String pattern = "dd/MM/yyyy HH:mm";
+		SimpleDateFormat df = new SimpleDateFormat(pattern);
+		String result = df.format(date);		
+		try {
+			return df.parse(result);
+		} catch (ParseException e) {			
+			e.printStackTrace();
+			return new Date();
+		}
+	}
 	public String Date2HHmm(Date date) {
 		String pattern = "HH:mm";
 		SimpleDateFormat df = new SimpleDateFormat(pattern);
@@ -51,8 +63,8 @@ public class Convertor {
 		}
 		return result;
 	}
-
-	public Date date2ddMMyyyy(Date date) {
+	
+	public static Date date2ddMMyyyy(Date date) {
 		String pattern = "dd/MM/yyyy";
 		SimpleDateFormat df = new SimpleDateFormat(pattern);
 		String dateFormated = df.format(date);
