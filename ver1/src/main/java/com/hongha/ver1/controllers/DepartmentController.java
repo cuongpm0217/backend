@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,7 +24,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hongha.ver1.dtos.DepartmentDTO;
+import com.hongha.ver1.entities.Branch;
 import com.hongha.ver1.entities.Department;
+import com.hongha.ver1.services.BranchService;
 import com.hongha.ver1.services.DepartmentService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -35,28 +37,39 @@ public class DepartmentController {
 	private ModelMapper mapper;
 	@Autowired
 	private DepartmentService departmentService;
+	@Autowired
+	private BranchService branchService;
 
 	@GetMapping("/")
-	public ResponseEntity<Map<String, Object>> getAll(@RequestParam(required = false) long branchId,
-			@RequestParam(required = false) String vname, @RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "name") String sortBy,
-			@RequestParam(defaultValue = "asc") String sortType) {
+	public ResponseEntity<Map<String, Object>> getAll(@RequestParam(required = false) String query,
+			@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "5") int size,
+			@RequestParam(defaultValue = "vname") String sortBy, @RequestParam(defaultValue = "asc") String sortType) {
 		try {
-			Slice<Department> departments = departmentService.getAll(page, size, sortBy, sortType);
-			if (vname != null || vname != "") {
-				departments = departmentService.findByBranchIdAndVnameLike(branchId, vname, page, size, sortBy,
-						sortType);
+			page = page - 1;
+			Page<Department> departments = departmentService.getAll(page, size, sortBy, sortType);
+			if (query != null || query == "") {
+				departments = departmentService.findBySearchText(query, page, size, sortBy, sortType);
 			}
 			// set No > DTO
 			List<DepartmentDTO> departmentDTOs = departments.stream()
 					.map(department -> mapper.map(department, DepartmentDTO.class)).collect(Collectors.toList());
 			for (int i = 0; i < departmentDTOs.size(); i++) {
-				departmentDTOs.get(i).setNo(i + 1);
+				departmentDTOs.get(i).setNo(i + 1 + (page * size));
+				String vname = "";
+				if (departmentDTOs.get(i).getBranchId() != 0) {
+					Branch b = branchService.findById(departmentDTOs.get(i).getBranchId());
+					if (b != null) {
+						vname = b.getName();
+					}
+				}
+				departmentDTOs.get(i).setBranchVName(vname);
 			}
 
 			Map<String, Object> response = new HashMap<>();
 			response.put("departments", departmentDTOs);
 			response.put("currentPage", departments.getNumber());
+			response.put("totalItems", departments.getTotalElements());
+			response.put("totalPages", departments.getTotalPages());
 			return new ResponseEntity<>(response, HttpStatus.OK);
 
 		} catch (Exception e) {
@@ -67,8 +80,8 @@ public class DepartmentController {
 
 	@PostMapping("/create")
 	public ResponseEntity<Map<String, Object>> save(@RequestBody DepartmentDTO departmentDTO) {
-		Department department = mapper.map(departmentDTO, Department.class);
-		Department departmentCreated = departmentService.save(department);
+		Department department = mapper.map(departmentDTO, Department.class);		
+		Department departmentCreated = departmentService.save(department);		
 		DepartmentDTO result = mapper.map(departmentCreated, DepartmentDTO.class);
 		Map<String, Object> response = new HashMap<>();
 		String msg = "";
@@ -89,10 +102,19 @@ public class DepartmentController {
 	@GetMapping(value = "/{uuid}")
 	public ResponseEntity<Map<String, Object>> getOneByUUID(@PathVariable("uuid") UUID uuid) {
 		DepartmentDTO result = mapper.map(departmentService.findByUUID(uuid), DepartmentDTO.class);
+
 		Map<String, Object> response = new HashMap<>();
 		String msg = "";
 		HttpStatus status;
 		if (result != null) {
+			String VName = "";
+			if (result.getBranchId() != 0) {
+				Branch b = branchService.findById(result.getBranchId());
+				if (b != null) {
+					VName = b.getName();
+				}
+			}
+			result.setBranchVName(VName);
 			status = HttpStatus.OK;
 			msg = "Found:" + result.getName();
 		} else {
