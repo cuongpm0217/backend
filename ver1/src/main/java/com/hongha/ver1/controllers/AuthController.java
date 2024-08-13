@@ -24,7 +24,7 @@ import com.hongha.ver1.securties.jwt.payload.request.SignupRequest;
 import com.hongha.ver1.securties.jwt.payload.response.JwtResponse;
 import com.hongha.ver1.securties.jwt.payload.response.MessageResponse;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -57,9 +57,9 @@ public class AuthController {
 
 			List<String> roles = userDetail.getAuthorities().stream().map(item -> item.getAuthority())
 					.collect(Collectors.toList());
-
-			return ResponseEntity.ok(new JwtResponse(jwt, userDetail.getGenId(), userDetail.getUsername(),
-					userDetail.getEmail(), roles,userDetail.getBranchId()));
+			JwtResponse result = new JwtResponse(jwt, userDetail.getGenId(), userDetail.getUsername(),
+					userDetail.getEmail(), roles,userDetail.getBranchId());
+			return ResponseEntity.ok(result);
 		} else {
 			return ResponseEntity.badRequest().body(new MessageResponse("Đăng nhập không thành công"));
 		}
@@ -76,17 +76,21 @@ public class AuthController {
 		}
 
 		// Create new user's account
-		User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(),
-				passwordEncoder.encode(signUpRequest.getPassword()),signUpRequest.getBranchId());
+		User user = User.builder()
+				.username(signUpRequest.getUsername())
+				.email(signUpRequest.getEmail())
+				.password(passwordEncoder.encode(signUpRequest.getPassword()))
+				.branchId(signUpRequest.getBranchId())
+				.build();				
 
-		Set<String> strRoles;
-		strRoles = signUpRequest.getRoles();
+		Set<String> strRoles= signUpRequest.getRoles();
+		 
 		Set<Role> roles = new HashSet<>();
-		// check role in DB
+		// check role in DB >>>>> role service 
 		if (roleRepository.count()==0) {
 			loadDefaultRole();
 		}
-		//check role in FE
+		//check role request
 		if (strRoles == null || strRoles.isEmpty()) {
 			Role userRole = roleRepository.findByName(ERole.ROLE_USER)
 					.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
@@ -122,15 +126,15 @@ public class AuthController {
 	private void loadDefaultRole() {
 		Role roleAdmin = new Role();
 		roleAdmin.setName(ERole.ROLE_ADMIN);
-		roleAdmin.setCreatedAt(new Date());
+		roleAdmin.setCreatedAt(LocalDateTime.now());
 		roleAdmin.setCreatedBy("admin");
 		Role roleManager = new Role();
 		roleManager.setName(ERole.ROLE_MANAGER);
-		roleManager.setCreatedAt(new Date());
+		roleManager.setCreatedAt(LocalDateTime.now());
 		roleManager.setCreatedBy("admin");
 		Role roleUser = new Role();
 		roleUser.setName(ERole.ROLE_USER);
-		roleUser.setCreatedAt(new Date());
+		roleUser.setCreatedAt(LocalDateTime.now());
 		roleUser.setCreatedBy("admin");
 		roleRepository.save(roleAdmin);
 		roleRepository.save(roleManager);
