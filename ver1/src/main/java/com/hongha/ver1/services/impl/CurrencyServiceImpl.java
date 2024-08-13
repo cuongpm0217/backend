@@ -121,14 +121,17 @@ public class CurrencyServiceImpl implements CurrencyService {
 
 	@Scheduled(cron = "0 0 */24 ? * *")
 	public void loadExchangeFromVCB() {
-		moneyRepo.deleteAll();
+//		moneyRepo.deleteAll();
 		// default VND
 		Currency vnd = new Currency();
 		vnd.setCode("VND");
 		vnd.setExchangeVND(1);
 		vnd.setFullName("Việt Nam Đồng");
 		vnd.setSymbol(java.util.Currency.getInstance("VND").getSymbol());
-		moneyRepo.save(vnd);
+		if(moneyRepo.findByCode("VND")==null) {
+			moneyRepo.save(vnd);
+		}
+		
 		try {
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -156,8 +159,14 @@ public class CurrencyServiceImpl implements CurrencyService {
 						currencyDB.setUpdatedBy("BOT VCB");
 					}
 				}
+				
 				if (currencyDB.getCode() != null) {
-					moneyRepo.saveAndFlush(currencyDB);
+					if (moneyRepo.count() <= nList.getLength()) {
+						moneyRepo.save(currencyDB);
+					} else {
+						Currency currencyRequest = moneyRepo.findByCode(currencyDB.getCode());
+						updateObj(currencyRequest, currencyDB);
+					}
 				}
 			}
 		} catch (Exception ex) {
