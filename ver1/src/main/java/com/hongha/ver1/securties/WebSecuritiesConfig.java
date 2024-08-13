@@ -26,7 +26,7 @@ public class WebSecuritiesConfig {
     UserServiceImpl userService;
     @Autowired
     private AuthEntryPointJwt unauthorizedHandler;
-
+    private String WHITE_LIST[]= {"/auth/**",};
     @Bean
     AuthTokenFilter authenticationJwtTokenFilter() {
         return new AuthTokenFilter();
@@ -35,7 +35,6 @@ public class WebSecuritiesConfig {
     @Bean
     DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-
         authProvider.setUserDetailsService(userService);
         authProvider.setPasswordEncoder(passwordEncoder());
 
@@ -56,11 +55,9 @@ public class WebSecuritiesConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     	http.csrf(csrf -> csrf.disable())
         .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
-        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))//not save session 
         .authorizeHttpRequests(auth -> 
-          auth
-//          		.requestMatchers("/api/**").authenticated()
-          		.requestMatchers("/auth/**").permitAll()          
+          auth.requestMatchers(WHITE_LIST).permitAll()        
           		.anyRequest().permitAll()
           		
         );
