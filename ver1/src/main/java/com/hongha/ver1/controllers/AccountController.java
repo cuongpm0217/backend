@@ -22,8 +22,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hongha.ver1.controllers.response.Pagination;
 import com.hongha.ver1.dtos.AccountDTO;
 import com.hongha.ver1.entities.Account;
+import com.hongha.ver1.redisService.AccountRedisService;
 import com.hongha.ver1.services.AccountService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -34,33 +36,59 @@ public class AccountController {
 	private ModelMapper mapper;
 	@Autowired
 	private AccountService accountService;
+	@Autowired
+	private AccountRedisService accountRedisService;
 
 	@GetMapping("/")
-	public ResponseEntity<Map<String, Object>> getAll(
-			@RequestParam(required = false) String code,
-			@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "10") int size,
-			@RequestParam(defaultValue = "code") String sortBy,
-			@RequestParam(defaultValue = "asc") String sortType) {
-		try {
-			Page<Account> accounts;
-			if (code == null || code!="") {
-				accounts = accountService.getAll(page, size, sortBy, sortType);
-			} else {
-				accounts = accountService.findByCodeContaining(code, page, size, sortBy, sortType);
-			}
-			// set No > DTO
-			List<AccountDTO> accountDTOs = accounts.stream().map(account -> mapper.map(account, AccountDTO.class))
-					.collect(Collectors.toList());
-			for (int i = 0; i < accountDTOs.size(); i++) {
-				accountDTOs.get(i).setNo(i + 1);
-			}
+	public ResponseEntity<Map<String, Object>> getAll(@RequestParam(required = false) String query,
+			@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "5") int size,
+			@RequestParam(defaultValue = "code") String sortBy, @RequestParam(defaultValue = "asc") String sortType) {
 
+		try {
+			page = page - 1;// front end always start 1		
+			query = query != null ? query : "";
+
+			List<AccountDTO> accountDTOs = accountRedisService.findBySearchText(query, page, size, sortBy, sortType);
+			Pagination pagination = accountRedisService.getPagination(query);
+			if (accountDTOs == null || pagination == null) {
+				Page<Account> accounts = accountService.findBySearchText(query, page, size, sortBy, sortType);
+				if (accountDTOs == null) {
+					accountDTOs = accounts.stream().map(account -> mapper.map(account, AccountDTO.class))
+							.collect(Collectors.toList());
+					accountRedisService.saveAllAccount(accountDTOs, query, page, size, sortBy, sortType);
+				} 
+				if (pagination == null) {
+					pagination = Pagination.builder().currentPage(accounts.getNumber())
+							.totalItem(accounts.getTotalElements()).totalPage(accounts.getTotalPages()).build();
+					accountRedisService.savePagination(pagination, query);
+				}
+
+			} 
+
+			// set No > DTO
+			for (int i = 0; i < accountDTOs.size(); i++) {
+				accountDTOs.get(i).setNo(i + 1 + (page * size));
+				switch (accountDTOs.get(i).getLevel()) {
+				case 1: {
+					accountDTOs.get(i).setStyle("level1");
+					break;
+				}
+				case 2: {
+					accountDTOs.get(i).setStyle("level2");
+					break;
+				}
+				case 3: {
+					accountDTOs.get(i).setStyle("level3");
+					break;
+				}
+				}
+
+			}
 			Map<String, Object> response = new HashMap<>();
 			response.put("accounts", accountDTOs);
-			response.put("currentPage", accounts.getNumber());
-			response.put("totalItems", accounts.getTotalElements());
-			response.put("totalPages", accounts.getTotalPages());
+			response.put("currentPage", pagination.getCurrentPage());
+			response.put("totalItems", pagination.getTotalItem());
+			response.put("totalPages", pagination.getCurrentPage());
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -78,6 +106,7 @@ public class AccountController {
 		if (result != null) {
 			msg = "create Success";
 			status = HttpStatus.CREATED;
+			accountRedisService.clearList();
 		} else {
 			msg = "create Fail";
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -90,25 +119,33 @@ public class AccountController {
 	// use uuid
 	@GetMapping("/{uuid}")
 	public ResponseEntity<Map<String, Object>> getOneByUUID(@PathVariable("uuid") UUID uuid) {
-		AccountDTO result = mapper.map(accountService.findByUUID(uuid), AccountDTO.class);
-		Map<String, Object> response = new HashMap<>();
-		String msg = "";
-		HttpStatus status;
-		if (result != null) {
-			status = HttpStatus.OK;
-			msg = "Found:" + result.getCode();
-		} else {
-			status = HttpStatus.NOT_FOUND;
-			msg = "Not found " + String.valueOf(uuid);
+		try {
+			AccountDTO result = accountRedisService.getOne(uuid);
+			if (result == null) {
+				result = mapper.map(accountService.findByUUID(uuid), AccountDTO.class);
+				accountRedisService.saveAccount(result);
+			}
+			Map<String, Object> response = new HashMap<>();
+			String msg = "";
+			HttpStatus status;
+			if (result != null) {
+				status = HttpStatus.OK;
+				msg = "Found:" + result.getCode();
+			} else {
+				status = HttpStatus.NOT_FOUND;
+				msg = "Not found " + String.valueOf(uuid);
+			}
+			response.put("account", result);
+			response.put("message", msg);
+			return new ResponseEntity<>(response, status);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		response.put("account", result);
-		response.put("message", msg);
-		return new ResponseEntity<>(response, status);
+
 	}
 
 	@PutMapping("/update-{uuid}")
-	public ResponseEntity<Map<String, Object>> updateByUUID(
-			@PathVariable("uuid") UUID uuid,
+	public ResponseEntity<Map<String, Object>> updateByUUID(@PathVariable("uuid") UUID uuid,
 			@RequestBody AccountDTO accountDTO) {
 		Map<String, Object> response = new HashMap<>();
 		String msg = "";
@@ -117,14 +154,15 @@ public class AccountController {
 			status = HttpStatus.NO_CONTENT;
 			msg = "Not match " + String.valueOf(uuid);
 			response.put("message", msg);
-			return new ResponseEntity<>(response,status);
+			return new ResponseEntity<>(response, status);
 		}
 		Account account = mapper.map(accountDTO, Account.class);
-		AccountDTO result = mapper.map(accountService.updateByUUID(uuid, account),AccountDTO.class);
-		
+		AccountDTO result = mapper.map(accountService.updateByUUID(uuid, account), AccountDTO.class);
+
 		if (result != null) {
 			status = HttpStatus.OK;
 			msg = "Found:" + result.getCode();
+			accountRedisService.clearOne(uuid);
 		} else {
 			status = HttpStatus.NOT_FOUND;
 			msg = "Not found " + String.valueOf(uuid);
@@ -143,6 +181,7 @@ public class AccountController {
 		if (result) {
 			status = HttpStatus.OK;
 			msg = "DELETED";
+			accountRedisService.clearOne(uuid);
 		} else {
 			status = HttpStatus.NOT_FOUND;
 			msg = "Not found " + String.valueOf(uuid);
