@@ -3,13 +3,11 @@ package com.hongha.ver1.utils;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
-import org.springframework.stereotype.Component;
-
-@Component
 public class GenerateCode {
 
-	public String GenInvoiceCode(int countInYear, String invoiceType) {
+	public static String GenInvoiceCode(int countInYear, String invoiceType) {
 		String code = "";
 		SimpleDateFormat df = new SimpleDateFormat("yyyy");
 		String date = df.format(new Date());
@@ -27,5 +25,23 @@ public class GenerateCode {
 		}
 		}
 		return code += date + count;
+	}
+//	key Redis
+	public static String getKeyList(Class<?> responseClass, String searchText, int pageNo, int pageSize, String sortBy,
+			String sortType) {
+		searchText = searchText!=null?searchText:"";
+		String key = String.format("all%s:%s:%d:%d:%s:%s", responseClass.getSimpleName(), searchText, pageNo, pageSize,
+				sortBy, sortType);
+		return key;
+	}
+
+	public static String getKeyOne(Class<?> responseClass, UUID uuid) {
+		String key = responseClass.getSimpleName()+"#" + uuid.toString();
+		return key;
+	}
+	public static String getKeyPagination(Class<?> responseClass,String searchText) {
+		searchText = searchText!=null?searchText:"";
+		String key = String.format("pagination%s:%s", responseClass.getSimpleName(),searchText);
+		return key;
 	}
 }
