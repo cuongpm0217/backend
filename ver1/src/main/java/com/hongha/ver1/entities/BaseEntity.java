@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Version;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,7 +28,8 @@ public abstract class BaseEntity implements Serializable {
 //	@GeneratedValue(strategy = GenerationType.UUID)
 	@Column(name = "gen_id", unique = true, nullable = false)
 	private UUID genId = UUID.randomUUID();
-
+	@Version
+	private long version;
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)
