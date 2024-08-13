@@ -35,16 +35,16 @@ public class DepartmentServiceImpl implements DepartmentService {
 	@Override
 	@Transactional
 	public Department save(Department departmentRequest) {
-		// fix UUID null
-		Department clone = new Department();
-		clone.setBranchId(departmentRequest.getBranchId());
-		clone.setCode(departmentRequest.getCode());
-		clone.setName(departmentRequest.getName());
-		clone.setVname(departmentRequest.getVname());
 		Department isInserted;
 		if (departmentRequest.getGenId() != null) {
 			isInserted = depRepo.save(departmentRequest);
 		} else {
+			// fix UUID null
+			Department clone = new Department();
+			clone.setBranchId(departmentRequest.getBranchId());
+			clone.setCode(departmentRequest.getCode());
+			clone.setName(departmentRequest.getName());
+			clone.setVname(departmentRequest.getVname());
 			isInserted = depRepo.save(clone);
 		}
 		return isInserted;
