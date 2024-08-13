@@ -15,6 +15,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,6 +24,7 @@ import lombok.Setter;
 @EntityListeners(UserListener.class)
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="_user")
@@ -32,18 +34,21 @@ public class User extends BaseEntityAudit{
 	@Column(unique = true,nullable = false,updatable = false)
 	private String username;
 	@Column(nullable = false)
+	@Builder.Default
 	private String password="QWE098&^%lkjGHJ)(*456";//set pass default
 	@Column(unique = true,nullable = false)
 	private String email;
 	@Column(name = "full_name")
 	private String fullName;
 	@Column
+	@Builder.Default
 	private boolean gender = true;
 	@Column
 	private Date dob;
 	@Column
 	private String avatar;
 	@Column
+	@Builder.Default
 	private String address1 = "TT.Ngô Đồng, Giao Thủy, Nam Định";
 	@Column
 	private String address2;
@@ -57,7 +62,8 @@ public class User extends BaseEntityAudit{
     @JoinTable(name = "user_role"
             ,joinColumns =@JoinColumn(name="user_id")
             ,inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles= new HashSet<Role>();
+	@Builder.Default
+    private Set<Role> roles= new HashSet<Role>();	
     public User(String username,String email,String password,long branchId){
         this.setUsername(username);
         this.setEmail(email);
