@@ -23,18 +23,20 @@ public class Product extends BaseEntityAudit {
 
 	@Column(nullable = false)
 	private String name;
+	@Column
+	private String code;
 	@Column(name = "category_id")
 	private long productCategoryId;
 	@Column(name = "brand_id")
 	private long brandId;
-	@Column
-	private double price;// saling price
-	@Column(name = "sale_price")
-	private double salePrice;
+	@Column(name="import_price")
+	private double importPrice;
+	@Column(name = "selling_price")
+	private double sellingPrice;
 	@Column(name = "currency_id")
 	private long currencyId;
 	@Column(name = "unit_id")
 	private long unitId;
 	@Column
-	private String country;
+	private String origination;// xuất sứ
 }
