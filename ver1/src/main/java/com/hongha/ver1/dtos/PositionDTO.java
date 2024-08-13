@@ -14,4 +14,5 @@ public class PositionDTO extends BaseDTO {
 	private String vname;
 	private int level;
 	private int no;
+	private String style;
 }
