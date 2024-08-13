@@ -1,6 +1,7 @@
 package com.hongha.ver1.securties.jwt.payload.response;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import java.util.List;
@@ -9,8 +10,10 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class JwtResponse {
 	private String token;
+	@Builder.Default
 	private String type = "honghaauto";
 	private UUID genId;
 	private String userName;
