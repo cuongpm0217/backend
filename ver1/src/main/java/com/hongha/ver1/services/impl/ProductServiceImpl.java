@@ -72,8 +72,8 @@ public class ProductServiceImpl implements ProductService {
 		selected.setProductCategoryId(productRequest.getProductCategoryId());
 		selected.setCurrencyId(productRequest.getCurrencyId());
 		selected.setName(productRequest.getName());
-		selected.setPrice(productRequest.getPrice());
-		selected.setSalePrice(productRequest.getSalePrice());
+		selected.setImportPrice(productRequest.getImportPrice());
+		selected.setSellingPrice(productRequest.getSellingPrice());
 		selected.setBrandId(productRequest.getBrandId());
 		selected.setUnitId(productRequest.getUnitId());
 		Product updated = productRepo.save(selected);
