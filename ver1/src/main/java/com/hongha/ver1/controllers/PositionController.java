@@ -37,20 +37,36 @@ public class PositionController {
 	private PositionService positionService;
 
 	@GetMapping("/")
-	public ResponseEntity<Map<String, Object>> getAll(@RequestParam(required = false) String name,
-			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size,
+	public ResponseEntity<Map<String, Object>> getAll(@RequestParam(required = false) String query,
+			@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "5") int size,
 			@RequestParam(defaultValue = "level") String sortBy, @RequestParam(defaultValue = "asc") String sortType) {
 		try {
-			Page<Position> positions = positionService.getAll(page, size, sortBy, sortType);
-			if (name != null || name != "") {
-				positions = positionService.findByVnameLike(name, page, size, sortBy, sortType);
+			page=page-1;
+			Page<Position> positions ;
+			if (query != null) {
+				positions = positionService.findBySearchText(query, page, size, sortBy, sortType);
+			}else {
+				positions = positionService.getAll(page, size, sortBy, sortType);
 			}
 			// set No > DTO
 			List<PositionDTO> positionDTOs = positions.stream()
 					.map(position -> mapper.map(position, PositionDTO.class)).collect(Collectors.toList());
-//			for (int i = 0; i < positionDTOs.size(); i++) {
-//				positionDTOs.get(i).setNo(i + 1);
-//			}
+			for (PositionDTO positionDTO : positionDTOs) {
+				switch(positionDTO.getLevel()) {
+				case 1,2:{
+					positionDTO.setStyle("level1");
+					break;
+				}
+				case 3,4,5,6,7:{
+					positionDTO.setStyle("level2");
+					break;
+				}
+				default:{
+					positionDTO.setStyle("level3");
+					break;
+				}
+				}
+			}
 
 			Map<String, Object> response = new HashMap<>();
 			response.put("positions", positionDTOs);

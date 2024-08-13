@@ -36,12 +36,17 @@ public class PositionServiceImpl implements PositionService {
 	@Override
 	@Transactional
 	public Position save(Position positionRequest) {
-		Position isInserted = positionRepo.save(positionRequest);
-		if (isInserted != null) {
-			return isInserted;
-		} else {
-			throw new RuntimeException("Can't create Position");
+		Position isInserted ;
+		if(positionRequest.getGenId()!=null) {
+			isInserted = positionRepo.save(positionRequest);
+		}else {
+			Position clone = new Position();
+			clone.setLevel(positionRequest.getLevel());
+			clone.setName(positionRequest.getName());
+			clone.setVname(positionRequest.getVname());
+			isInserted = positionRepo.save(clone);
 		}
+		return isInserted;
 
 	}
 
@@ -139,6 +144,7 @@ public class PositionServiceImpl implements PositionService {
 		Pageable pageable = genPageable(pageNo, pageSize, sortBy, sortType);
 		Page<Position> page = positionRepo.findAll(pageable);
 		if (!page.hasContent()) {
+			
 			try {
 				loadPositionExcel();
 			} catch (IOException e) {
@@ -149,15 +155,15 @@ public class PositionServiceImpl implements PositionService {
 	}
 
 	@Override
-	public Page<Position> findByVnameLike(String vname, int pageNo, int pageSize, String sortBy, String sortType) {
+	public Page<Position> findBySearchText(String searchText, int pageNo, int pageSize, String sortBy, String sortType) {
 		Pageable pageable = genPageable(pageNo, pageSize, sortBy, sortType);
-		Page<Position> page = positionRepo.findByVnameLike(vname, pageable);
+		Page<Position> page = positionRepo.findBySearchText(searchText, pageable);
 		return page;
 	}
 
 	private Pageable genPageable(int pageNo, int pageSize, String sortBy, String sortType) {
 		Sort sort = Sort.by(sortBy);
-		if (sortType.equals("des")) {
+		if (sortType.startsWith("des")) {
 			sort = sort.descending();
 		}
 		Pageable pageable = PageRequest.of(pageNo, pageSize, sort);

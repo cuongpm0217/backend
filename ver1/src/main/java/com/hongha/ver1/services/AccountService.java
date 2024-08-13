@@ -18,9 +18,10 @@ public interface AccountService {
 
 	boolean delete(long id);
 
-	boolean deleteByUUID(UUID genID);
-
-	Page<Account> findByCodeContaining(String code, int pageNo, int pageSize, String sortBy, String sortType);
+	boolean deleteByUUID(UUID genID);	
 
 	Page<Account> getAll(int pageNo, int pageSize, String sortBy, String sortType) throws IOException;
+
+	Page<Account> findBySearchText(String searchText, int pageNo, int pageSize, String sortBy, String sortType);
+	
 }

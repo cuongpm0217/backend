@@ -37,7 +37,7 @@ public class BranchServiceImpl implements BranchService {
 		if (branch != null) {
 			return branch;
 		} else
-			throw new RuntimeException("Not found");
+			return null;
 	}
 
 	@Override
@@ -117,17 +117,22 @@ public class BranchServiceImpl implements BranchService {
 	}
 
 	@Override
-	public Page<Branch> findByNameOrAddressLike(String name, String address, int pageNo, int pageSize, String sortBy,
+	public Page<Branch> findByNameContainingOrAddressContaining(String name, String address, int pageNo, int pageSize, String sortBy,
 			String sortType) {
 		Pageable paging = genPage(pageNo, pageSize, sortBy, sortType);
-		Page<Branch> pageResult = branchRepo.findByNameOrAddressLike(name, address, paging);
+		Page<Branch> pageResult = branchRepo.findByNameContainingOrAddressContaining(name, address, paging);
 		return pageResult;
 	}
 
 	@Override
 	public Page<Branch> getAll(int pageNo, int pageSize, String sortBy, String sortType) {
+		
+		if(branchRepo.count()==0) {			
+			loadDefaultBranch();
+		}
 		Pageable paging = genPage(pageNo, pageSize, sortBy, sortType);
 		Page<Branch> pageResult = branchRepo.findAll(paging);
+		
 		return pageResult;
 	}
 
@@ -137,7 +142,15 @@ public class BranchServiceImpl implements BranchService {
 			sorted = sorted.descending();
 		}
 		Pageable paging = PageRequest.of(pageNo, pageSize, sorted);
+		
 		return paging;
 	}
-
+	private void loadDefaultBranch() {
+		Branch branch = new Branch();
+		branch.setAddress("Thị trấn Ngô Đồng, Giao Thủy, Nam Định");
+		branch.setName("Chi nhánh Ngô Đồng");
+		branch.setLevel(1);
+		branch.setPhone1("0976625719");
+		branchRepo.save(branch);
+	}
 }

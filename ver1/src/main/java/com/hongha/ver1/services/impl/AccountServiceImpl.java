@@ -34,13 +34,17 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	@Transactional
 	public Account save(Account accountRequest) {
-		Account isInserted = accountRepo.save(accountRequest);
-		if (isInserted != null) {
-
-			return isInserted;
-		} else {
-			throw new RuntimeException("Can't save");
+		Account isInserted ;
+		if(accountRequest.getGenId()!=null) {
+			isInserted = accountRepo.save(accountRequest);
+		}else {
+			Account clone = new Account();
+			clone.setCode(accountRequest.getCode());
+			clone.setName(accountRequest.getName());
+			clone.setLevel(accountRequest.getLevel());
+			isInserted = accountRepo.save(clone);
 		}
+		return isInserted;
 	}
 
 	@Override
@@ -63,15 +67,22 @@ public class AccountServiceImpl implements AccountService {
 		}
 	}
 	@Override
-	public Page<Account> findByCodeContaining(String code, int pageNo, int pageSize, String sortBy, String sortType) {
+	public Page<Account> findBySearchText(String searchText, int pageNo, int pageSize, String sortBy, String sortType) {
+		Pageable paging = genPageable(pageNo, pageSize, sortBy, sortType);
+		Page<Account> result = accountRepo.findBySearchText(searchText,paging);
+		return result;
+	}
+	
+
+	private Pageable genPageable(int pageNo, int pageSize, String sortBy, String sortType) {
 		Sort sorted = Sort.by(sortBy);
-		if(sortType.equals("des")) {
+		if(sortType.startsWith("des")) {
 			sorted = Sort.by(sortBy).descending();
 		}
 		Pageable paging = PageRequest.of(pageNo, pageSize, sorted);
-		Page<Account> result = accountRepo.findByCodeContaining(code,paging);
-		return result;
+		return paging;
 	}
+	
 	
 	@Override
 	public Page<Account> getAll(int pageNo, int pageSize, String sortBy, String sortType) throws IOException {
@@ -79,11 +90,8 @@ public class AccountServiceImpl implements AccountService {
 		if (counter == 0) {
 			loadAccountExcel();
 		}
-		Sort sorted = Sort.by(sortBy);
-		if(sortType.equals("des")) {
-			sorted = sorted.descending();
-		}
-		Pageable paging = PageRequest.of(pageNo, pageSize, sorted);
+		
+		Pageable paging = genPageable(pageNo, pageSize, sortBy, sortType);
 		Page<Account> pageResult = accountRepo.findAll(paging);		
 		return pageResult;
 	}
@@ -100,7 +108,7 @@ public class AccountServiceImpl implements AccountService {
 			if (isUpdated != null) {
 				return isUpdated;
 			} else {
-				throw new RuntimeException("Update fail");
+				throw new RuntimeException("Update false");
 			}
 		} else {
 			throw new RuntimeException("Not found:" + String.valueOf(id));
@@ -216,4 +224,7 @@ public class AccountServiceImpl implements AccountService {
 		}
 		return cellValue;
 	}
+
+	
+	
 }
