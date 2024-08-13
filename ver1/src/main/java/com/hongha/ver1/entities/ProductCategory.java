@@ -20,6 +20,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ProductCategory extends BaseEntityAudit{
 	private static final long serialVersionUID = 1L;
-	@Column()
+	@Column(nullable =  false)
 	private String name;
+	@Column
+	private String code;
 }
