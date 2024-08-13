@@ -16,14 +16,24 @@ import com.hongha.ver1.repositories.RepairBillItemRepository;
 import com.hongha.ver1.services.RepairBillItemService;
 
 @Service
-public class RepairBillItemServiceImpl implements RepairBillItemService{
+public class RepairBillItemServiceImpl implements RepairBillItemService {
 	@Autowired
 	private RepairBillItemRepository billItemRepo;
 
 	@Override
 	@Transactional
 	public RepairBillItem save(RepairBillItem billItemRequest) {
-		RepairBillItem isInserted = billItemRepo.save(billItemRequest);
+		RepairBillItem clone = RepairBillItem.builder()
+				.guarantee(billItemRequest.getGuarantee())
+				.note(billItemRequest.getNote())
+				.price(billItemRequest.getPrice())
+				.repairBillId(billItemRequest.getRepairBillId())
+				.productId(billItemRequest.getProductId())
+				.quantity(billItemRequest.getQuantity())				
+				.build();
+		//update Stock
+		RepairBillItem isInserted = billItemRepo.save(clone);
+
 		if (isInserted != null) {
 			return isInserted;
 		} else {
@@ -64,20 +74,19 @@ public class RepairBillItemServiceImpl implements RepairBillItemService{
 		if (selected != null) {
 			updateObj(billItemRequest, selected);
 			return updateObj(billItemRequest, selected);
-			
+
 		} else {
 			throw new RuntimeException("Not found RepairBillItem:" + String.valueOf(id));
 		}
 	}
 
 	private RepairBillItem updateObj(RepairBillItem billItemRequest, RepairBillItem selected) {
-		selected.setEmployeeId(billItemRequest.getEmployeeId());
 		selected.setNote(billItemRequest.getNote());
 		selected.setPrice(billItemRequest.getPrice());
 		selected.setProductId(billItemRequest.getProductId());
 		selected.setQuantity(billItemRequest.getQuantity());
 		selected.setRepairBillId(billItemRequest.getRepairBillId());
-		selected.setWarranty(billItemRequest.getWarranty());
+		selected.setGuarantee(billItemRequest.getGuarantee());
 		RepairBillItem updated = billItemRepo.save(selected);
 		if (updated != null) {
 			return updated;
@@ -133,5 +142,4 @@ public class RepairBillItemServiceImpl implements RepairBillItemService{
 		return page;
 	}
 
-	
 }
