@@ -13,5 +13,5 @@ import com.hongha.ver1.entities.Branch;
 public interface BranchRepository extends JpaRepository<Branch, Long> {
 	Branch findByGenId(UUID genId);
 	
-	Page<Branch> findByNameOrAddressLike(String name,String address, Pageable paging);
+	Page<Branch> findByNameContainingOrAddressContaining(String name,String address, Pageable paging);
 }
