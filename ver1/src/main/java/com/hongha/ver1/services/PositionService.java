@@ -27,5 +27,5 @@ public interface PositionService {
 
 	Page<Position> getAll(int pageNo, int pageSize, String sortBy, String sortType);
 
-	Page<Position> findByVnameLike(String vname, int pageNo, int pageSize, String sortBy, String sortType);
+	Page<Position> findBySearchText(String searchText, int pageNo, int pageSize, String sortBy, String sortType);
 }
