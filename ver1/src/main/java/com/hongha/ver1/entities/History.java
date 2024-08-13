@@ -13,14 +13,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-
 @Table(name = "_history")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class History extends BaseEntityAudit {
-	private static final long serialVersionUID = 1L;
+public class History extends BaseEntityAudit {	
+	private static final long serialVersionUID = 3139488870627427592L;
 	@Column(updatable = false, nullable = false)
 	private String obj;
 	@Enumerated(EnumType.STRING)
