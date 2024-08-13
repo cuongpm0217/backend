@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,6 +17,7 @@ import lombok.Setter;
 @Table(name = "_repair_bill_item")
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class RepairBillItem extends BaseEntityAudit{
@@ -30,9 +32,7 @@ public class RepairBillItem extends BaseEntityAudit{
 	@Column
 	private double price;
 	@Column
-	private int warranty;// follow month
-	@Column
-	private long employeeId;
+	private int guarantee;// follow month	
 	@Column
 	private String note;
 }
