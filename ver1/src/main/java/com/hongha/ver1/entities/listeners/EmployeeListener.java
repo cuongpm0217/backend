@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.hongha.ver1.entities.Employee;
 import com.hongha.ver1.entities.History;
 import com.hongha.ver1.entities.enums.EAction;
-import com.hongha.ver1.utils.BeanUtil;
+import com.hongha.ver1.services.impl.BeanUtil;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PostPersist;
