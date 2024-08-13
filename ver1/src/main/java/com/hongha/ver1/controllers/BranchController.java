@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -44,10 +43,9 @@ public class BranchController {
 		try {
 			page = page - 1;// front end always start 1
 			Page<Branch> branches = branchService.getAll(page, size, sortBy, sortType);
-//			if ((name != null || name != "") | (address != null || address != "")) {
-//				branches = branchService.findByNameOrAddressLike(name, address, page, size, sortBy, sortType);
-//			}
-						
+			if ((name != null || name == "") || (address != null || address == "")) {
+				branches = branchService.findByNameContainingOrAddressContaining(name, address, page, size, sortBy, sortType);
+			}					
 			// set No > DTO
 			List<BranchDTO> branchDTOs = branches.stream().map(branch -> mapper.map(branch, BranchDTO.class))
 					.collect(Collectors.toList());
