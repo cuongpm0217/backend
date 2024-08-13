@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.hongha.ver1.entities.Purchase;
 import com.hongha.ver1.repositories.PurchaseRepository;
 import com.hongha.ver1.services.PurchaseService;
-import com.hongha.ver1.utils.BeanUtil;
 import com.hongha.ver1.utils.GenerateCode;
 
 import jakarta.persistence.EntityManager;
@@ -26,15 +25,14 @@ import jakarta.persistence.Query;
 public class PurchaseServiceImpl implements PurchaseService {
 	@Autowired
 	private PurchaseRepository purRepo;
-	@Autowired
-	private GenerateCode genCode;
+	
 
 	@Override
 	@Transactional
 	public Purchase save(Purchase purRequest) {
 		//mq generate purchase code
 		int countInYear = getCountInYearUsingJPQL();
-		String code = genCode.GenInvoiceCode(countInYear, Purchase.class.getName());
+		String code = GenerateCode.GenInvoiceCode(countInYear, Purchase.class.getName());
 		purRequest.setCode(code);
 		//mq insert then generate code 
 		Purchase isInserted = purRepo.save(purRequest);

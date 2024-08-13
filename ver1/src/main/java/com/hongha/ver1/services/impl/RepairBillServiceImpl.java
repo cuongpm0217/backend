@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.hongha.ver1.entities.RepairBill;
 import com.hongha.ver1.repositories.RepairBillRepository;
 import com.hongha.ver1.services.RepairBillService;
-import com.hongha.ver1.utils.BeanUtil;
 import com.hongha.ver1.utils.GenerateCode;
 
 import jakarta.persistence.EntityManager;
@@ -24,14 +23,12 @@ import jakarta.persistence.Query;
 public class RepairBillServiceImpl implements RepairBillService {
 	@Autowired
 	private RepairBillRepository billRepo;
-	@Autowired
-	private GenerateCode genCode;
-
+	
 	@Override
 	@Transactional
 	public RepairBill save(RepairBill billRequest) {
 		int countInYear = getCountInYearUsingJPQL();
-		String code = genCode.GenInvoiceCode(countInYear, RepairBill.class.getName());
+		String code = GenerateCode.GenInvoiceCode(countInYear, RepairBill.class.getName());
 		billRequest.setCode(code);
 		RepairBill isInserted = billRepo.save(billRequest);
 		if (isInserted != null) {
