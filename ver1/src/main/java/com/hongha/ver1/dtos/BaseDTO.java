@@ -1,6 +1,6 @@
 package com.hongha.ver1.dtos;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import jakarta.persistence.MappedSuperclass;
@@ -13,7 +13,8 @@ public abstract class BaseDTO {
 	private UUID genId;
 	private String createdBy;
 	private String updatedBy;
-	private Date createdAt;
-	private Date updatedAt;
+	private LocalDateTime createdAt;
+	private LocalDateTime updatedAt;
+	private long version;
 
 }
