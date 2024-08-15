@@ -15,22 +15,26 @@ import com.hongha.ver1.entities.Department;
 public interface DepartmentRepository extends JpaRepository<Department, Long>{
 	Department findByGenId(UUID genId);
 	
-	@Query(value= "SELECT _d.* FROM `_department` as _d "
-			+ "LEFT JOIN `_branch` _b ON _d.branch_id = _b.id "
-			+ "WHERE "			
-			+ "(SELECT CONVERT(_d.updated_at,DATE)) LIKE CONCAT('%', CONCAT(:searchText, '%')) "
-			+ "OR LOWER(_b.name) LIKE lower(concat('%', concat(:searchText, '%'))) "
-			+ "OR LOWER(_d.code) LIKE lower(concat('%', concat(:searchText, '%'))) "
-			+ "OR LOWER(_d.name) LIKE lower(concat('%', concat(:searchText, '%'))) "
-			+ "OR LOWER(_d.vname) LIKE lower(concat('%', concat(:searchText, '%'))) "
-			,countQuery = "SELECT count(_d.id) FROM `_department` as _d "
-					+ "LEFT JOIN `_branch` _b ON _d.branch_id = _b.id "
-					+ "WHERE "					
-					+ "(SELECT CONVERT(_d.updated_at,DATE)) LIKE CONCAT('%', CONCAT(:searchText, '%')) "
-					+ "OR LOWER(_b.name) LIKE lower(concat('%', concat(:searchText, '%'))) "
-					+ "OR LOWER(_d.code) LIKE lower(concat('%', concat(:searchText, '%'))) "
-					+ "OR LOWER(_d.name) LIKE lower(concat('%', concat(:searchText, '%'))) "
-					+ "OR LOWER(_d.vname) LIKE lower(concat('%', concat(:searchText, '%'))) "
+	@Query(value= """
+            SELECT _d.* FROM `_department` as _d \
+            LEFT JOIN `_branch` _b ON _d.branch_id = _b.id \
+            WHERE \
+            (SELECT CONVERT(_d.updated_at,DATE)) LIKE CONCAT('%', CONCAT(:searchText, '%')) \
+            OR LOWER(_b.name) LIKE lower(concat('%', concat(:searchText, '%'))) \
+            OR LOWER(_d.code) LIKE lower(concat('%', concat(:searchText, '%'))) \
+            OR LOWER(_d.name) LIKE lower(concat('%', concat(:searchText, '%'))) \
+            OR LOWER(_d.vname) LIKE lower(concat('%', concat(:searchText, '%'))) \
+            """
+			,countQuery = """
+                    SELECT count(_d.id) FROM `_department` as _d \
+                    LEFT JOIN `_branch` _b ON _d.branch_id = _b.id \
+                    WHERE \
+                    (SELECT CONVERT(_d.updated_at,DATE)) LIKE CONCAT('%', CONCAT(:searchText, '%')) \
+                    OR LOWER(_b.name) LIKE lower(concat('%', concat(:searchText, '%'))) \
+                    OR LOWER(_d.code) LIKE lower(concat('%', concat(:searchText, '%'))) \
+                    OR LOWER(_d.name) LIKE lower(concat('%', concat(:searchText, '%'))) \
+                    OR LOWER(_d.vname) LIKE lower(concat('%', concat(:searchText, '%'))) \
+                    """
 			,nativeQuery = true)
 	Page<Department> findBySearchText(@Param("searchText") String searchText, Pageable pageable);
 }

@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.2.5</version>
+		<version>3.2.8</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.hongha</groupId>
@@ -118,7 +118,7 @@
 		<dependency>
 			<groupId>org.modelmapper</groupId>
 			<artifactId>modelmapper</artifactId>
-			<version>3.2.0</version>
+			<version>3.2.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -128,6 +128,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 		<!--start redis-->
 		<dependency>
@@ -148,8 +149,20 @@
 		</dependency>
 
 		<!--end redis -->
+		<dependency>
+			<groupId>org.eclipse.birt</groupId>
+			<artifactId>org.eclipse.birt.core</artifactId>
+			<version>4.9.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.birt.runtime</groupId>
+			<artifactId>org.eclipse.birt.runtime</artifactId>
+			<version>4.6.0-20160607</version>
+		</dependency>
 		
+
 	</dependencies>
+
 
 	<build>
 		<plugins>
