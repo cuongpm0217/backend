@@ -2,7 +2,6 @@ package com.hongha.ver1.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,8 +17,8 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductGroup extends BaseEntityAudit{
-	
+public class ProductGroup extends BaseEntityAudit {
+
 	private static final long serialVersionUID = 4525858241774645250L;
 	@Column
 	private String name;

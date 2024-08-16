@@ -24,5 +24,4 @@ public interface RepairBillRepository extends JpaRepository<RepairBill, Long> {
 //			+ "from _repair_bill left join _vehicle  on _repair_bill.vehicle_id = _vehicle.id where _vehicle.license_plate like :licensePlate")
 //	Page<RepairBill> findByLicensePlate(@Param("licensePlate") String licensePlate, Pageable pageable);
 
-
 }

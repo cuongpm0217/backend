@@ -15,10 +15,15 @@ public interface AccountRedisService {
 
 	void saveAllAccount(List<AccountDTO> accounts, String searchText, int pageNo, int pageSize, String sortBy,
 			String sortType) throws JsonProcessingException, JsonMappingException;
+
 	Pagination getPagination(String searchText);
-	void savePagination(Pagination pagination,String searchText);
+
+	void savePagination(Pagination pagination, String searchText);
+
 	AccountDTO getOne(UUID uuid) throws JsonProcessingException, JsonMappingException;
+
 	void saveAccount(AccountDTO accountDTO) throws JsonProcessingException, JsonMappingException;
+
 	void clearList();
 
 	void clearOne(UUID uuid);

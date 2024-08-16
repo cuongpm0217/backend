@@ -1,6 +1,5 @@
 package com.hongha.ver1.dtos;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class BranchDTO extends BaseDTO{
+public class BranchDTO extends BaseDTO {
 	private String name;
 	private int level;
 	private String address;

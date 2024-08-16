@@ -23,7 +23,7 @@ public interface DepartmentService {
 
 	Department updateByUUID(UUID genID, Department departmentRequest);
 
-	boolean deleteByUUID(UUID genID);	
+	boolean deleteByUUID(UUID genID);
 
 	Page<Department> findBySearchText(String searchText, int pageNo, int pageSize, String sortBy, String sortType);
 

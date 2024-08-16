@@ -1,7 +1,6 @@
 package com.hongha.ver1.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -17,12 +16,13 @@ public class UserServiceImpl implements UserDetailsService {
 	private UserRepository userRepo;
 
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	public CustomUserDetail loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = userRepo.findByUsername(username);
-		if (user == null)
+		if (user == null) {
 			throw new UsernameNotFoundException(username);
-		else
+		} else {
 			return new CustomUserDetail(user);
+		}
 	}
 
 	@Transactional

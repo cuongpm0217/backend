@@ -11,15 +11,15 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CustomerDTO extends BaseDTO{
+public class CustomerDTO extends BaseDTO {
 	private String name;
 	private Date dob;
 	private Boolean gender;
 	private String address1;
 	private String address2;
 	private String phone1;
-	private String phone2;	
-	private long customerTypeId;	
+	private String phone2;
+	private long customerTypeId;
 	private int no;
 	private String tittle;
 }

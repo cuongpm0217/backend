@@ -18,8 +18,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PurchaseItem extends BaseEntityAudit{
-	
+public class PurchaseItem extends BaseEntityAudit {
+
 	private static final long serialVersionUID = 1L;
 	@Column(nullable = false)
 	private long purchaseId;

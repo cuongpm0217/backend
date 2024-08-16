@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.25" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.16.0.v202406131946</property>
+    <property name="units">mm</property>
+    <property name="iconFile">/templates/simple_listing.gif</property>
+    <property name="layoutPreference">auto layout</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <data-sources>
+        <script-data-source name="Data Source" id="25">
+            <method name="open"><![CDATA[dummyObject = new Object();]]></method>
+            <method name="close"><![CDATA[dummyObject = null;]]></method>
+        </script-data-source>
+    </data-sources>
+    <data-sets>
+        <script-data-set name="Data Set" id="26">
+            <list-property name="resultSetHints">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">No</property>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">fullName</property>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">No</property>
+                    <text-property name="displayName">STT</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">fullName</property>
+                    <text-property name="displayName">Tên</text-property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">No</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">fullName</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <method name="beforeOpen"><![CDATA[
+]]></method>
+            <property name="dataSource">Data Source</property>
+            <method name="open"><![CDATA[count =0;
+myDataSet = new Packages.com.hongha.ver1.controllers.request.BranchRequest();
+myData = myDataSet.getListBranch();
+
+]]></method>
+            <method name="fetch"><![CDATA[if(count < myData.size()){
+       row["No"] = myData.get(count).getNo();
+       row["fullName"] = myData.get(count).getName();       
+       count++;
+       return true;
+}
+return false;]]></method>
+        </script-data-set>
+    </data-sets>
+    <styles>
+        <style name="report" id="24">
+            <property name="fontFamily">sans-serif</property>
+            <property name="fontSize">10pt</property>
+        </style>
+    </styles>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <property name="type">a4</property>
+            <page-footer>
+                <text id="3">
+                    <property name="contentType">html</property>
+                    <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
+                </text>
+            </page-footer>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <table id="27">
+            <property name="dataSet">Data Set</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">No</property>
+                    <text-property name="displayName">STT</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["No"]</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">fullName</property>
+                    <text-property name="displayName">Tên</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["fullName"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <column id="41"/>
+            <column id="42"/>
+            <header>
+                <row id="28">
+                    <cell id="29">
+                        <label id="30">
+                            <text-property name="text">STT</text-property>
+                        </label>
+                    </cell>
+                    <cell id="31">
+                        <label id="32">
+                            <text-property name="text">Tên</text-property>
+                        </label>
+                    </cell>
+                </row>
+            </header>
+            <detail>
+                <row id="33">
+                    <cell id="34">
+                        <data id="35">
+                            <property name="resultSetColumn">No</property>
+                        </data>
+                    </cell>
+                    <cell id="36">
+                        <data id="37">
+                            <property name="resultSetColumn">fullName</property>
+                        </data>
+                    </cell>
+                </row>
+            </detail>
+            <footer>
+                <row id="38">
+                    <cell id="39"/>
+                    <cell id="40"/>
+                </row>
+            </footer>
+        </table>
+    </body>
+</report>

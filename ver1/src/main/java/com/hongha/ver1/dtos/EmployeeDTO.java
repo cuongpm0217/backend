@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class EmployeeDTO extends BaseDTO{
+public class EmployeeDTO extends BaseDTO {
 	private String name;
 	private long userId;
 	private long positionId;
@@ -19,12 +19,12 @@ public class EmployeeDTO extends BaseDTO{
 	private long branchId;
 	private Date dob;
 	private boolean gender;
-	private String nationalID;///cmt cccd
+	private String nationalID;/// cmt cccd
 	private String phone1;
 	private String phone2;
 	private String address1;
 	private String address2;
-	private String avatar;//url image
+	private String avatar;// url image
 	private int no;
 	private String tittle;
 }

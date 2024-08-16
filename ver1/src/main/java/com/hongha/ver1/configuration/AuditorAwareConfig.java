@@ -10,8 +10,8 @@ import com.hongha.ver1.utils.AuditorAwareImpl;
 @Configuration
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
 public class AuditorAwareConfig {
-    @Bean
-    AuditorAware<String> auditorAware() {
-        return new AuditorAwareImpl();
-    }
+	@Bean
+	AuditorAware<String> auditorAware() {
+		return new AuditorAwareImpl();
+	}
 }

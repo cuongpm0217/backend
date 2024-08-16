@@ -151,10 +151,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public Page<Employee> findByPhone1OrPhone2Like(String phone1,String phone2, int pageNo, int pageSize, String sortBy,
-			String sortType) {
+	public Page<Employee> findByPhone1OrPhone2Like(String phone1, String phone2, int pageNo, int pageSize,
+			String sortBy, String sortType) {
 		Pageable pageable = genPageable(pageNo, pageSize, sortBy, sortType);
-		Page<Employee> page = empRepo.findByPhone1OrPhone2Like(phone1,phone2, pageable);
+		Page<Employee> page = empRepo.findByPhone1OrPhone2Like(phone1, phone2, pageable);
 		return page;
 	}
 

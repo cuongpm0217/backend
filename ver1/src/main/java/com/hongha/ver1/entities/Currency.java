@@ -13,19 +13,19 @@ import lombok.Setter;
 
 @Entity
 @EntityListeners(CurrencyListener.class)
-@Table(name="_currency")
+@Table(name = "_currency")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Currency extends BaseEntityAudit{
+public class Currency extends BaseEntityAudit {
 	private static final long serialVersionUID = 1L;
 	@Column(nullable = false)
-	private String code;//VND
+	private String code;// VND
 	@Column
-	private String fullName;//Việt Nam Đồng
+	private String fullName;// Việt Nam Đồng
 	@Column
-	private String symbol;//₫
-	@Column(name="exchange_VND")
-	private double exchangeVND;//vnd > 1 usd > 24500.0
+	private String symbol;// ₫
+	@Column(name = "exchange_VND")
+	private double exchangeVND;// vnd > 1 usd > 24500.0
 }

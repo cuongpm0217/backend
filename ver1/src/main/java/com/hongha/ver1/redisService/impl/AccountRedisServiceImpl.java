@@ -39,7 +39,7 @@ public class AccountRedisServiceImpl implements AccountRedisService {
 				result = redisObjectMapper.readValue(json, new TypeReference<List<AccountDTO>>() {
 				});
 			}
-		}else {
+		} else {
 			log.info("key expired");
 		}
 		return result;
@@ -68,7 +68,7 @@ public class AccountRedisServiceImpl implements AccountRedisService {
 			String json = (String) redisTemplate.opsForValue().get(key);
 			result = json != null ? redisObjectMapper.readValue(json, new TypeReference<AccountDTO>() {
 			}) : null;
-		}else {
+		} else {
 			log.info("key expired");
 		}
 		return result;
@@ -103,7 +103,7 @@ public class AccountRedisServiceImpl implements AccountRedisService {
 			} catch (JsonProcessingException e) {
 				log.error("Wrong key");
 			}
-		}else {
+		} else {
 			log.info("key expired");
 		}
 		return result;

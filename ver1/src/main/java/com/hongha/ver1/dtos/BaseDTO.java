@@ -4,9 +4,12 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import jakarta.persistence.MappedSuperclass;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
+
 @MappedSuperclass
 public abstract class BaseDTO {
 	private Long id;

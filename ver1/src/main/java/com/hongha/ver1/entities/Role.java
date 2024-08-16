@@ -22,7 +22,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Table(name = "_role")
 public class Role extends BaseEntityAudit {
-	
+
 	private static final long serialVersionUID = 1L;
 	@Enumerated(EnumType.STRING)
 	@Column(name = "name", unique = true)

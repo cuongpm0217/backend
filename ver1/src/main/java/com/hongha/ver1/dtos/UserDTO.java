@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDTO extends BaseDTO{
+public class UserDTO extends BaseDTO {
 	private String username;
 	private String password;
 	private String email;

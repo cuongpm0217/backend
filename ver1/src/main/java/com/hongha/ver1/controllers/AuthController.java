@@ -1,18 +1,26 @@
 package com.hongha.ver1.controllers;
 
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.hongha.ver1.entities.CustomUserDetail;
-
 import com.hongha.ver1.entities.Role;
 import com.hongha.ver1.entities.User;
 import com.hongha.ver1.entities.enums.ERole;
@@ -23,12 +31,6 @@ import com.hongha.ver1.securties.jwt.payload.request.LoginRequest;
 import com.hongha.ver1.securties.jwt.payload.request.SignupRequest;
 import com.hongha.ver1.securties.jwt.payload.response.JwtResponse;
 import com.hongha.ver1.securties.jwt.payload.response.MessageResponse;
-
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -58,7 +60,7 @@ public class AuthController {
 			List<String> roles = userDetail.getAuthorities().stream().map(item -> item.getAuthority())
 					.collect(Collectors.toList());
 			JwtResponse result = new JwtResponse(jwt, userDetail.getGenId(), userDetail.getUsername(),
-					userDetail.getEmail(), roles,userDetail.getBranchId());
+					userDetail.getEmail(), roles, userDetail.getBranchId());
 			return ResponseEntity.ok(result);
 		} else {
 			return ResponseEntity.badRequest().body(new MessageResponse("Đăng nhập không thành công"));
@@ -76,21 +78,18 @@ public class AuthController {
 		}
 
 		// Create new user's account
-		User user = User.builder()
-				.username(signUpRequest.getUsername())
-				.email(signUpRequest.getEmail())
-				.password(passwordEncoder.encode(signUpRequest.getPassword()))
-				.branchId(signUpRequest.getBranchId())
-				.build();				
+		User user = User.builder().username(signUpRequest.getUsername()).email(signUpRequest.getEmail())
+				.password(passwordEncoder.encode(signUpRequest.getPassword())).branchId(signUpRequest.getBranchId())
+				.build();
 
-		Set<String> strRoles= signUpRequest.getRoles();
-		 
+		Set<String> strRoles = signUpRequest.getRoles();
+
 		Set<Role> roles = new HashSet<>();
-		// check role in DB >>>>> role service 
-		if (roleRepository.count()==0) {
+		// check role in DB >>>>> role service
+		if (roleRepository.count() == 0) {
 			loadDefaultRole();
 		}
-		//check role request
+		// check role request
 		if (strRoles == null || strRoles.isEmpty()) {
 			Role userRole = roleRepository.findByName(ERole.ROLE_USER)
 					.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
@@ -140,5 +139,5 @@ public class AuthController {
 		roleRepository.save(roleManager);
 		roleRepository.save(roleUser);
 	}
-	
+
 }

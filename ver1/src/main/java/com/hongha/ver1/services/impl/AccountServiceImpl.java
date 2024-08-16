@@ -34,10 +34,10 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	@Transactional
 	public Account save(Account accountRequest) {
-		Account isInserted ;
-		if(accountRequest.getGenId()!=null) {
+		Account isInserted;
+		if (accountRequest.getGenId() != null) {
 			isInserted = accountRepo.save(accountRequest);
-		}else {
+		} else {
 			Account clone = new Account();
 			clone.setCode(accountRequest.getCode());
 			clone.setName(accountRequest.getName());
@@ -66,33 +66,32 @@ public class AccountServiceImpl implements AccountService {
 			throw new RuntimeException("Not found:" + String.valueOf(genId));
 		}
 	}
+
 	@Override
 	public Page<Account> findBySearchText(String searchText, int pageNo, int pageSize, String sortBy, String sortType) {
 		Pageable paging = genPageable(pageNo, pageSize, sortBy, sortType);
-		Page<Account> result = accountRepo.findBySearchText(searchText,paging);
+		Page<Account> result = accountRepo.findBySearchText(searchText, paging);
 		return result;
 	}
-	
 
 	private Pageable genPageable(int pageNo, int pageSize, String sortBy, String sortType) {
 		Sort sorted = Sort.by(sortBy);
-		if(sortType.startsWith("des")) {
+		if (sortType.startsWith("des")) {
 			sorted = Sort.by(sortBy).descending();
 		}
 		Pageable paging = PageRequest.of(pageNo, pageSize, sorted);
 		return paging;
 	}
-	
-	
+
 	@Override
 	public Page<Account> getAll(int pageNo, int pageSize, String sortBy, String sortType) throws IOException {
 		long counter = accountRepo.count();
 		if (counter == 0) {
 			loadAccountExcel();
 		}
-		
+
 		Pageable paging = genPageable(pageNo, pageSize, sortBy, sortType);
-		Page<Account> pageResult = accountRepo.findAll(paging);		
+		Page<Account> pageResult = accountRepo.findAll(paging);
 		return pageResult;
 	}
 
@@ -168,10 +167,8 @@ public class AccountServiceImpl implements AccountService {
 		Workbook wb = new XSSFWorkbook(inputStream);
 
 		Sheet sheet = wb.getSheet("account");
-		Iterator<Row> rows = sheet.iterator();
-		while (rows.hasNext()) {
-			Row nextRow = rows.next();
-//			 Get all cells
+		for (Row nextRow : sheet) {
+			//			 Get all cells
 			Iterator<Cell> cellIterator = nextRow.cellIterator();
 // Read cells and set value for object
 			Account acc = new Account();
@@ -225,6 +222,4 @@ public class AccountServiceImpl implements AccountService {
 		return cellValue;
 	}
 
-	
-	
 }

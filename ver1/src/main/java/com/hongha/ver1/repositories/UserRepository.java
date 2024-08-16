@@ -7,12 +7,14 @@ import org.springframework.stereotype.Repository;
 
 import com.hongha.ver1.entities.User;
 
-
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    User findByUsername(String username);
-    Boolean existsByUsername(String username);
-    Boolean existsByEmail(String email);
-    User findByGenId(UUID genId);
+	User findByUsername(String username);
+
+	Boolean existsByUsername(String username);
+
+	Boolean existsByEmail(String email);
+
+	User findByGenId(UUID genId);
 
 }

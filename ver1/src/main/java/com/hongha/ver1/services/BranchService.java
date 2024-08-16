@@ -24,8 +24,8 @@ public interface BranchService {
 
 	boolean deleteByUUID(UUID genID);
 
-	Page<Branch> findByNameContainingOrAddressContaining(String name, String address, int pageNo, int pageSize, String sortBy,
-			String sortType);
+	Page<Branch> findByNameContainingOrAddressContaining(String name, String address, int pageNo, int pageSize,
+			String sortBy, String sortType);
 
 	Page<Branch> getAll(int pageNo, int pageSize, String sortBy, String sortType);
 }

@@ -23,15 +23,11 @@ public class RepairBillItemServiceImpl implements RepairBillItemService {
 	@Override
 	@Transactional
 	public RepairBillItem save(RepairBillItem billItemRequest) {
-		RepairBillItem clone = RepairBillItem.builder()
-				.guarantee(billItemRequest.getGuarantee())
-				.note(billItemRequest.getNote())
-				.price(billItemRequest.getPrice())
-				.repairBillId(billItemRequest.getRepairBillId())
-				.productId(billItemRequest.getProductId())
-				.quantity(billItemRequest.getQuantity())				
-				.build();
-		//update Stock
+		RepairBillItem clone = RepairBillItem.builder().guarantee(billItemRequest.getGuarantee())
+				.note(billItemRequest.getNote()).price(billItemRequest.getPrice())
+				.repairBillId(billItemRequest.getRepairBillId()).productId(billItemRequest.getProductId())
+				.quantity(billItemRequest.getQuantity()).build();
+		// update Stock
 		RepairBillItem isInserted = billItemRepo.save(clone);
 
 		if (isInserted != null) {

@@ -12,5 +12,6 @@ import com.hongha.ver1.entities.Brand;
 @Repository
 public interface BrandRepository extends JpaRepository<Brand, Long> {
 	Brand findByGenId(UUID genId);
-	Page<Brand> findByNameLike(String name,Pageable pageable);
+
+	Page<Brand> findByNameLike(String name, Pageable pageable);
 }

@@ -1,7 +1,6 @@
 package com.hongha.ver1.services.impl;
 
 import java.util.Date;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -25,16 +24,15 @@ import jakarta.persistence.Query;
 public class PurchaseServiceImpl implements PurchaseService {
 	@Autowired
 	private PurchaseRepository purRepo;
-	
 
 	@Override
 	@Transactional
 	public Purchase save(Purchase purRequest) {
-		//mq generate purchase code
+		// mq generate purchase code
 		int countInYear = getCountInYearUsingJPQL();
 		String code = GenerateCode.GenInvoiceCode(countInYear, Purchase.class.getName());
 		purRequest.setCode(code);
-		//mq insert then generate code 
+		// mq insert then generate code
 		Purchase isInserted = purRepo.save(purRequest);
 		if (isInserted != null) {
 			return isInserted;
@@ -162,10 +160,12 @@ public class PurchaseServiceImpl implements PurchaseService {
 		Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
 		return pageable;
 	}
+
 	private int getCountInYearUsingJPQL() {
 		int countInYear = 0;
 		EntityManager entityManager = BeanUtil.getBean(EntityManager.class);
-		Query query = entityManager.createQuery("select count(p.id) from _purchase p where year(p.created_at)=year(now())");
+		Query query = entityManager
+				.createQuery("select count(p.id) from _purchase p where year(p.created_at)=year(now())");
 		countInYear = (int) query.getSingleResult();
 		return countInYear;
 	}

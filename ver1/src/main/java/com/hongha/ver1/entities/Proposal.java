@@ -22,8 +22,8 @@ public class Proposal extends BaseEntityAudit {
 
 	private static final long serialVersionUID = 1L;
 	@Column
-	private long customerId;	
-	@Column(name="vehicle_id")
+	private long customerId;
+	@Column(name = "vehicle_id")
 	private long vehicleId;
 	@Column
 	private long branchId;

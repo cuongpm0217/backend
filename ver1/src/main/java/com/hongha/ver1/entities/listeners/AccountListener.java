@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.hongha.ver1.entities.Account;
 import com.hongha.ver1.entities.History;
 import com.hongha.ver1.entities.enums.EAction;
-
 import com.hongha.ver1.services.impl.BeanUtil;
 
 import jakarta.persistence.EntityManager;
@@ -15,10 +14,9 @@ import jakarta.persistence.PostPersist;
 import jakarta.persistence.PostRemove;
 import jakarta.persistence.PostUpdate;
 
-
 @Component
 public class AccountListener {
-	
+
 	@PostPersist
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	private void afterCreate(Account target) {
@@ -37,7 +35,7 @@ public class AccountListener {
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	private void afterRemove(Account target) {
 		perform(EAction.DELETE, target.getId());
-		// clear cache		
+		// clear cache
 //		accountRedisService.clear();
 	}
 

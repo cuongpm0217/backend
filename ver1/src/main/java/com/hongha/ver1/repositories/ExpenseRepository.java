@@ -12,5 +12,6 @@ import com.hongha.ver1.entities.Expense;
 @Repository
 public interface ExpenseRepository extends JpaRepository<Expense, Long> {
 	Expense findByGenId(UUID genId);
-	Page<Expense> findByNameLike(String name,Pageable paging);
+
+	Page<Expense> findByNameLike(String name, Pageable paging);
 }

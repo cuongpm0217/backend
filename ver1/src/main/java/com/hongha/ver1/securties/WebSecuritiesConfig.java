@@ -18,55 +18,54 @@ import com.hongha.ver1.securties.jwt.AuthEntryPointJwt;
 import com.hongha.ver1.securties.jwt.AuthTokenFilter;
 import com.hongha.ver1.services.impl.UserServiceImpl;
 
-
 @Configuration
 @EnableWebSecurity
 public class WebSecuritiesConfig {
 	@Autowired
-    UserServiceImpl userService;
-    @Autowired
-    private AuthEntryPointJwt unauthorizedHandler;
-    private String WHITE_LIST[]= {"/auth/**",};
-    @Bean
-    AuthTokenFilter authenticationJwtTokenFilter() {
-        return new AuthTokenFilter();
-    }
+	UserServiceImpl userService;
+	@Autowired
+	private AuthEntryPointJwt unauthorizedHandler;
+	private String WHITE_LIST[] = { "/auth/**", };
 
-    @Bean
-    DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userService);
-        authProvider.setPasswordEncoder(passwordEncoder());
+	@Bean
+	AuthTokenFilter authenticationJwtTokenFilter() {
+		return new AuthTokenFilter();
+	}
 
-        return authProvider;
-    }
+	@Bean
+	DaoAuthenticationProvider authenticationProvider() {
+		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+		authProvider.setUserDetailsService(userService);
+		authProvider.setPasswordEncoder(passwordEncoder());
 
-    @Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-        return authConfig.getAuthenticationManager();
-    }
+		return authProvider;
+	}
 
-    @Bean
-    PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+	@Bean
+	AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+		return authConfig.getAuthenticationManager();
+	}
 
-    @Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    	http.csrf(csrf -> csrf.disable())
-        .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
-        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))//not save session 
-        .authorizeHttpRequests(auth -> 
-          auth.requestMatchers(WHITE_LIST).permitAll()        
-          		.anyRequest().permitAll()
-          		
-        );
-    
-    http.authenticationProvider(authenticationProvider());
+	@Bean
+	PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
-    http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-    
-    return http.build();
-      
-    }
+	@Bean
+	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		http.csrf(csrf -> csrf.disable())
+				.exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))// not save
+																												// session
+				.authorizeHttpRequests(auth -> auth.requestMatchers(WHITE_LIST).permitAll().anyRequest().permitAll()
+
+				);
+
+		http.authenticationProvider(authenticationProvider());
+
+		http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+
+		return http.build();
+
+	}
 }

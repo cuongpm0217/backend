@@ -20,8 +20,8 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RepairBillItem extends BaseEntityAudit{
-	
+public class RepairBillItem extends BaseEntityAudit {
+
 	private static final long serialVersionUID = 1L;
 	@Column(nullable = false)
 	private long repairBillId;
@@ -32,7 +32,7 @@ public class RepairBillItem extends BaseEntityAudit{
 	@Column
 	private double price;
 	@Column
-	private int guarantee;// follow month	
+	private int guarantee;// follow month
 	@Column
 	private String note;
 }

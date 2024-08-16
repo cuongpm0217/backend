@@ -1,7 +1,6 @@
 package com.hongha.ver1.services.impl;
 
 import java.io.File;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,10 +35,10 @@ public class PositionServiceImpl implements PositionService {
 	@Override
 	@Transactional
 	public Position save(Position positionRequest) {
-		Position isInserted ;
-		if(positionRequest.getGenId()!=null) {
+		Position isInserted;
+		if (positionRequest.getGenId() != null) {
 			isInserted = positionRepo.save(positionRequest);
-		}else {
+		} else {
 			Position clone = new Position();
 			clone.setLevel(positionRequest.getLevel());
 			clone.setName(positionRequest.getName());
@@ -144,7 +143,7 @@ public class PositionServiceImpl implements PositionService {
 		Pageable pageable = genPageable(pageNo, pageSize, sortBy, sortType);
 		Page<Position> page = positionRepo.findAll(pageable);
 		if (!page.hasContent()) {
-			
+
 			try {
 				loadPositionExcel();
 			} catch (IOException e) {
@@ -155,7 +154,8 @@ public class PositionServiceImpl implements PositionService {
 	}
 
 	@Override
-	public Page<Position> findBySearchText(String searchText, int pageNo, int pageSize, String sortBy, String sortType) {
+	public Page<Position> findBySearchText(String searchText, int pageNo, int pageSize, String sortBy,
+			String sortType) {
 		Pageable pageable = genPageable(pageNo, pageSize, sortBy, sortType);
 		Page<Position> page = positionRepo.findBySearchText(searchText, pageable);
 		return page;
@@ -176,10 +176,8 @@ public class PositionServiceImpl implements PositionService {
 		InputStream inputStream = new FileInputStream(new File(excelFilePath));
 		Workbook wb = new XSSFWorkbook(inputStream);
 		Sheet sheet = wb.getSheet("position");
-		Iterator<Row> rows = sheet.iterator();
-		while (rows.hasNext()) {
-			Row nextRow = rows.next();
-//				 Get all cells
+		for (Row nextRow : sheet) {
+			//				 Get all cells
 			Iterator<Cell> cellIterator = nextRow.cellIterator();
 			// Read cells and set value for object
 			Position position = new Position();

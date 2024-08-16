@@ -16,5 +16,5 @@ public class ProposalItemDTO extends BaseDTO {
 	private double price;
 	private int warranty;
 	private String note;
-	private int no=this.getId().intValue();
+	private int no = this.getId().intValue();
 }

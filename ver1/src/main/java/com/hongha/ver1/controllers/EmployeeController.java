@@ -43,26 +43,28 @@ public class EmployeeController {
 			@RequestParam(defaultValue = "asc") String sortType) {
 		try {
 			Page<Employee> employees;
-			if (name != null || name != "")
+			if (name != null || name != "") {
 				employees = employeeService.findByNameLike(name, page, size, sortBy, sortType);
+			}
 			if (phone != "" || phone != null) {
 				String phone1 = phone;
 				String phone2 = phone;
 				employees = employeeService.findByPhone1OrPhone2Like(phone1, phone2, page, size, sortBy, sortType);
-			} else
+			} else {
 				employees = employeeService.getAll(page, size, sortBy, sortType);
+			}
 			// set No > DTO
 			List<EmployeeDTO> employeeDTOs = employees.stream().map(employee -> mapper.map(employee, EmployeeDTO.class))
 					.collect(Collectors.toList());
 			for (int i = 0; i < employeeDTOs.size(); i++) {
-				EmployeeDTO item =employeeDTOs.get(i);
+				EmployeeDTO item = employeeDTOs.get(i);
 				item.setNo(i + 1);
-				if(item.isGender()) {
+				if (item.isGender()) {
 					item.setTittle("Mr.");
-				}else {
+				} else {
 					item.setTittle("Ms.");
 				}
-				item.setName(item.getTittle()+item.getName());
+				item.setName(item.getTittle() + item.getName());
 			}
 
 			Map<String, Object> response = new HashMap<>();
@@ -106,9 +108,9 @@ public class EmployeeController {
 		String msg = "";
 		HttpStatus status;
 		if (result != null) {
-			if(result.isGender()) {
+			if (result.isGender()) {
 				result.setTittle("Mr.");
-			}else {
+			} else {
 				result.setTittle("Ms.");
 			}
 			status = HttpStatus.OK;

@@ -12,5 +12,6 @@ import com.hongha.ver1.entities.ProposalItem;
 @Repository
 public interface ProposalItemRepository extends JpaRepository<ProposalItem, Long> {
 	ProposalItem findByGenId(UUID genId);
-	Page<ProposalItem> findByProposalId(long proposalId,Pageable paging);
+
+	Page<ProposalItem> findByProposalId(long proposalId, Pageable paging);
 }

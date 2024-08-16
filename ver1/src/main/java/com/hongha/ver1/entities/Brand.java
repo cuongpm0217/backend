@@ -24,5 +24,5 @@ public class Brand extends BaseEntityAudit {
 	private String name;
 	@Column
 	private String code;
-	
+
 }

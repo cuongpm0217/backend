@@ -11,7 +11,8 @@ import org.springframework.stereotype.Repository;
 import com.hongha.ver1.entities.Ledger;
 
 @Repository
-public interface LedgerRepository extends JpaRepository<Ledger, Long>{
+public interface LedgerRepository extends JpaRepository<Ledger, Long> {
 	Ledger findByGenId(UUID genId);
-	Page<Ledger> findByCreatedAtBetween(Date fromDate,Date toDate,Pageable paging);
+
+	Page<Ledger> findByCreatedAtBetween(Date fromDate, Date toDate, Pageable paging);
 }

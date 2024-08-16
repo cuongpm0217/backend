@@ -18,17 +18,17 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Purchase extends BaseEntityAudit{
+public class Purchase extends BaseEntityAudit {
 	private static final long serialVersionUID = 1L;
 	@Column
 	private String code;
 	@Column
-	private String detail;	
-	@Column(name="partner_id")
+	private String detail;
+	@Column(name = "partner_id")
 	private long partnerId;
-	@Column(name="employee_id")
-	private long employeeId;	
-	@Column(name="branch_id")
+	@Column(name = "employee_id")
+	private long employeeId;
+	@Column(name = "branch_id")
 	private long branchId;
 	@Column
 	private double total;

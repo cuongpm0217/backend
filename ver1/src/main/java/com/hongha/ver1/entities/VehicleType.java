@@ -12,12 +12,12 @@ import lombok.Setter;
 
 @Entity
 @EntityListeners(VehicleTypeListener.class)
-@Table(name="_vehicle_type")
+@Table(name = "_vehicle_type")
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor	
-public class VehicleType extends BaseEntityAudit{
+@NoArgsConstructor
+public class VehicleType extends BaseEntityAudit {
 	private static final long serialVersionUID = 1L;
 	private String name;
 }

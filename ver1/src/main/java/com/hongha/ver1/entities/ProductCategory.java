@@ -18,9 +18,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductCategory extends BaseEntityAudit{
+public class ProductCategory extends BaseEntityAudit {
 	private static final long serialVersionUID = 1L;
-	@Column(nullable =  false)
+	@Column(nullable = false)
 	private String name;
 	@Column
 	private String code;

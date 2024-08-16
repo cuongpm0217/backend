@@ -18,12 +18,11 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductImage extends BaseEntityAudit{
+public class ProductImage extends BaseEntityAudit {
 	private static final long serialVersionUID = -8654890181139930993L;
-	@Column(nullable = false,name="product_id")
+	@Column(nullable = false, name = "product_id")
 	private long productId;
 	@Column
 	private String url;
-	
 
 }

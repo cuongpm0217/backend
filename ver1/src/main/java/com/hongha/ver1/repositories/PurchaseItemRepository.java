@@ -12,5 +12,6 @@ import com.hongha.ver1.entities.PurchaseItem;
 @Repository
 public interface PurchaseItemRepository extends JpaRepository<PurchaseItem, Long> {
 	PurchaseItem findByGenId(UUID genId);
+
 	Page<PurchaseItem> findByPurchaseId(long purchaseId, Pageable paging);
 }

@@ -29,7 +29,7 @@ public class Product extends BaseEntityAudit {
 	private long productCategoryId;
 	@Column(name = "brand_id")
 	private long brandId;
-	@Column(name="import_price")
+	@Column(name = "import_price")
 	private double importPrice;
 	@Column(name = "selling_price")
 	private double sellingPrice;

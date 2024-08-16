@@ -1,7 +1,6 @@
 package com.hongha.ver1.services.impl;
 
 import java.net.URL;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -128,10 +127,10 @@ public class CurrencyServiceImpl implements CurrencyService {
 		vnd.setExchangeVND(1);
 		vnd.setFullName("Việt Nam Đồng");
 		vnd.setSymbol(java.util.Currency.getInstance("VND").getSymbol());
-		if(moneyRepo.findByCode("VND")==null) {
+		if (moneyRepo.findByCode("VND") == null) {
 			moneyRepo.save(vnd);
 		}
-		
+
 		try {
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -159,7 +158,7 @@ public class CurrencyServiceImpl implements CurrencyService {
 						currencyDB.setUpdatedBy("BOT VCB");
 					}
 				}
-				
+
 				if (currencyDB.getCode() != null) {
 					if (moneyRepo.count() <= nList.getLength()) {
 						moneyRepo.save(currencyDB);

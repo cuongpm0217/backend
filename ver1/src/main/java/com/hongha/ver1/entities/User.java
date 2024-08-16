@@ -27,16 +27,16 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="_user")
-public class User extends BaseEntityAudit{
-	
+@Table(name = "_user")
+public class User extends BaseEntityAudit {
+
 	private static final long serialVersionUID = 1L;
-	@Column(unique = true,nullable = false,updatable = false)
+	@Column(unique = true, nullable = false, updatable = false)
 	private String username;
 	@Column(nullable = false)
 	@Builder.Default
-	private String password="QWE098&^%lkjGHJ)(*456";//set pass default
-	@Column(unique = true,nullable = false)
+	private String password = "QWE098&^%lkjGHJ)(*456";// set pass default
+	@Column(unique = true, nullable = false)
 	private String email;
 	@Column(name = "full_name")
 	private String fullName;
@@ -56,18 +56,17 @@ public class User extends BaseEntityAudit{
 	private String phone1;
 	@Column
 	private String phone2;
-	@Column(name="branch_id")
+	@Column(name = "branch_id")
 	private long branchId;
 	@ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_role"
-            ,joinColumns =@JoinColumn(name="user_id")
-            ,inverseJoinColumns = @JoinColumn(name = "role_id"))
+	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	@Builder.Default
-    private Set<Role> roles= new HashSet<Role>();	
-    public User(String username,String email,String password,long branchId){
-        this.setUsername(username);
-        this.setEmail(email);
-        this.setPassword(password);
-        this.setBranchId(branchId);
-    }
+	private Set<Role> roles = new HashSet<Role>();
+
+	public User(String username, String email, String password, long branchId) {
+		this.setUsername(username);
+		this.setEmail(email);
+		this.setPassword(password);
+		this.setBranchId(branchId);
+	}
 }

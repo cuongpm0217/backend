@@ -13,7 +13,6 @@ public interface AccountInvoiceService {
 	AccountInvoice findById(long id);
 
 	AccountInvoice findByUUID(UUID genId);
-	
 
 	AccountInvoice update(long id, AccountInvoice accountInvoiceRequest);
 
@@ -24,6 +23,8 @@ public interface AccountInvoiceService {
 	boolean deleteByUUID(UUID genID);
 
 	Page<AccountInvoice> getAll(int pageNo, int pageSize, String sortBy);
-	Page<AccountInvoice> findByInvoiceId(long invoiceId,int pageNo, int pageSize, String sortBy);
+
+	Page<AccountInvoice> findByInvoiceId(long invoiceId, int pageNo, int pageSize, String sortBy);
+
 	List<AccountInvoice> findByInvoiceId(long invoiceId);
 }

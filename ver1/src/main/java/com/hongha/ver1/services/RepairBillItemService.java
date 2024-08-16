@@ -23,6 +23,7 @@ public interface RepairBillItemService {
 	RepairBillItem updateByUUID(UUID genID, RepairBillItem repairBillItemRequest);
 
 	boolean deleteByUUID(UUID genID);
-	
-	Page<RepairBillItem> findByRepairBillId(long repairBillId,int pageNo, int pageSize, String sortBy, String sortType);
+
+	Page<RepairBillItem> findByRepairBillId(long repairBillId, int pageNo, int pageSize, String sortBy,
+			String sortType);
 }

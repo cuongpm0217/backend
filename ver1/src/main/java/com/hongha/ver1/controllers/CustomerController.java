@@ -60,14 +60,12 @@ public class CustomerController {
 				customerDTO.setNo(i + 1);
 				if (customerDTO.getGender() == null) {
 					customerDTO.setTittle("Cty ");
-				}
-				else if (customerDTO.getGender()) {
+				} else if (customerDTO.getGender()) {
 					customerDTO.setTittle("Mr.");
-				}
-				 else {
+				} else {
 					customerDTO.setTittle("Ms.");
 				}
-				customerDTO.setName(customerDTO.getTittle()+customerDTO.getName());
+				customerDTO.setName(customerDTO.getTittle() + customerDTO.getName());
 			}
 
 			Map<String, Object> response = new HashMap<>();
@@ -111,11 +109,11 @@ public class CustomerController {
 		String msg = "";
 		HttpStatus status;
 		if (result != null) {
-			if(result.getGender()==null) {
+			if (result.getGender() == null) {
 				result.setTittle("Cty ");
-			}else if(result.getGender()) {
+			} else if (result.getGender()) {
 				result.setTittle("Mr.");
-			}else {
+			} else {
 				result.setTittle("Ms.");
 			}
 			status = HttpStatus.OK;

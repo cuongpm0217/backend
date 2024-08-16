@@ -13,6 +13,8 @@ import com.hongha.ver1.entities.AccountInvoice;
 @Repository
 public interface AccountInvoiceRepository extends JpaRepository<AccountInvoice, Long> {
 	AccountInvoice findByGenId(UUID genId);
-	Page<AccountInvoice> findByInvoiceId(long invoiceId,Pageable pageable);
+
+	Page<AccountInvoice> findByInvoiceId(long invoiceId, Pageable pageable);
+
 	List<AccountInvoice> findByInvoiceId(long invoiceId);
 }
