@@ -28,4 +28,6 @@ public interface DepartmentService {
 	Page<Department> findBySearchText(String searchText, int pageNo, int pageSize, String sortBy, String sortType);
 
 	Page<Department> getAll(int pageNo, int pageSize, String sortBy, String sortType) throws IOException;
+	
+	Page<Department> getByBranch(long branchId,int pageNo, int pageSize, String sortBy, String sortType);
 }

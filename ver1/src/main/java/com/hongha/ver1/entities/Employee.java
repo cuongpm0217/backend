@@ -1,7 +1,6 @@
 package com.hongha.ver1.entities;
 
-import java.util.Date;
-
+import java.time.LocalDate;
 import com.hongha.ver1.entities.listeners.EmployeeListener;
 
 import jakarta.persistence.Column;
@@ -9,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,6 +18,7 @@ import lombok.Setter;
 @Table(name = "_employee")
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Employee extends BaseEntityAudit {
@@ -34,7 +35,7 @@ public class Employee extends BaseEntityAudit {
 	@Column(name = "branch_id")
 	private long branchId;
 	@Column
-	private Date dob;
+	private LocalDate dob;
 	@Column
 	private boolean gender;
 	@Column(name = "national_id")

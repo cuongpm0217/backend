@@ -12,6 +12,6 @@ import lombok.Setter;
 public class VehicleDTO extends BaseDTO {
 	private String licensePlate;
 	private String model;
-	private String vehicleType;
+	private VehicleTypeDTO vehicleTypeDTO;
 	private int yearOfFactory;
 }

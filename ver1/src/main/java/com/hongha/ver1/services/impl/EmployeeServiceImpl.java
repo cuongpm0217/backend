@@ -23,13 +23,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	@Transactional
 	public Employee save(Employee employeeRequest) {
-		Employee isInserted = empRepo.save(employeeRequest);
-		if (isInserted != null) {
-			return isInserted;
-		} else {
-			throw new RuntimeException("Can't create Employee");
-		}
-
+		Employee clone = new Employee();
+		clone = Employee.builder().address1(employeeRequest.getAddress1()).address2(employeeRequest.getAddress2())
+				.avatar(employeeRequest.getAvatar()).branchId(employeeRequest.getBranchId())
+				.departmentId(employeeRequest.getDepartmentId()).dob(employeeRequest.getDob())
+				.gender(employeeRequest.isGender()).name(employeeRequest.getName())
+				.nationalID(employeeRequest.getNationalID()).phone1(employeeRequest.getPhone1())
+				.phone2(employeeRequest.getPhone2()).positionId(employeeRequest.getPositionId())
+				.userId(employeeRequest.getUserId()).build();
+		return empRepo.save(clone);
 	}
 
 	@Override

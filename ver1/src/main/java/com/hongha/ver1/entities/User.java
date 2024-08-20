@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.hongha.ver1.entities.listeners.UserListener;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -58,7 +59,7 @@ public class User extends BaseEntityAudit {
 	private String phone2;
 	@Column(name = "branch_id")
 	private long branchId;
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	@Builder.Default
 	private Set<Role> roles = new HashSet<Role>();
