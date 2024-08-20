@@ -23,13 +23,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	@Transactional
 	public Employee save(Employee employeeRequest) {
-		Employee isInserted = empRepo.save(employeeRequest);
-		if (isInserted != null) {
-			return isInserted;
-		} else {
-			throw new RuntimeException("Can't create Employee");
-		}
-
+		Employee clone = new Employee();
+		clone = Employee.builder().address1(employeeRequest.getAddress1()).address2(employeeRequest.getAddress2())
+				.avatar(employeeRequest.getAvatar()).branchId(employeeRequest.getBranchId())
+				.departmentId(employeeRequest.getDepartmentId()).dob(employeeRequest.getDob())
+				.gender(employeeRequest.isGender()).name(employeeRequest.getName())
+				.nationalID(employeeRequest.getNationalID()).phone1(employeeRequest.getPhone1())
+				.phone2(employeeRequest.getPhone2()).positionId(employeeRequest.getPositionId())
+				.userId(employeeRequest.getUserId()).build();
+		return empRepo.save(clone);
 	}
 
 	@Override
@@ -151,10 +153,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public Page<Employee> findByPhone1OrPhone2Like(String phone1,String phone2, int pageNo, int pageSize, String sortBy,
-			String sortType) {
+	public Page<Employee> findByPhone1OrPhone2Like(String phone1, String phone2, int pageNo, int pageSize,
+			String sortBy, String sortType) {
 		Pageable pageable = genPageable(pageNo, pageSize, sortBy, sortType);
-		Page<Employee> page = empRepo.findByPhone1OrPhone2Like(phone1,phone2, pageable);
+		Page<Employee> page = empRepo.findByPhone1OrPhone2Like(phone1, phone2, pageable);
 		return page;
 	}
 
