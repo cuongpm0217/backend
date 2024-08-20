@@ -160,6 +160,13 @@ public class DepartmentServiceImpl implements DepartmentService {
 		return page;
 	}
 
+	@Override
+	public Page<Department> getByBranch(long branchId, int pageNo, int pageSize, String sortBy, String sortType) {
+		Pageable pageable = genPageable(pageNo, pageSize, sortBy, sortType);
+		Page<Department> page = depRepo.findByBranchId(branchId, pageable);
+		return page;
+	}
+
 	private Pageable genPageable(int pageNo, int pageSize, String sortBy, String sortType) {
 		Sort sort = Sort.by(sortBy);
 		if (sortType.startsWith("des")) {
@@ -236,4 +243,5 @@ public class DepartmentServiceImpl implements DepartmentService {
 		}
 		return cellValue;
 	}
+
 }

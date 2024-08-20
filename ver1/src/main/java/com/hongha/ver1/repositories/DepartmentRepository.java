@@ -33,4 +33,5 @@ public interface DepartmentRepository extends JpaRepository<Department, Long>{
 					+ "OR LOWER(_d.vname) LIKE lower(concat('%', concat(:searchText, '%'))) "
 			,nativeQuery = true)
 	Page<Department> findBySearchText(@Param("searchText") String searchText, Pageable pageable);
+	Page<Department> findByBranchId(long branchId, Pageable pageable);
 }
