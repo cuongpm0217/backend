@@ -1,5 +1,6 @@
 package com.hongha.ver1.controllers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,9 +25,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hongha.ver1.dtos.DepartmentDTO;
 import com.hongha.ver1.dtos.EmployeeDTO;
+import com.hongha.ver1.dtos.PositionDTO;
+import com.hongha.ver1.dtos.UserDTO;
 import com.hongha.ver1.entities.Employee;
+import com.hongha.ver1.services.DepartmentService;
 import com.hongha.ver1.services.EmployeeService;
+import com.hongha.ver1.services.PositionService;
+import com.hongha.ver1.services.UserService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -35,34 +43,54 @@ public class EmployeeController {
 	private ModelMapper mapper;
 	@Autowired
 	private EmployeeService employeeService;
+	@Autowired
+	private PositionService positionService;
+	@Autowired
+	private DepartmentService departmentService;
+	@Autowired
+	private UserService userService;
 
 	@GetMapping("/")
 	public ResponseEntity<Map<String, Object>> getAll(@RequestParam(required = false) String name,
 			@RequestParam(required = false) String phone, @RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "level") String sortBy,
+			@RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "departmentId") String sortBy,
 			@RequestParam(defaultValue = "asc") String sortType) {
 		try {
-			Page<Employee> employees;
-			if (name != null || name != "")
+
+			Page<Employee> employees = employeeService.getAll(page, size, sortBy, sortType);
+			if (name != null)
 				employees = employeeService.findByNameLike(name, page, size, sortBy, sortType);
-			if (phone != "" || phone != null) {
+			if (phone != null) {
 				String phone1 = phone;
 				String phone2 = phone;
 				employees = employeeService.findByPhone1OrPhone2Like(phone1, phone2, page, size, sortBy, sortType);
-			} else
-				employees = employeeService.getAll(page, size, sortBy, sortType);
-			// set No > DTO
-			List<EmployeeDTO> employeeDTOs = employees.stream().map(employee -> mapper.map(employee, EmployeeDTO.class))
-					.collect(Collectors.toList());
-			for (int i = 0; i < employeeDTOs.size(); i++) {
-				EmployeeDTO item =employeeDTOs.get(i);
-				item.setNo(i + 1);
-				if(item.isGender()) {
-					item.setTittle("Mr.");
-				}else {
-					item.setTittle("Ms.");
+			}
+
+			List<EmployeeDTO> employeeDTOs = new ArrayList<EmployeeDTO>();
+			for (Employee employee : employees) {
+				PositionDTO positionDTO = mapper.map(positionService.findById(employee.getPositionId()),
+						PositionDTO.class);
+				DepartmentDTO departmentDTO = mapper.map(departmentService.findById(employee.getDepartmentId()),
+						DepartmentDTO.class);
+//				UserDTO userDTO = mapper.map(userService.findById(employee.getUserId()), UserDTO.class);
+				EmployeeDTO employeeDTO = mapper.map(employee, EmployeeDTO.class);
+				employeeDTO.setDepartmentDTO(departmentDTO);
+				employeeDTO.setPositionDTO(positionDTO);
+//				employeeDTO.setUserDTO(userDTO);
+				if (employeeDTO.isGender()) {
+					employeeDTO.setTittle("Mr.");
+				} else {
+					employeeDTO.setTittle("Ms.");
 				}
-				item.setName(item.getTittle()+item.getName());
+
+				employeeDTOs.add(employeeDTO);
+			}
+//			List<EmployeeDTO> employeeDTOs = employees.stream().map(employee -> mapper.map(employee, EmployeeDTO.class))
+//					.collect(Collectors.toList());
+			for (int i = 0; i < employeeDTOs.size(); i++) {
+				EmployeeDTO employeeDTO = employeeDTOs.get(i);
+				employeeDTO.setNo(i + 1);
+
 			}
 
 			Map<String, Object> response = new HashMap<>();
@@ -73,6 +101,7 @@ public class EmployeeController {
 			return new ResponseEntity<>(response, HttpStatus.OK);
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
@@ -80,35 +109,47 @@ public class EmployeeController {
 
 	@PostMapping("/create")
 	public ResponseEntity<Map<String, Object>> save(@RequestBody EmployeeDTO employeeDTO) {
-		Employee employee = mapper.map(employeeDTO, Employee.class);
-		Employee employeeCreated = employeeService.save(employee);
-		EmployeeDTO result = mapper.map(employeeCreated, EmployeeDTO.class);
-		Map<String, Object> response = new HashMap<>();
-		String msg = "";
-		HttpStatus status;
-		if (result != null) {
-			msg = "create Success";
-			status = HttpStatus.CREATED;
-		} else {
-			msg = "create Fail";
-			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		try {
+			Employee employee = mapper.map(employeeDTO, Employee.class);
+			employee.setDepartmentId(employeeDTO.getDepartmentDTO().getId());
+			employee.setBranchId(employeeDTO.getDepartmentDTO().getBranchId());
+			employee.setPositionId(employeeDTO.getPositionDTO().getId());
+			Employee employeeCreated = employeeService.save(employee);
+			EmployeeDTO result = mapper.map(employeeCreated, EmployeeDTO.class);
+
+			Map<String, Object> response = new HashMap<>();
+			String msg = "";
+			HttpStatus status;
+			if (result != null) {
+				result.setDepartmentDTO(employeeDTO.getDepartmentDTO());
+				result.setPositionDTO(employeeDTO.getPositionDTO());
+				msg = "create Success";
+				status = HttpStatus.CREATED;
+			} else {
+				msg = "create Failse";
+				status = HttpStatus.INTERNAL_SERVER_ERROR;
+			}
+			response.put("employee", employeeCreated);
+			response.put("message", msg);
+			return new ResponseEntity<>(response, status);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		response.put("employee", result);
-		response.put("message", msg);
-		return new ResponseEntity<>(response, status);
+
 	}
 
 	// use UUID
 	@GetMapping(value = "/{uuid}")
-	public ResponseEntity<Map<String, Object>> getOneByUUID(@PathVariable("uuid") UUID uuid) {
+	public ResponseEntity<Map<String, Object>> getOneByUUID(@PathVariable UUID uuid) {
 		EmployeeDTO result = mapper.map(employeeService.findByUUID(uuid), EmployeeDTO.class);
 		Map<String, Object> response = new HashMap<>();
 		String msg = "";
 		HttpStatus status;
 		if (result != null) {
-			if(result.isGender()) {
+			if (result.isGender()) {
 				result.setTittle("Mr.");
-			}else {
+			} else {
 				result.setTittle("Ms.");
 			}
 			status = HttpStatus.OK;
@@ -123,7 +164,7 @@ public class EmployeeController {
 	}
 
 	@PutMapping(value = "/update-{uuid}")
-	public ResponseEntity<Map<String, Object>> updateByUUID(@PathVariable("uuid") UUID uuid,
+	public ResponseEntity<Map<String, Object>> updateByUUID(@PathVariable UUID uuid,
 			@RequestBody EmployeeDTO employeeDTO) {
 		Map<String, Object> response = new HashMap<>();
 		String msg = "";
@@ -150,7 +191,7 @@ public class EmployeeController {
 	}
 
 	@DeleteMapping(value = "/delete-{uuid}")
-	public ResponseEntity<Map<String, Object>> deleteByUUID(@PathVariable("uuid") UUID uuid) {
+	public ResponseEntity<Map<String, Object>> deleteByUUID(@PathVariable UUID uuid) {
 		boolean result = employeeService.deleteByUUID(uuid);
 		Map<String, Object> response = new HashMap<>();
 		String msg = "";
