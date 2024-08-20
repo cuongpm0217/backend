@@ -31,7 +31,7 @@ public class RepairBill extends BaseEntityAudit {
 	@Column(name = "started_date")
 	private Date startedDate;
 	@Column(name = "end_date")
-	private Date endDate = startedDate;//default
+	private Date endDate = startedDate;// default
 	@Column(name = "vehicle_id")
 	private long vehicleId;
 	@Column(name = "branch_id")

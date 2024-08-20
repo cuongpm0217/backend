@@ -1,6 +1,5 @@
 package com.hongha.ver1.entities;
 
-import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -16,9 +15,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @MappedSuperclass
-public abstract class BaseEntity implements Serializable {
+public abstract class BaseEntity {
 
-	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", updatable = false, nullable = false)
@@ -30,12 +28,15 @@ public abstract class BaseEntity implements Serializable {
 	private UUID genId = UUID.randomUUID();
 	@Version
 	private long version;
+
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
+		if (this == o) {
 			return true;
-		if (!(o instanceof BaseEntity))
+		}
+		if (!(o instanceof BaseEntity)) {
 			return false;
+		}
 		BaseEntity that = (BaseEntity) o;
 		return id.equals(that.id);
 	}

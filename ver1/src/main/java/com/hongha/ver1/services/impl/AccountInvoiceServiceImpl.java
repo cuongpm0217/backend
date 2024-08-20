@@ -3,6 +3,7 @@ package com.hongha.ver1.services.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -140,7 +141,7 @@ public class AccountInvoiceServiceImpl implements AccountInvoiceService {
 		if (!list.isEmpty()) {
 			return list;
 		} else {
-			return new ArrayList<AccountInvoice>();
+			return new ArrayList<>();
 		}
 	}
 

@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -45,7 +46,7 @@ public class AccountController {
 			@RequestParam(defaultValue = "code") String sortBy, @RequestParam(defaultValue = "asc") String sortType) {
 
 		try {
-			page = page - 1;// front end always start 1		
+			page = page - 1;// front end always start 1
 			query = query != null ? query : "";
 
 			List<AccountDTO> accountDTOs = accountRedisService.findBySearchText(query, page, size, sortBy, sortType);
@@ -56,14 +57,14 @@ public class AccountController {
 					accountDTOs = accounts.stream().map(account -> mapper.map(account, AccountDTO.class))
 							.collect(Collectors.toList());
 					accountRedisService.saveAllAccount(accountDTOs, query, page, size, sortBy, sortType);
-				} 
+				}
 				if (pagination == null) {
 					pagination = Pagination.builder().currentPage(accounts.getNumber())
 							.totalItem(accounts.getTotalElements()).totalPage(accounts.getTotalPages()).build();
 					accountRedisService.savePagination(pagination, query);
 				}
 
-			} 
+			}
 
 			// set No > DTO
 			for (int i = 0; i < accountDTOs.size(); i++) {

@@ -4,8 +4,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.hongha.ver1.entities.Purchase;
 import com.hongha.ver1.entities.History;
+import com.hongha.ver1.entities.Purchase;
 import com.hongha.ver1.entities.enums.EAction;
 import com.hongha.ver1.services.impl.BeanUtil;
 

@@ -2,7 +2,6 @@ package com.hongha.ver1.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,9 +25,9 @@ public class ProductGroupItem {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", updatable = false, nullable = false)
 	private long id;
-	@Column(nullable = false,name="product_group_id")
+	@Column(nullable = false, name = "product_group_id")
 	private long productGroupId;
-	@Column(nullable = false,name="product_id")
+	@Column(nullable = false, name = "product_id")
 	private long productId;
 
 }

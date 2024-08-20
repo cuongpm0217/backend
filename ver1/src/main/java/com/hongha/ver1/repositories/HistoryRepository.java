@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.hongha.ver1.entities.History;
 
 @Repository
-public interface HistoryRepository extends JpaRepository<History, Long>{
+public interface HistoryRepository extends JpaRepository<History, Long> {
 
 }

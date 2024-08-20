@@ -13,20 +13,20 @@ import lombok.Setter;
 
 @Entity
 @EntityListeners(VehicleListener.class)
-@Table(name="_vehicle")
+@Table(name = "_vehicle")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Vehicle extends BaseEntityAudit {
-	
+
 	private static final long serialVersionUID = 1L;
-	@Column(name="license_plate")
+	@Column(name = "license_plate")
 	private String licensePlate;
 	@Column
 	private String model;
-	@Column(name="vehicle_type_id")
+	@Column(name = "vehicle_type_id")
 	private long vehicleTypeId;
-	@Column(name="yearOfFactory")
+	@Column(name = "yearOfFactory")
 	private int yearOfFactory;
 }

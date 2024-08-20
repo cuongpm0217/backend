@@ -80,8 +80,8 @@ public class DepartmentController {
 
 	@PostMapping("/create")
 	public ResponseEntity<Map<String, Object>> save(@RequestBody DepartmentDTO departmentDTO) {
-		Department department = mapper.map(departmentDTO, Department.class);		
-		Department departmentCreated = departmentService.save(department);		
+		Department department = mapper.map(departmentDTO, Department.class);
+		Department departmentCreated = departmentService.save(department);
 		DepartmentDTO result = mapper.map(departmentCreated, DepartmentDTO.class);
 		Map<String, Object> response = new HashMap<>();
 		String msg = "";

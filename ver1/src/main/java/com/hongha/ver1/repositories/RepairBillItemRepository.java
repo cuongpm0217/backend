@@ -12,5 +12,6 @@ import com.hongha.ver1.entities.RepairBillItem;
 @Repository
 public interface RepairBillItemRepository extends JpaRepository<RepairBillItem, Long> {
 	RepairBillItem findByGenId(UUID genId);
-	Page<RepairBillItem> findByRepairBillId(long repairBillId,Pageable pageable);
+
+	Page<RepairBillItem> findByRepairBillId(long repairBillId, Pageable pageable);
 }

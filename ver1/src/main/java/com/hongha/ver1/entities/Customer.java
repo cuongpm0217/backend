@@ -15,28 +15,28 @@ import lombok.Setter;
 
 @Entity
 @EntityListeners(CustomerListener.class)
-@Table(name="_customer")
+@Table(name = "_customer")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Customer extends BaseEntityAudit{
+public class Customer extends BaseEntityAudit {
 	private static final long serialVersionUID = 1L;
 	@Column(nullable = false)
 	private String name;
 	@Column
 	private Date dob;
 	@Column
-	private Boolean gender=null;
+	private Boolean gender = null;
 	@Column
-	private String address1="Giao Thủy, Nam Định";//set as default
+	private String address1 = "Giao Thủy, Nam Định";// set as default
 	@Column
 	private String address2;
 	@Column
 	private String phone1;
 	@Column
 	private String phone2;
-	@Column(nullable = false,name="customer_type_id")
+	@Column(nullable = false, name = "customer_type_id")
 	private long customerTypeId;
-	
+
 }

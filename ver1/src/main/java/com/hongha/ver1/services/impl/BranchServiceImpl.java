@@ -36,8 +36,9 @@ public class BranchServiceImpl implements BranchService {
 		Branch branch = branchRepo.getReferenceById(id);
 		if (branch != null) {
 			return branch;
-		} else
+		} else {
 			return null;
+		}
 	}
 
 	@Override
@@ -89,8 +90,9 @@ public class BranchServiceImpl implements BranchService {
 		Branch branch = branchRepo.findByGenId(genId);
 		if (branch != null) {
 			return branch;
-		} else
+		} else {
 			throw new RuntimeException("Not found");
+		}
 	}
 
 	@Override
@@ -117,8 +119,8 @@ public class BranchServiceImpl implements BranchService {
 	}
 
 	@Override
-	public Page<Branch> findByNameContainingOrAddressContaining(String name, String address, int pageNo, int pageSize, String sortBy,
-			String sortType) {
+	public Page<Branch> findByNameContainingOrAddressContaining(String name, String address, int pageNo, int pageSize,
+			String sortBy, String sortType) {
 		Pageable paging = genPage(pageNo, pageSize, sortBy, sortType);
 		Page<Branch> pageResult = branchRepo.findByNameContainingOrAddressContaining(name, address, paging);
 		return pageResult;
@@ -126,13 +128,13 @@ public class BranchServiceImpl implements BranchService {
 
 	@Override
 	public Page<Branch> getAll(int pageNo, int pageSize, String sortBy, String sortType) {
-		
-		if(branchRepo.count()==0) {			
+
+		if (branchRepo.count() == 0) {
 			loadDefaultBranch();
 		}
 		Pageable paging = genPage(pageNo, pageSize, sortBy, sortType);
 		Page<Branch> pageResult = branchRepo.findAll(paging);
-		
+
 		return pageResult;
 	}
 
@@ -142,9 +144,10 @@ public class BranchServiceImpl implements BranchService {
 			sorted = sorted.descending();
 		}
 		Pageable paging = PageRequest.of(pageNo, pageSize, sorted);
-		
+
 		return paging;
 	}
+
 	private void loadDefaultBranch() {
 		Branch branch = new Branch();
 		branch.setAddress("Thị trấn Ngô Đồng, Giao Thủy, Nam Định");

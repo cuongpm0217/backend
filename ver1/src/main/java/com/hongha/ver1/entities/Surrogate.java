@@ -13,24 +13,23 @@ import lombok.Setter;
 
 @Entity
 @EntityListeners(SurrogateListener.class)
-@Table(name="_surrogate")
+@Table(name = "_surrogate")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Surrogate extends BaseEntityAudit{
-	
+public class Surrogate extends BaseEntityAudit {
 	private static final long serialVersionUID = 1L;
 	@Column(nullable = false)
 	private String name;
 	@Column
-	private boolean gender=true;//default man
+	private boolean gender = true;// default man
 	@Column
 	private String phone;
 	@Column
 	private String address;
 	@Column
 	private String company;
-	@Column(name="customer_id",nullable = false)
+	@Column(name = "customer_id", nullable = false)
 	private long customerId;
 }

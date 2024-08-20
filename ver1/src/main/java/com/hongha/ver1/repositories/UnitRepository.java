@@ -12,5 +12,6 @@ import com.hongha.ver1.entities.Unit;
 @Repository
 public interface UnitRepository extends JpaRepository<Unit, Long> {
 	Unit findByGenId(UUID genId);
-	Slice<Unit> findByName(String name,Pageable pageable);
+
+	Slice<Unit> findByName(String name, Pageable pageable);
 }

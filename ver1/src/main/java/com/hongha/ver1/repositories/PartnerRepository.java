@@ -12,5 +12,6 @@ import com.hongha.ver1.entities.Partner;
 @Repository
 public interface PartnerRepository extends JpaRepository<Partner, Long> {
 	Partner findByGenId(UUID genId);
-	Page<Partner> findByPhone1OrPhone2Like(String phone1,String phone2,Pageable paging);
+
+	Page<Partner> findByPhone1OrPhone2Like(String phone1, String phone2, Pageable paging);
 }

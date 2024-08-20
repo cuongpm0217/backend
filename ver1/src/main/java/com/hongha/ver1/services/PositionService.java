@@ -1,11 +1,11 @@
 package com.hongha.ver1.services;
 
 import java.io.IOException;
-
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
+
 import com.hongha.ver1.entities.Position;
 
 public interface PositionService {

@@ -41,27 +41,27 @@ public class PositionController {
 			@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "5") int size,
 			@RequestParam(defaultValue = "level") String sortBy, @RequestParam(defaultValue = "asc") String sortType) {
 		try {
-			page=page-1;
-			Page<Position> positions ;
+			page = page - 1;
+			Page<Position> positions;
 			if (query != null) {
 				positions = positionService.findBySearchText(query, page, size, sortBy, sortType);
-			}else {
+			} else {
 				positions = positionService.getAll(page, size, sortBy, sortType);
 			}
 			// set No > DTO
-			List<PositionDTO> positionDTOs = positions.stream()
-					.map(position -> mapper.map(position, PositionDTO.class)).collect(Collectors.toList());
+			List<PositionDTO> positionDTOs = positions.stream().map(position -> mapper.map(position, PositionDTO.class))
+					.collect(Collectors.toList());
 			for (PositionDTO positionDTO : positionDTOs) {
-				switch(positionDTO.getLevel()) {
-				case 1,2:{
+				switch (positionDTO.getLevel()) {
+				case 1, 2: {
 					positionDTO.setStyle("level1");
 					break;
 				}
-				case 3,4,5,6,7:{
+				case 3, 4, 5, 6, 7: {
 					positionDTO.setStyle("level2");
 					break;
 				}
-				default:{
+				default: {
 					positionDTO.setStyle("level3");
 					break;
 				}

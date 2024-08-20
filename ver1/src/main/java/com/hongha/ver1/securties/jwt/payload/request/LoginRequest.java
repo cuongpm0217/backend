@@ -5,11 +5,11 @@ import lombok.Getter;
 @Getter
 public class LoginRequest {
 
-    private String username;
-    private String password;
-    private long branchId;
-    private String ipLogin;
-    private String device;
-    private String reloadToken;
+	private String username;
+	private String password;
+	private long branchId;
+	private String ipLogin;
+	private String device;
+	private String reloadToken;
 
 }

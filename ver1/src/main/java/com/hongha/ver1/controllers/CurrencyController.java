@@ -27,7 +27,7 @@ import com.hongha.ver1.dtos.CurrencyDTO;
 import com.hongha.ver1.entities.Currency;
 import com.hongha.ver1.services.CurrencyService;
 
-@CrossOrigin(origins = "*",maxAge = 3600)
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/currency")
 public class CurrencyController {
@@ -37,22 +37,19 @@ public class CurrencyController {
 	private CurrencyService currencyService;
 
 	@GetMapping("/")
-	public ResponseEntity<Map<String, Object>> getAll(
-			@RequestParam(required = false) String code,
-			@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "10") int size,
-			@RequestParam(defaultValue = "code") String sortBy,
-			@RequestParam(defaultValue = "des") String sortType) {
+	public ResponseEntity<Map<String, Object>> getAll(@RequestParam(required = false) String code,
+			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size,
+			@RequestParam(defaultValue = "code") String sortBy, @RequestParam(defaultValue = "des") String sortType) {
 		try {
 			Page<Currency> currencies;
-			if (code == null || code!="") {
+			if (code == null || code != "") {
 				currencies = currencyService.getAll(page, size, sortBy, sortType);
 			} else {
 				currencies = currencyService.findByCodeContaining(code, page, size, sortBy, sortType);
 			}
 			// set No > DTO
-			List<CurrencyDTO> currencyDTOs = currencies.stream().map(currency -> mapper.map(currency, CurrencyDTO.class))
-					.collect(Collectors.toList());
+			List<CurrencyDTO> currencyDTOs = currencies.stream()
+					.map(currency -> mapper.map(currency, CurrencyDTO.class)).collect(Collectors.toList());
 			for (int i = 0; i < currencyDTOs.size(); i++) {
 				currencyDTOs.get(i).setNo(i + 1);
 			}
@@ -87,6 +84,7 @@ public class CurrencyController {
 		response.put("message", msg);
 		return new ResponseEntity<>(response, status);
 	}
+
 	@GetMapping("/USD-VND/")
 	public ResponseEntity<Map<String, Object>> getExchangeRateUSD() {
 		String code = "USD";
@@ -105,6 +103,7 @@ public class CurrencyController {
 		response.put("message", msg);
 		return new ResponseEntity<>(response, status);
 	}
+
 	// use uuid
 	@GetMapping("/{uuid}")
 	public ResponseEntity<Map<String, Object>> getOneByUUID(@PathVariable("uuid") UUID uuid) {
@@ -125,8 +124,7 @@ public class CurrencyController {
 	}
 
 	@PutMapping("/update={uuid}")
-	public ResponseEntity<Map<String, Object>> updateByUUID(
-			@PathVariable("uuid") UUID uuid,
+	public ResponseEntity<Map<String, Object>> updateByUUID(@PathVariable("uuid") UUID uuid,
 			@RequestBody CurrencyDTO currencyDTO) {
 		Map<String, Object> response = new HashMap<>();
 		String msg = "";
@@ -135,11 +133,11 @@ public class CurrencyController {
 			status = HttpStatus.NO_CONTENT;
 			msg = "Not match " + String.valueOf(uuid);
 			response.put("message", msg);
-			return new ResponseEntity<>(response,status);
+			return new ResponseEntity<>(response, status);
 		}
 		Currency currency = mapper.map(currencyDTO, Currency.class);
-		CurrencyDTO result = mapper.map(currencyService.updateByUUID(uuid, currency),CurrencyDTO.class);
-		
+		CurrencyDTO result = mapper.map(currencyService.updateByUUID(uuid, currency), CurrencyDTO.class);
+
 		if (result != null) {
 			status = HttpStatus.OK;
 			msg = "Found:" + result.getCode();
@@ -169,5 +167,5 @@ public class CurrencyController {
 		response.put("message", msg);
 		return new ResponseEntity<>(response, status);
 	}
-	
+
 }

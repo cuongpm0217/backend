@@ -105,7 +105,7 @@ public class RoleServiceImpl implements RoleService {
 		Role role = roleRepo.findByGenId(genID);
 		if (role != null) {
 			roleRepo.deleteById(role.getId());
-			//delete user_role
+			// delete user_role
 			return true;
 		} else {
 			return false;

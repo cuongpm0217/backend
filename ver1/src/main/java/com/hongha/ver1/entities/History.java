@@ -18,7 +18,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class History extends BaseEntityAudit {	
+public class History extends BaseEntityAudit {
 	private static final long serialVersionUID = 3139488870627427592L;
 	@Column(updatable = false, nullable = false)
 	private String obj;

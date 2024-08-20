@@ -12,7 +12,7 @@ import com.hongha.ver1.repositories.SalaryTypeRepository;
 import com.hongha.ver1.services.SalaryTypeService;
 
 @Service
-public class SalaryTypeServiceImpl implements SalaryTypeService{
+public class SalaryTypeServiceImpl implements SalaryTypeService {
 	@Autowired
 	private SalaryTypeRepository salTypeRepo;
 
@@ -60,7 +60,7 @@ public class SalaryTypeServiceImpl implements SalaryTypeService{
 		if (selected != null) {
 			updateObj(salTypeRequest, selected);
 			return updateObj(salTypeRequest, selected);
-			
+
 		} else {
 			throw new RuntimeException("Not found SalaryType:" + String.valueOf(id));
 		}

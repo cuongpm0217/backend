@@ -168,10 +168,8 @@ public class BrandServiceImpl implements BrandService {
 		Workbook wb = new XSSFWorkbook(inputStream);
 
 		Sheet sheet = wb.getSheet("brand");
-		Iterator<Row> rows = sheet.iterator();
-		while (rows.hasNext()) {
-			Row nextRow = rows.next();
-//				 Get all cells
+		for (Row nextRow : sheet) {
+			//				 Get all cells
 			Iterator<Cell> cellIterator = nextRow.cellIterator();
 			// Read cells and set value for object
 			Brand proBrand = new Brand();

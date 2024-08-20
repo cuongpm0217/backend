@@ -11,5 +11,6 @@ import com.hongha.ver1.entities.VehicleType;
 
 public interface VehicleTypeRepository extends JpaRepository<VehicleType, Long> {
 	VehicleType findByGenId(@Param("uuid") UUID genId);
-	Slice<VehicleType> findByName(String name,Pageable pageable);
+
+	Slice<VehicleType> findByName(String name, Pageable pageable);
 }

@@ -2,6 +2,7 @@ package com.hongha.ver1.services.impl;
 
 import java.util.List;
 import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,7 +51,7 @@ public class CustomerTypeServiceImpl implements CustomerTypeService {
 	@Override
 	public List<CustomerType> getAll() {
 		List<CustomerType> list = cusTypeRepo.findAll();
-		if(list.isEmpty()) {
+		if (list.isEmpty()) {
 			CustomerType cusType = new CustomerType();
 			cusType.setName(ECustomerType.ECustomerType_INVIDUAL);
 			cusTypeRepo.save(cusType);

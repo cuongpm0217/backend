@@ -27,5 +27,5 @@ public interface BrandService {
 
 	Page<Brand> getAll(int pageNo, int pageSize, String sortBy, String sortType);
 
-	Page<Brand> findByNameLike(String name, int pageNo, int pageSize, String sortBy,String sortType);
+	Page<Brand> findByNameLike(String name, int pageNo, int pageSize, String sortBy, String sortType);
 }

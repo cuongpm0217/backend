@@ -26,22 +26,24 @@ public class GenerateCode {
 		}
 		return code += date + count;
 	}
+
 //	key Redis
 	public static String getKeyList(Class<?> responseClass, String searchText, int pageNo, int pageSize, String sortBy,
 			String sortType) {
-		searchText = searchText!=null?searchText:"";
-		String key = String.format("all%s:%s:%d:%d:%s:%s", responseClass.getSimpleName(), searchText, pageNo, pageSize,
+		searchText = searchText != null ? searchText : "";
+		String key = "all%s:%s:%d:%d:%s:%s".formatted(responseClass.getSimpleName(), searchText, pageNo, pageSize,
 				sortBy, sortType);
 		return key;
 	}
 
 	public static String getKeyOne(Class<?> responseClass, UUID uuid) {
-		String key = responseClass.getSimpleName()+"#" + uuid.toString();
+		String key = responseClass.getSimpleName() + "#" + uuid.toString();
 		return key;
 	}
-	public static String getKeyPagination(Class<?> responseClass,String searchText) {
-		searchText = searchText!=null?searchText:"";
-		String key = String.format("pagination%s:%s", responseClass.getSimpleName(),searchText);
+
+	public static String getKeyPagination(Class<?> responseClass, String searchText) {
+		searchText = searchText != null ? searchText : "";
+		String key = "pagination%s:%s".formatted(responseClass.getSimpleName(), searchText);
 		return key;
 	}
 }

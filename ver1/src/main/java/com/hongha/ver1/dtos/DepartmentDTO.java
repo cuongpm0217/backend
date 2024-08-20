@@ -17,5 +17,5 @@ public class DepartmentDTO extends BaseDTO {
 	private String code;
 	private int no;
 	private String style;
-//	
+//
 }

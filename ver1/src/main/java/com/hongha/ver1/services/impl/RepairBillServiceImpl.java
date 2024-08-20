@@ -23,7 +23,7 @@ import jakarta.persistence.Query;
 public class RepairBillServiceImpl implements RepairBillService {
 	@Autowired
 	private RepairBillRepository billRepo;
-	
+
 	@Override
 	@Transactional
 	public RepairBill save(RepairBill billRequest) {
@@ -155,10 +155,12 @@ public class RepairBillServiceImpl implements RepairBillService {
 		Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
 		return pageable;
 	}
+
 	private int getCountInYearUsingJPQL() {
 		int countInYear = 0;
 		EntityManager entityManager = BeanUtil.getBean(EntityManager.class);
-		Query query = entityManager.createQuery("select count(r.id) from _repair_bill r where year(r.started_date)=year(now())");
+		Query query = entityManager
+				.createQuery("select count(r.id) from _repair_bill r where year(r.started_date)=year(now())");
 		countInYear = (int) query.getSingleResult();
 		return countInYear;
 	}

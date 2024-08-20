@@ -31,17 +31,19 @@ public class Convertor {
 		String result = df.format(date);
 		return result;
 	}
+
 	public Date Date2ddMMyyyyhhmmDate(Date date) {
 		String pattern = "dd/MM/yyyy HH:mm";
 		SimpleDateFormat df = new SimpleDateFormat(pattern);
-		String result = df.format(date);		
+		String result = df.format(date);
 		try {
 			return df.parse(result);
-		} catch (ParseException e) {			
+		} catch (ParseException e) {
 			e.printStackTrace();
 			return new Date();
 		}
 	}
+
 	public String Date2HHmm(Date date) {
 		String pattern = "HH:mm";
 		SimpleDateFormat df = new SimpleDateFormat(pattern);
@@ -61,7 +63,7 @@ public class Convertor {
 		}
 		return result;
 	}
-	
+
 	public static Date date2ddMMyyyy(Date date) {
 		String pattern = "dd/MM/yyyy";
 		SimpleDateFormat df = new SimpleDateFormat(pattern);
@@ -91,41 +93,47 @@ public class Convertor {
 		String _hundreds = hundreds[n / 100];
 		String _tens = tens[(n / 10) % 10];
 		String _units = units[n % 10];
-		if (s.length() == 1)
+		if (s.length() == 1) {
 			return one_digit[n];
-		else if (s.length() == 2)
+		} else if (s.length() == 2) {
 			return tens[n / 10] + _units;
-		else {
-			if (s == "000")
+		} else {
+			if (s == "000") {
 				return "";
-			else if ((n / 10) % 10 == 0) {
-				if (n % 10 == 0)
+			} else if ((n / 10) % 10 == 0) {
+				if (n % 10 == 0) {
 					if (n == 0) {
 						return "";
-					} else
+					} else {
 						return _hundreds;
-				else
+					}
+				} else {
 					return _hundreds + " " + _tens + " " + one_digit[n % 10];
-			} else
+				}
+			} else {
 				return _hundreds + " " + _tens + _units;
+			}
 		}
 
 	}
 
 	public String thanhTien(String long2String) {
-		ArrayList<String> classes = new ArrayList<String>();
+		ArrayList<String> classes = new ArrayList<>();
 
-		for (int i = long2String.length() - 1; i > 1; i = i - 3)
+		for (int i = long2String.length() - 1; i > 1; i = i - 3) {
 			classes.add(long2String.substring(i - 2, i + 1));
+		}
 
-		if (long2String.length() % 3 != 0)
+		if (long2String.length() % 3 != 0) {
 			classes.add(long2String.substring(0, long2String.length() % 3));
+		}
 
 		String res = "";
 		for (int i = 0; i < classes.size(); i++) {
 			String named_class = read_class(classes.get(i));
-			if (named_class != "")
+			if (named_class != "") {
 				res = named_class + bigger[i] + " " + res;
+			}
 		}
 		return res + " đồng chẵn";
 	}

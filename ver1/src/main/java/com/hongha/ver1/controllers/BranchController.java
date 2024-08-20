@@ -44,8 +44,9 @@ public class BranchController {
 			page = page - 1;// front end always start 1
 			Page<Branch> branches = branchService.getAll(page, size, sortBy, sortType);
 			if ((name != null || name == "") || (address != null || address == "")) {
-				branches = branchService.findByNameContainingOrAddressContaining(name, address, page, size, sortBy, sortType);
-			}					
+				branches = branchService.findByNameContainingOrAddressContaining(name, address, page, size, sortBy,
+						sortType);
+			}
 			// set No > DTO
 			List<BranchDTO> branchDTOs = branches.stream().map(branch -> mapper.map(branch, BranchDTO.class))
 					.collect(Collectors.toList());
@@ -70,7 +71,7 @@ public class BranchController {
 	public ResponseEntity<Map<String, Object>> save(@RequestBody BranchDTO branchDTO) {
 		Branch branch = mapper.map(branchDTO, Branch.class);
 		Branch branchCreated = branchService.save(branch);
-		BranchDTO result= mapper.map(branchCreated, BranchDTO.class);
+		BranchDTO result = mapper.map(branchCreated, BranchDTO.class);
 		Map<String, Object> response = new HashMap<>();
 		String msg = "";
 		HttpStatus status;
@@ -89,7 +90,7 @@ public class BranchController {
 	// use UUID
 	@GetMapping(value = "/api/branch/{uuid}")
 	public ResponseEntity<Map<String, Object>> getOneByUUID(@PathVariable("uuid") UUID uuid) {
-		BranchDTO result =  mapper.map(branchService.findByUUID(uuid), BranchDTO.class);
+		BranchDTO result = mapper.map(branchService.findByUUID(uuid), BranchDTO.class);
 		Map<String, Object> response = new HashMap<>();
 		String msg = "";
 		HttpStatus status;
@@ -106,7 +107,8 @@ public class BranchController {
 	}
 
 	@PutMapping(value = "/api/branch/update-{uuid}")
-	public ResponseEntity<Map<String, Object>> updateByUUID(@PathVariable("uuid") UUID uuid, @RequestBody BranchDTO branchDTO) {
+	public ResponseEntity<Map<String, Object>> updateByUUID(@PathVariable("uuid") UUID uuid,
+			@RequestBody BranchDTO branchDTO) {
 		Map<String, Object> response = new HashMap<>();
 		String msg = "";
 		HttpStatus status;
@@ -114,11 +116,11 @@ public class BranchController {
 			status = HttpStatus.NO_CONTENT;
 			msg = "Not match " + String.valueOf(uuid);
 			response.put("message", msg);
-			return new ResponseEntity<>(response,status);
+			return new ResponseEntity<>(response, status);
 		}
 		Branch branch = mapper.map(branchDTO, Branch.class);
-		BranchDTO result = mapper.map(branchService.updateByUUID(uuid, branch),BranchDTO.class);
-		
+		BranchDTO result = mapper.map(branchService.updateByUUID(uuid, branch), BranchDTO.class);
+
 		if (result != null) {
 			status = HttpStatus.OK;
 			msg = "Found:" + result.getName();
