@@ -76,7 +76,7 @@ public class CustomerTypeController {
 
 	// use UUID
 	@GetMapping(value = "/{uuid}")
-	public ResponseEntity<Map<String, Object>> getOneByUUID(@PathVariable("uuid") UUID uuid) {
+	public ResponseEntity<Map<String, Object>> getOneByUUID(@PathVariable UUID uuid) {
 		CustomerTypeDTO result = mapper.map(customerTypeService.findByUUID(uuid), CustomerTypeDTO.class);
 		Map<String, Object> response = new HashMap<>();
 		String msg = "";
@@ -94,7 +94,7 @@ public class CustomerTypeController {
 	}
 
 	@PutMapping(value = "/update-{uuid}")
-	public ResponseEntity<Map<String, Object>> updateByUUID(@PathVariable("uuid") UUID uuid,
+	public ResponseEntity<Map<String, Object>> updateByUUID(@PathVariable UUID uuid,
 			@RequestBody CustomerTypeDTO customerTypeDTO) {
 		Map<String, Object> response = new HashMap<>();
 		String msg = "";
@@ -122,7 +122,7 @@ public class CustomerTypeController {
 	}
 
 	@DeleteMapping(value = "/delete-{uuid}")
-	public ResponseEntity<Map<String, Object>> deleteByUUID(@PathVariable("uuid") UUID uuid) {
+	public ResponseEntity<Map<String, Object>> deleteByUUID(@PathVariable UUID uuid) {
 		boolean result = customerTypeService.deleteByUUID(uuid);
 		Map<String, Object> response = new HashMap<>();
 		String msg = "";
