@@ -5,8 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import org.springframework.context.annotation.Bean;
-
 public class Convertor {
 	public Date ddMMYYYY2Date(String ddMMYYYY) {
 		String pattern = "dd/MM/yyyy";
